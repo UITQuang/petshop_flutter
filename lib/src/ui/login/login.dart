@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
-import 'package:project1/ui/login/signup.dart';
+import 'package:project1/src/ui/login/signup.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
