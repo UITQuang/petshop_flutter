@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
-import 'package:project1/ui/login/signup.dart';
+import 'package:project1/src/screen/ui/login/signup.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,7 +16,8 @@ class _LoginPageState extends State<LoginPage> {
 
   void login(String phone, password) async {
     try {
-      Response response = await post(Uri.parse('https://meowmeowpetshop.xyz/api/v1/login-customer'),
+      Response response = await post(
+          Uri.parse('https://meowmeowpetshop.xyz/api/v1/login-customer'),
           body: {'phone': phone, 'password': password});
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
@@ -149,11 +150,11 @@ class _LoginPageState extends State<LoginPage> {
                 height: 15,
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   // get(SignUpPage);
 
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> SignUpPage()));
-
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SignUpPage()));
                 },
                 child: Container(
                   alignment: Alignment.center,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ui/login/login.dart';
+import 'src/screen/ui/login/login.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -8,4 +8,3 @@ void main() {
     home: LoginPage(),
   ));
 }
-
