@@ -26,7 +26,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       children: [
                         Image(image: NetworkImage('https://meowmeowpetshop.xyz/files/Product/cat-oscar.jpeg'),
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height - 600,
+                          height: MediaQuery.of(context).size.width*0.8 ,
                           fit: BoxFit.cover,
                           alignment: Alignment.bottomCenter,
                         ),
