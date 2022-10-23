@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:project1/src/ui/home/home.dart';
+
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:project1/src/ui/login/signup.dart';
@@ -20,6 +22,9 @@ class _LoginPageState extends State<LoginPage> {
       Response response = await post(Uri.parse('https://meowmeowpetshop.xyz/api/v1/login-customer'),
           body: {'phone': phone, 'password': password});
       if (response.statusCode == 200) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const Homepage()));
+
+
         var data = jsonDecode(response.body.toString());
         print(data['data']['name']);
         print('successfullt');
@@ -101,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Container(
                 width: 300,
-                child: TextField(
+                child: TextFormField(
                   controller: phoneNumberControler,
                   decoration: InputDecoration(
                       labelText: 'Số điện thoại',
@@ -110,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Container(
                 width: 300,
-                child: TextField(
+                child: TextFormField(
+                  obscureText: true,
                   controller: passwordControler,
                   decoration: InputDecoration(
                       labelText: 'Mật khẩu', prefixIcon: Icon(Icons.password)),
