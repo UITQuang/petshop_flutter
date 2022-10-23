@@ -1,7 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
-import 'src/screen/ui/login/login.dart';
-import 'src/screen/detail_product.dart';
+import 'package:project1/src/ui/login/login.dart';
 
 void main() {
   runApp(MaterialApp(
