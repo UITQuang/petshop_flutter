@@ -2,7 +2,7 @@
 // @dart=2.9
 
 import 'package:flutter/material.dart';
-import 'package:project1/src/ui/detail_product.dart';
+import 'package:project1/src/ui/product/detail_product.dart';
 import 'package:project1/src/ui/login/login.dart';
 
 void main() {
