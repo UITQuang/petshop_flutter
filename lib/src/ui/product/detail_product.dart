@@ -402,7 +402,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -429,7 +429,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           ),
                           IconButton(
                               alignment: Alignment.topRight,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                               icon: Icon(Icons.exit_to_app))
                         ],
                       ),
@@ -437,86 +439,97 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                     Divider(
                       color: Colors.grey,
                     ),
-                    Text(
-                      'Mùi hương',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Mùi hương',
+                            style:
+                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Wrap(
+                            children: [
+                              for (int i = 0; i < 5; i++)
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        elevation: 5,
+                                        shadowColor: BACKGROUND_COLOR),
+                                    onPressed: () {},
+                                    child: Wrap(
+                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      children: [
+                                        Image(
+                                          image: AssetImage('assets/product.png'),
+                                          width: 30,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          'Táo ',
+                                          style: TextStyle(
+                                              fontSize: 14, color: Colors.black),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    Wrap(
-                      children: [
-                        for (int i = 0; i < 5; i++)
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  elevation: 5,
-                                  shadowColor: BACKGROUND_COLOR),
-                              onPressed: () {},
-                              child: Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
-                                  Image(
-                                    image: AssetImage('assets/product.png'),
-                                    width: 30,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Táo ',
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.black),
-                                  )
-                                ],
-                              ),
-                            ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Số lượng',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Container(
+                              child: Row(children: [
+                            IconButton(
+                                icon: Icon(Icons.remove), onPressed: () {}),
+                            Text('1'),
+                            IconButton(icon: Icon(Icons.add), onPressed: () {})
+                          ]
+                              )
                           )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Số lượng',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                            child: Row(children: [
-                          IconButton(
-                              icon: Icon(Icons.remove), onPressed: () {}),
-                          Text('1'),
-                          IconButton(icon: Icon(Icons.add), onPressed: () {})
-                        ]
-                            )
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(height: 20,),
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width, // <-- match_parent
-                        height: 60, // <-- match-parent
-                        child: ElevatedButton(
-                          onPressed: () {
-                            print('Mua ngay');
-                          },
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: Size.fromHeight(50),
-                              padding: EdgeInsets.all(0),
-                              backgroundColor: PRIMARY_COLOR),
-                          child: Text(
-                            'Mua ngay',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          print('Mua ngay');
+                        },
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(0),
+                            backgroundColor: PRIMARY_COLOR),
+                        child: Text(
+                          'Thêm vào giỏ hàng',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     )
-
                   ],
-                )),
+                )
+            ),
           );
         });
   }

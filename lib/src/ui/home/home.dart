@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/utilities/colors.dart';
+import '../product/detail_product.dart';
 import 'header_drawer.dart';
 
 class Homepage extends StatefulWidget {
@@ -106,7 +107,7 @@ class _HomePageState extends State<Homepage> {
       int oldPrice,) {
     return GestureDetector(
       onTap: () {
-        print(title + ':$price đồng');
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> DetailProductScreen()));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
