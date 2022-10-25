@@ -402,6 +402,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
+
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -429,6 +430,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           ),
                           IconButton(
                               alignment: Alignment.topRight,
+
                               onPressed: () {
                                 Navigator.pop(context);
                               },

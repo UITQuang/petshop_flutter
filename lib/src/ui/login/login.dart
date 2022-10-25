@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 15,
               ),
               Row(
-                children: [
+                children: const [
                   Expanded(child: SizedBox()),
                   Text('Quên mật khẩu?'),
                   SizedBox(
@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               GestureDetector(

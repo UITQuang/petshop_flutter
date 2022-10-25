@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project1/src/services/api/product_service.dart';
+import 'package:project1/src/services/utilities/app_url.dart';
 
 import '../../services/utilities/colors.dart';
 import '../product/detail_product.dart';
@@ -20,8 +22,7 @@ class _HomePageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff1F1D48),
-        actions:  [
-
+        actions: [
           Expanded(child: searchFilter()),
           const Padding(
             padding: EdgeInsets.only(left: 8.0),
@@ -37,109 +38,117 @@ class _HomePageState extends State<Homepage> {
         ),
         titleSpacing: 10,
         automaticallyImplyLeading: true,
-
       ),
-      body: ListView(
-        children: [
-
-          listFilter(),
-          const Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              "Mới nhất",
-              style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-          listProduct()
-        ],
-      ),
+      body: bodyView(),
       drawer: Drawer(
-
-          child: Container(
-              child: Column(
-                children: [
-                  const HeaderDrawer(),
-                  listDrawer(),
-                  footDrawer(),
-                ],
-              )),
-
+        child: Container(
+            child: Column(
+          children: [
+            const HeaderDrawer(),
+            listDrawer(),
+            footDrawer(),
+          ],
+        )),
       ),
     );
+  }
+
+  Widget bodyView() {
+    return SafeArea(
+        child: Column(
+      children: [
+        listFilter(),
+        const Padding(
+          padding: EdgeInsets.only(left: 5.0),
+          child: Text(
+            "Mới nhất",
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 20,
+                fontWeight: FontWeight.w600),
+          ),
+        ),
+        listProduct(),
+      ],
+    ));
   }
 
   Widget listProduct() {
-    List<Widget> _list = [];
-    List<Widget> _row = [];
-    for (int i = 1; i < 10; i++) {
-      _row.add(
-        Expanded(flex: 1,
-        child: itemProduct(
-            'https://meowmeowpetshop.xyz/files/Product/cat-oscar.jpeg',
-            "Hat Dinh Duong",
-            "Hat dinh duong cung cap nhieu dinh duong cho meo nha ban",
-            89000,
-            95000),
-      ),);
-      if (_row.length == 2) {
-        _list.add(Row(children: _row.toList()
-        ,));
-        _row.clear();
-      }
-    }
-    if(_row.length==1){
-      _row.add(Expanded(flex:1,child: SizedBox()));
-      _list.add(Row(children: _row.toList(),));
+    ProductService productService = ProductService();
 
-    }
-    return Column(
-      children: _list,
-    );
+    return Expanded(
+        child: FutureBuilder(
+            future: productService.getProductList(),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (!snapshot.hasData) {
+                return ListView.builder(
+                    itemCount: 9,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: Text("khong co gi ca"),
+                      );
+                    });
+              } else {
+                var size = MediaQuery.of(context).size;
+                final double itemHeight =
+                    (size.height - kToolbarHeight - 24) / 2;
+                final double itemWidth = size.width / 2;
+                return GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: (itemWidth / itemHeight),
+                  children: List.generate(snapshot.data!.length, (index) {
+                    return itemProduct(
+                      AppUrl.url + snapshot.data![index]['picture'].toString(),
+                      snapshot.data![index]['title'].toString(),
+                      snapshot.data![index]['price'].toString(),
+                    );
+                  }),
+                );
+              }
+            }));
   }
 
-  Widget itemProduct(String networkImage,
-      String title,
-      String description,
-      int price,
-      int oldPrice,) {
+  Widget itemProduct(
+    String networkImage,
+    String title,
+    String price,
+  ) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> DetailProductScreen()));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => DetailProductScreen()));
+        print(title + ':$price đồng');
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-
           alignment: Alignment.topLeft,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(5)),
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(0.0),
                 child: Image(
                   image: NetworkImage(networkImage),
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.4,
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.width * 0.5,
                 ),
               ),
-              Text(title),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 5),
+                child: Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               Row(
-
                 children: [
                   Text(
                     '₫' '$price',
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       color: SECONDARY_COLOR,
                       fontWeight: FontWeight.bold,
                     ),
@@ -149,17 +158,18 @@ class _HomePageState extends State<Homepage> {
                       width: 10,
                     ),
                   ),
-                  Text(
-                    '₫' '$oldPrice',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 20,
-                        decoration: TextDecoration.lineThrough),
-                  )
+                  // Text(
+                  //   '₫' '$price+$price*10%',
+                  //   style: const TextStyle(
+                  //       fontWeight: FontWeight.w200,
+                  //       fontSize: 20,
+                  //       decoration: TextDecoration.lineThrough),
+                  // )
                 ],
               ),
-              SizedBox(height: 15,),
-              Text(description)
+              SizedBox(
+                height: 15,
+              ),
             ],
           ),
         ),
@@ -214,7 +224,10 @@ class _HomePageState extends State<Homepage> {
               padding: EdgeInsets.symmetric(horizontal: (8), vertical: (7)),
               child: Row(
                 children: [
-                  const Icon(Icons.search_outlined,color: Colors.grey,),
+                  const Icon(
+                    Icons.search_outlined,
+                    color: Colors.grey,
+                  ),
                   SizedBox(
                     width: (12),
                   ),
@@ -242,7 +255,10 @@ class _HomePageState extends State<Homepage> {
                     onTap: () {},
                     child: const Padding(
                       padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: Icon(Icons.filter_list,color: Colors.grey,),
+                      child: Icon(
+                        Icons.filter_list,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ],
@@ -256,7 +272,6 @@ class _HomePageState extends State<Homepage> {
 
   Widget listDrawer() {
     return Container(
-
       child: Column(
         children: [
           menuItem(1, "Trang chủ", Icons.home,
@@ -318,33 +333,42 @@ class _HomePageState extends State<Homepage> {
       ),
     );
   }
-Widget  footDrawer() {
+
+  Widget footDrawer() {
     return Container(
       alignment: Alignment.bottomLeft,
-margin: EdgeInsets.only(top: 50, left: 30),
+      margin: EdgeInsets.only(top: 50, left: 30),
       child: Column(
-        
         children: const [
-          Text("Thông tin liên hệ:", style: TextStyle(
-            color: Colors.black,fontWeight: FontWeight.w500
-          ),),
-          SizedBox(height: 10,),
-          Text("Số điện thoại: 0853685806", style: TextStyle(
-              color: Colors.black,fontWeight: FontWeight.w300
-          ),),
-          SizedBox(height: 10,),
-          Text("Email: mewmewpetshop@.gmail.com", style: TextStyle(
-              color: Colors.black,fontWeight: FontWeight.w300
-          ),),
-          SizedBox(height: 10,),
-          Text("Địa chỉ: KTX khu B, TP Thủ Đức, TP HCM", style: TextStyle(
-              color: Colors.black,fontWeight: FontWeight.w300
-          ),),
+          Text(
+            "Thông tin liên hệ:",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Số điện thoại: 0853685806",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Email: mewmewpetshop@.gmail.com",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Địa chỉ: KTX khu B, TP Thủ Đức, TP HCM",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+          ),
         ],
       ),
     );
-}
-
+  }
 }
 
 enum DrawerSections {
