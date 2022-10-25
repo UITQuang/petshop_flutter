@@ -9,6 +9,6 @@ void main() {
   runApp(MaterialApp(
     theme: ThemeData(primaryColor: Colors.pinkAccent),
     debugShowCheckedModeBanner: false,
-    home: LoginPage(),
+    home: DetailProductScreen(),
   ));
 }
