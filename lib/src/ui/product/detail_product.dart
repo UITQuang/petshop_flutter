@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/utilities/colors.dart';
+import '../../services/utilities/colors.dart';
 class DetailProductScreen extends StatefulWidget {
   const DetailProductScreen({Key? key}) : super(key: key);
 
