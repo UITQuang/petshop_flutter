@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:project1/src/services/utilities/app_url.dart';
-import 'package:project1/src/ui/home/home.dart';
-import '../../models/product_model.dart';
+
 import '../../services/utilities/colors.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import '../../models/product_detail.dart';
@@ -50,6 +48,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   height: MediaQuery.of(context).size.width * 0.8,
                                   fit: BoxFit.cover,
                                   alignment: Alignment.bottomCenter,
+
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

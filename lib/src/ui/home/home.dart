@@ -1,7 +1,8 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
-
+import 'package:shimmer/shimmer.dart';
 import '../../services/utilities/colors.dart';
 import '../product/detail_product.dart';
 import 'header_drawer.dart';
@@ -57,20 +58,51 @@ class _HomePageState extends State<Homepage> {
     return SafeArea(
         child: Column(
       children: [
+        carouselSlider(),
         listFilter(),
-        const Padding(
-          padding: EdgeInsets.only(left: 5.0),
-          child: Text(
-            "Mới nhất",
-            style: TextStyle(
-                color: Colors.black87,
-                fontSize: 20,
-                fontWeight: FontWeight.w600),
-          ),
-        ),
+        // const Padding(
+        //   padding: EdgeInsets.only(left: 5.0),
+        //   child: Text(
+        //     "Mới nhất",
+        //     style: TextStyle(
+        //         color: Colors.black87,
+        //         fontSize: 20,
+        //         fontWeight: FontWeight.w600),
+        //   ),
+        // ),
         listProduct(),
       ],
     ));
+  }
+
+  Widget carouselSlider() {
+    return CarouselSlider(
+      items: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: Image.asset("assets/images/chovameo.jpg", fit: BoxFit.fill),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: Image.asset(
+            "assets/images/meo.jpg",
+            fit: BoxFit.fill,
+          ),
+        ),
+      ],
+      options: CarouselOptions(
+        autoPlay: true,
+        enlargeCenterPage: true,
+        viewportFraction: 0.6,
+        aspectRatio: 2.8,
+        initialPage: 2,
+      ),
+    );
+    // RaisedButton(
+    // onPressed: () => buttonCarouselController.nextPage(
+    // duration: Duration(milliseconds: 300), curve: Curves.linear),
+    // child: Text('→'),
+    // )
   }
 
   Widget listProduct() {
@@ -80,19 +112,58 @@ class _HomePageState extends State<Homepage> {
         child: FutureBuilder(
             future: productService.getProductList(),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              var size = MediaQuery.of(context).size;
+              final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
+              final double itemWidth = size.width / 2;
               if (!snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: 9,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: Text("khong co gi ca"),
+                return GridView.count(
+                    crossAxisCount: 2,
+                    childAspectRatio: (1 / 0.8),
+                    children: List.generate(10, (index) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 5.0, bottom: 5),
+                                  child: Container(
+                                    color: Colors.white,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    height: 3,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 5.0, ),
+                                  child: Container(
+                                    color: Colors.white,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    height: 3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       );
-                    });
+                    }));
               } else {
-                var size = MediaQuery.of(context).size;
-                final double itemHeight =
-                    (size.height - kToolbarHeight - 24) / 2;
-                final double itemWidth = size.width / 2;
                 return GridView.count(
                   crossAxisCount: 2,
                   childAspectRatio: (itemWidth / itemHeight),
@@ -179,6 +250,7 @@ class _HomePageState extends State<Homepage> {
 
   Widget listFilter() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         itemFilter(Icons.border_all, "Tất cả"),
         itemFilter(Icons.pets_outlined, "Chó"),
@@ -210,7 +282,7 @@ class _HomePageState extends State<Homepage> {
 
   Widget searchFilter() {
     return Padding(
-      padding: EdgeInsets.only(left: 50),
+      padding: const EdgeInsets.only(left: 50),
       child: Row(
         children: [
           Expanded(
@@ -249,6 +321,10 @@ class _HomePageState extends State<Homepage> {
                           color: Colors.black87,
                           fontSize: 18,
                           fontWeight: FontWeight.w300),
+                      onChanged: (value){
+                        setState(() {
+                        });
+                      },
                     ),
                   ),
                   GestureDetector(
@@ -271,27 +347,25 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget listDrawer() {
-    return Container(
-      child: Column(
-        children: [
-          menuItem(1, "Trang chủ", Icons.home,
-              currentPage == DrawerSections.home ? true : false),
-          menuItem(2, "Danh mục sản phẩm", Icons.list,
-              currentPage == DrawerSections.category ? true : false),
-          menuItem(3, "Thông báo", Icons.notifications,
-              currentPage == DrawerSections.notification ? true : false),
-          menuItem(4, "Lịch sử mua hàng", Icons.history,
-              currentPage == DrawerSections.history ? true : false),
-          menuItem(5, "Thông tin thành viên", Icons.account_circle,
-              currentPage == DrawerSections.information ? true : false),
-          menuItem(6, "Thẻ thành viên", Icons.card_membership_sharp,
-              currentPage == DrawerSections.membershipCard ? true : false),
-          menuItem(7, "Đăng xuất", Icons.logout,
-              currentPage == DrawerSections.logOut ? true : false),
-          menuItem(8, "Hotline", Icons.phone,
-              currentPage == DrawerSections.hotline ? true : false),
-        ],
-      ),
+    return Column(
+      children: [
+        menuItem(1, "Trang chủ", Icons.home,
+            currentPage == DrawerSections.home ? true : false),
+        menuItem(2, "Danh mục sản phẩm", Icons.list,
+            currentPage == DrawerSections.category ? true : false),
+        menuItem(3, "Thông báo", Icons.notifications,
+            currentPage == DrawerSections.notification ? true : false),
+        menuItem(4, "Lịch sử mua hàng", Icons.history,
+            currentPage == DrawerSections.history ? true : false),
+        menuItem(5, "Thông tin thành viên", Icons.account_circle,
+            currentPage == DrawerSections.information ? true : false),
+        menuItem(6, "Thẻ thành viên", Icons.card_membership_sharp,
+            currentPage == DrawerSections.membershipCard ? true : false),
+        menuItem(7, "Đăng xuất", Icons.logout,
+            currentPage == DrawerSections.logOut ? true : false),
+        menuItem(8, "Hotline", Icons.phone,
+            currentPage == DrawerSections.hotline ? true : false),
+      ],
     );
   }
 
