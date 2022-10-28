@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:project1/src/ui/home/home.dart';
-
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:project1/src/ui/login/signup.dart';
@@ -14,8 +13,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController phoneNumberControler = TextEditingController();
-  TextEditingController passwordControler = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   void login(String phone, password) async {
     try {
@@ -24,10 +23,9 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const Homepage()));
 
-
         var data = jsonDecode(response.body.toString());
         print(data['data']['name']);
-        print('successfullt');
+        print('successful');
       } else {
         print('failed');
       }
@@ -107,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 width: 300,
                 child: TextFormField(
-                  controller: phoneNumberControler,
+                  controller: phoneNumberController,
                   decoration: InputDecoration(
                       labelText: 'Số điện thoại',
                       prefixIcon: Icon(Icons.phone)),
@@ -117,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                 width: 300,
                 child: TextFormField(
                   obscureText: true,
-                  controller: passwordControler,
+                  controller: passwordController,
                   decoration: InputDecoration(
                       labelText: 'Mật khẩu', prefixIcon: Icon(Icons.password)),
                 ),
@@ -139,8 +137,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  login(phoneNumberControler.text.toString(),
-                      passwordControler.text.toString());
+                  login(phoneNumberController.text.toString(),
+                      passwordController.text.toString());
                 },
                 child: Container(
                   alignment: Alignment.center,

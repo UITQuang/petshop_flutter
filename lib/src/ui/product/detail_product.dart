@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../services/utilities/colors.dart';
 
 class DetailProductScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                     Stack(
                       children: [
                         Image(
-                          image: NetworkImage(
+                          image: const NetworkImage(
                               'https://meowmeowpetshop.xyz/files/Product/cat-oscar.jpeg'),
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width * 0.8,
@@ -39,7 +40,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                print('oke');
+                               print("back");
                               },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(40, 40),
