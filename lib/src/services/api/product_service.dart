@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
+
+import '../../models/product_model.dart';
+import '../../models/product_detail.dart';
 
 
 class ProductService{
@@ -11,12 +13,20 @@ class ProductService{
     final response = await http.get(Uri.parse(AppUrl.productList));
     var   data = jsonDecode(response.body.toString());
     if(response.statusCode == 200){
-print("hihi123");
       return data;
 
     }else{
-      print("object");
+      throw Exception('Error');
+    }
+  }
 
+  Future<ProductDetail> getDetailProduct (int id) async {
+    final response = await http.get(Uri.parse(AppUrl.detailProduct+id.toString()));
+    if(response.statusCode == 200){
+      var data = jsonDecode(response.body);
+      ProductDetail product = ProductDetail.fromJson(data);
+      return product;
+    }else{
       throw Exception('Error');
     }
   }
