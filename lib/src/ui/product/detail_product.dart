@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
 
+import '../../services/utilities/app_url.dart';
 import '../../services/utilities/colors.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import '../../models/product_detail.dart';
+import '../home/home.dart';
 
 class DetailProductScreen extends StatefulWidget {
   int id;
@@ -296,7 +298,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                     Wrap(
                                       children: [
                                           IconButton(
-                                            icon: Image.asset('assets/product.png'),
+                                            icon: Image.asset('assets/images/product.png'),
                                             iconSize: 60,
                                             onPressed: () {},
                                           ),
@@ -429,7 +431,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                             children: [
                               Image(
                                   width: 80,
-                                  image: AssetImage('assets/product.png')),
+                                  image: AssetImage('assets/images/product.png')),
                               SizedBox(
                                 width: 10,
                               ),
