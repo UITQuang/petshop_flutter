@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
 
+import '../../services/utilities/app_url.dart';
 import '../../services/utilities/colors.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import '../../models/product_detail.dart';
+import '../home/home.dart';
 
 class DetailProductScreen extends StatefulWidget {
   int id;
@@ -11,12 +13,22 @@ class DetailProductScreen extends StatefulWidget {
     required this.id
   });
 
+
   @override
   State<DetailProductScreen> createState() => _DetailProductScreenState();
 }
 
 class _DetailProductScreenState extends State<DetailProductScreen> {
   final ScrollController _firstController = ScrollController();
+  String picture="";
+  String price="";
+  void _changeProduct(iProduct){
+    print(iProduct.picture);
+    setState((){
+      picture = iProduct!.picture;
+      price = iProduct!.price;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +123,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Card(
@@ -119,7 +131,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   Padding(
@@ -138,7 +150,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                             style: TextStyle(color: Colors.white),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 5,
                                         ),
                                         Expanded(
@@ -146,7 +158,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                             snapshot.data!.product!.title.toString(),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 18,
                                             ),
                                           ),
@@ -154,7 +166,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                   Padding(
@@ -163,19 +175,19 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '₫' + snapshot.data!.product!.price.toString(),
-                                          style: TextStyle(
+                                          '₫' +  snapshot.data!.product!.price.toString(),
+                                          style: const TextStyle(
                                             fontSize: 26,
                                             color: SECONDARY_COLOR,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text(
                                             snapshot.data!.product!.priceSale==""? '₫' + snapshot.data!.product!.priceSale.toString() : "",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w200,
                                               fontSize: 20,
                                               decoration: TextDecoration.lineThrough),
@@ -183,10 +195,10 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
-                                  Padding(
+                                  const Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 10),
                                     child: Text(
                                       'Mô tả sản phẩm',
@@ -194,7 +206,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                           fontSize: 16, fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 4,
                                   ),
                                   Padding(
@@ -220,7 +232,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                 ],
@@ -228,7 +240,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                             ),
 
                             //Vận chuyển
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Card(
@@ -240,17 +252,17 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Image(
-                                      image: AssetImage('assets/shoppe_express.png'),
+                                    const Image(
+                                      image: AssetImage('assets/images/shoppe_express.png'),
                                       width: 100,
                                       height: 50,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Container(
                                         width: 250,
-                                        child: Text(
+                                        child: const Text(
                                           'Dịch vụ giao hàng hoả tốc, đảm bảo bạn sẽ nhận được hàng trong vòng 4h tại TP.HCM',
                                           style: TextStyle(
                                             fontSize: 14,
@@ -264,17 +276,20 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                             ),
 
                             //Chọn phân loại
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Container(
                                 padding: EdgeInsets.all(10),
                                 color: Colors.white,
                                 child: Column(
+                                  crossAxisAlignment : CrossAxisAlignment.start,
+                                  mainAxisAlignment : MainAxisAlignment.start,
                                   children: [
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
+                                      children: const [
                                         Text(
                                           'Chọn loại hàng',
                                           style: TextStyle(
@@ -284,21 +299,18 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                         SizedBox(
                                           width: 5,
                                         ),
-                                        Text(
-                                          '(6 vị)',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300,
-                                          ),
-                                        )
+
                                       ],
                                     ),
                                     Wrap(
                                       children: [
+                                        for(int i = 0 ; i < snapshot.data!.productType!.length ; i++)
                                           IconButton(
-                                            icon: Image.asset('assets/product.png'),
+                                            icon: Image.network(AppUrl.url+ snapshot.data!.productType![i]!.picture.toString()),
                                             iconSize: 60,
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              _modalBottomSheetMenu(snapshot.data!.productType);
+                                            },
                                           ),
                                       ],
                                     )
@@ -329,7 +341,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children: const [
                           Icon(
                             Icons.chat,
                             color: PRIMARY_COLOR,
@@ -347,7 +359,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   flex: 1,
                   child: ElevatedButton(
                       onPressed: () {
-                        _modalBottomSheetMenu(widget.id);
+                        // _modalBottomSheetMenu();
                       },
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(0),
@@ -355,7 +367,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children: const [
                           Icon(
                             Icons.add_shopping_cart,
                             color: PRIMARY_COLOR,
@@ -376,12 +388,12 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       print('Mua ngay');
                     },
                     style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(0),
+                        padding: const EdgeInsets.all(0),
                         backgroundColor: PRIMARY_COLOR),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text(
                           'Mua ngay',
                           style: TextStyle(
@@ -399,16 +411,20 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
     );
   }
 
-  void _modalBottomSheetMenu(id) {
+  void _modalBottomSheetMenu(productType) {
+    Size size = MediaQuery.of(context).size;
+    picture = productType[0]!.picture;
+    price = productType[0]!.price;
     ProductService productService = ProductService();
     showModalBottomSheet(
+        isScrollControlled: false,
         context: context,
         builder: (builder) {
           return Container(
-            height: 350,
-            color: Colors.transparent,
+           height: size.height * 0.5,
             child: Container(
                 width: MediaQuery.of(context).size.width,
+
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -417,43 +433,8 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Wrap(
-                            direction: Axis.horizontal,
-                            crossAxisAlignment: WrapCrossAlignment.end,
-                            children: [
-                              Image(
-                                  width: 80,
-                                  image: AssetImage('assets/product.png')),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                '₫' + '89.000',
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  color: SECONDARY_COLOR,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          IconButton(
-                              alignment: Alignment.topRight,
-
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(Icons.exit_to_app))
-                        ],
-                      ),
-                    ),
-                    Divider(
+                    _curentProductType(),
+                    const Divider(
                       color: Colors.grey,
                     ),
                     Padding(
@@ -461,40 +442,15 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Mùi hương',
                             style:
                             TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Wrap(
                             children: [
-                          Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            elevation: 5,
-                            shadowColor: BACKGROUND_COLOR),
-                        onPressed: () {},
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Image(
-                              image: AssetImage('assets/product.png'),
-                              width: 30,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Táo ',
-                              style: TextStyle(
-                                  fontSize: 14, color: Colors.black),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
+                              for(int i = 0 ; i < productType.length ; i++)
+                                _listProductType(productType[i])
                             ],
                           ),
 
@@ -506,7 +462,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Số lượng',
                             textAlign: TextAlign.left,
                             style: TextStyle(
@@ -535,7 +491,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                         style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.all(0),
                             backgroundColor: PRIMARY_COLOR),
-                        child: Text(
+                        child: const Text(
                           'Thêm vào giỏ hàng',
                           style: TextStyle(
                               color: Colors.white,
@@ -550,4 +506,81 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
           );
         });
   }
+
+  Widget _curentProductType() {
+    return  Padding(
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            direction: Axis.horizontal,
+            crossAxisAlignment: WrapCrossAlignment.end,
+            children:  [
+              Image(
+                image: NetworkImage(AppUrl.url + picture),
+                width: 80,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                '₫' + price,
+                style: TextStyle(
+                  fontSize: 26,
+                  color: SECONDARY_COLOR,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          IconButton(
+              alignment: Alignment.topRight,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.exit_to_app))
+        ],
+      ),
+    );
+  }
+
+  Widget _listProductType(iProduct) {
+    return  Padding(
+      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            elevation: 5,
+            shadowColor: BACKGROUND_COLOR),
+        onPressed: () {
+          _changeProduct(iProduct);
+        },
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children:  [
+            Image(
+              image: NetworkImage(AppUrl.url + iProduct!.picture),
+              width: 30,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              iProduct.title.toString(),
+              style: TextStyle(
+                  fontSize: 14, color: Colors.black),
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
 }
+
+
+
