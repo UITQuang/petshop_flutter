@@ -166,7 +166,7 @@ class _HomePageState extends State<Homepage> {
               } else {
                 return GridView.count(
                   crossAxisCount: 2,
-                  childAspectRatio: (itemWidth / itemHeight),
+                  childAspectRatio: (1 / 1.5),
                   children: List.generate(snapshot.data!.length, (index) {
                     return itemProduct(
                       snapshot.data![index]['id'],
@@ -190,7 +190,9 @@ class _HomePageState extends State<Homepage> {
       onTap: () {
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => DetailProductScreen(
-              id:id
+
+              id:id,
+
             )));
         print(title + ':$price đồng');
       },
