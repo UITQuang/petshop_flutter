@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
 
+import '../../services/utilities/app_url.dart';
 import '../../services/utilities/colors.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import '../../models/product_detail.dart';
+import '../home/home.dart';
+
 
 class DetailProductScreen extends StatefulWidget {
   int id;
@@ -241,7 +244,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Image(
-                                      image: AssetImage('assets/shoppe_express.png'),
+                                      image: AssetImage("assets/images/shoppe_express.png"),
                                       width: 100,
                                       height: 50,
                                     ),
@@ -296,7 +299,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                     Wrap(
                                       children: [
                                           IconButton(
-                                            icon: Image.asset('assets/product.png'),
+                                            icon: Image.asset("assets/images/product.png"),
                                             iconSize: 60,
                                             onPressed: () {},
                                           ),
@@ -426,10 +429,10 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           Wrap(
                             direction: Axis.horizontal,
                             crossAxisAlignment: WrapCrossAlignment.end,
-                            children: [
+                            children: const [
                               Image(
                                   width: 80,
-                                  image: AssetImage('assets/product.png')),
+                                  image: AssetImage("assets/images/product.png")),
                               SizedBox(
                                 width: 10,
                               ),
@@ -478,9 +481,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                         onPressed: () {},
                         child: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
+                          children: const [
                             Image(
-                              image: AssetImage('assets/product.png'),
+                              image: AssetImage("assets/images/product.png"),
                               width: 30,
                             ),
                             SizedBox(
@@ -506,20 +509,18 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Số lượng',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Container(
-                              child: Row(children: [
+                          Row(children: [
                             IconButton(
-                                icon: Icon(Icons.remove), onPressed: () {}),
-                            Text('1'),
+                            icon: Icon(Icons.remove), onPressed: () {}),
+                            const Text('1'),
                             IconButton(icon: Icon(Icons.add), onPressed: () {})
                           ]
-                              )
                           )
                         ],
                       ),

@@ -166,9 +166,10 @@ class _HomePageState extends State<Homepage> {
               } else {
                 return GridView.count(
                   crossAxisCount: 2,
-                  childAspectRatio: (itemWidth / itemHeight),
+                  childAspectRatio: (1 / 1.5),
                   children: List.generate(snapshot.data!.length, (index) {
                     return itemProduct(
+                      snapshot.data![index]['id'],
                       AppUrl.url + snapshot.data![index]['picture'].toString(),
                       snapshot.data![index]['title'].toString(),
                       snapshot.data![index]['price'].toString(),
@@ -180,6 +181,7 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget itemProduct(
+      int id,
     String networkImage,
     String title,
     String price,
@@ -187,7 +189,9 @@ class _HomePageState extends State<Homepage> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => DetailProductScreen()));
+            MaterialPageRoute(builder: (context) => DetailProductScreen(
+              id:id,
+            )));
         print(title + ':$price đồng');
       },
       child: Padding(
