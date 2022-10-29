@@ -7,6 +7,7 @@ import 'package:project1/src/services/api/product_service.dart';
 import '../../models/product_detail.dart';
 import '../home/home.dart';
 
+
 class DetailProductScreen extends StatefulWidget {
   int id;
    DetailProductScreen({
@@ -435,6 +436,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   children: [
                     _curentProductType(),
                     const Divider(
+
                       color: Colors.grey,
                     ),
                     Padding(
@@ -451,6 +453,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                             children: [
                               for(int i = 0 ; i < productType.length ; i++)
                                 _listProductType(productType[i])
+
                             ],
                           ),
 
@@ -468,14 +471,12 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Container(
-                              child: Row(children: [
+                          Row(children: [
                             IconButton(
-                                icon: Icon(Icons.remove), onPressed: () {}),
-                            Text('1'),
+                            icon: Icon(Icons.remove), onPressed: () {}),
+                            const Text('1'),
                             IconButton(icon: Icon(Icons.add), onPressed: () {})
                           ]
-                              )
                           )
                         ],
                       ),

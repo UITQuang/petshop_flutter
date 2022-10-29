@@ -137,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               GestureDetector(
                 onTap: () {
+                  print('hijhi');
                   login(phoneNumberController.text.toString(),
                       passwordController.text.toString());
                 },
