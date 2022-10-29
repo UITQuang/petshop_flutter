@@ -299,8 +299,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                     Wrap(
                                       children: [
                                           IconButton(
+
                                             icon: Image.asset("assets/images/product.png"),
-                                            iconSize: 60,
+                            iconSize: 60,
                                             onPressed: () {},
                                           ),
                                       ],
@@ -432,7 +433,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                             children: const [
                               Image(
                                   width: 80,
+
                                   image: AssetImage("assets/images/product.png")),
+
                               SizedBox(
                                 width: 10,
                               ),

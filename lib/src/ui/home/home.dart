@@ -190,7 +190,9 @@ class _HomePageState extends State<Homepage> {
       onTap: () {
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => DetailProductScreen(
+
               id:id,
+
             )));
         print(title + ':$price đồng');
       },
