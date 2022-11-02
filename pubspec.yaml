@@ -42,6 +42,10 @@ dependencies:
   rxdart: ^0.27.5
   carousel_slider: ^4.1.1
   shimmer: ^2.0.0
+  vnpay_flutter: ^1.0.1
+  momo_vn: ^2.0.2
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -63,6 +67,7 @@ flutter:
     - assets/images/chovameo.jpg
     - assets/images/shoppe_express.png
     - assets/images/product.png
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
