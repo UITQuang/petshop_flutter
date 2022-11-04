@@ -19,7 +19,7 @@ class _PaymentState extends State<Payment> {
 
   String responseCode = '';
   String vnp_TxnRef = '';
-  int method = 1; //1:momo 2:vnpay 3:cod
+  int method = 2; //1:momo 2:vnpay 3:cod
 
   //momo
   late MomoVn _momoPay;
