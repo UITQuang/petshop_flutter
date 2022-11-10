@@ -17,7 +17,7 @@ class Payment extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+
           },
         ),
         title: Text(title, style: TextStyle(fontSize: 20)),

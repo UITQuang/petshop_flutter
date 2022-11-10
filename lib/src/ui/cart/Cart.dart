@@ -16,10 +16,7 @@ class Cart extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) =>  Payment()),
-            );
+
           },
         ),
         title: Text(title, style: TextStyle(fontSize: 20)),
