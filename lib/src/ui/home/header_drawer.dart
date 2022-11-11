@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class HeaderDrawer extends StatefulWidget {
   const HeaderDrawer({Key? key}) : super(key: key);
@@ -9,6 +10,7 @@ class HeaderDrawer extends StatefulWidget {
 
 class _HeaderDrawerState extends State<HeaderDrawer> {
   @override
+  var box= Hive.box('userBox');
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -44,13 +46,13 @@ class _HeaderDrawerState extends State<HeaderDrawer> {
               ],
             ),
           ),
-          const Text(
-            'Huyền Trâm',
-            style: TextStyle(color: Colors.white),
+          Text(
+            box.get("name"),
+            style: const TextStyle(color: Colors.white),
           ),
-          const Text(
-            'huyentram@gmail.com',
-            style: TextStyle(color: Colors.white),
+          Text(
+            box.get("email"),
+            style: const TextStyle(color: Colors.white),
           )
         ],
       ),

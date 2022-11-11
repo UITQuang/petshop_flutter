@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
+import 'package:project1/src/ui/home/profile.dart';
+
 import 'package:project1/src/ui/cart/Cart.dart';
 import 'package:provider/provider.dart';
+
 import 'package:shimmer/shimmer.dart';
 import '../../services/utilities/colors.dart';
 import '../product/detail_product.dart';
@@ -88,22 +91,14 @@ class _HomePageState extends State<Homepage> {
 
   Widget bodyView() {
     return SafeArea(
-        child: Column(
-      children: [
-        carouselSlider(),
-        listFilter(),
-        // const Padding(
-        //   padding: EdgeInsets.only(left: 5.0),
-        //   child: Text(
-        //     "Mới nhất",
-        //     style: TextStyle(
-        //         color: Colors.black87,
-        //         fontSize: 20,
-        //         fontWeight: FontWeight.w600),
-        //   ),
-        // ),
-        listProduct(),
-      ],
+        child: SingleChildScrollView(
+      child: Column(
+        children: [
+          carouselSlider(),
+          listFilter(),
+          listProduct(),
+        ],
+      ),
     ));
   }
 
@@ -130,25 +125,20 @@ class _HomePageState extends State<Homepage> {
         initialPage: 2,
       ),
     );
-    // RaisedButton(
-    // onPressed: () => buttonCarouselController.nextPage(
-    // duration: Duration(milliseconds: 300), curve: Curves.linear),
-    // child: Text('→'),
-    // )
   }
 
   Widget listProduct() {
     ProductService productService = ProductService();
-
-    return Expanded(
+    return Padding(
+        padding: const EdgeInsets.all(0.0),
         child: FutureBuilder(
             future: productService.getProductList(),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-              var size = MediaQuery.of(context).size;
-              final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-              final double itemWidth = size.width / 2;
               if (!snapshot.hasData) {
                 return GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
                     crossAxisCount: 2,
                     childAspectRatio: (1 / 0.8),
                     children: List.generate(10, (index) {
@@ -198,15 +188,34 @@ class _HomePageState extends State<Homepage> {
                     }));
               } else {
                 return GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
                   crossAxisCount: 2,
                   childAspectRatio: (1 / 1.5),
                   children: List.generate(snapshot.data!.length, (index) {
-                    return itemProduct(
-                      snapshot.data![index]['id'],
-                      AppUrl.url + snapshot.data![index]['picture'].toString(),
-                      snapshot.data![index]['title'].toString(),
-                      snapshot.data![index]['price'].toString(),
-                    );
+                    String name = snapshot.data![index]['title'];
+                    if (searchController.text.isEmpty) {
+                      return itemProduct(
+                        snapshot.data![index]['id'],
+                        AppUrl.url +
+                            snapshot.data![index]['picture'].toString(),
+                        snapshot.data![index]['title'].toString(),
+                        snapshot.data![index]['price'].toString(),
+                      );
+                    } else if (name
+                        .toLowerCase()
+                        .contains(searchController.text.toLowerCase())) {
+                      return itemProduct(
+                        snapshot.data![index]['id'],
+                        AppUrl.url +
+                            snapshot.data![index]['picture'].toString(),
+                        snapshot.data![index]['title'].toString(),
+                        snapshot.data![index]['price'].toString(),
+                      );
+                    } else {
+                      return Container();
+                    }
                   }),
                 );
               }
@@ -299,19 +308,28 @@ class _HomePageState extends State<Homepage> {
 
   Widget itemFilter(IconData icon, String title) {
     return GestureDetector(
+      onTap: (){
+        searchController.clear();
+        if(title!="Tất cả"){
+          searchController.text=title;
+        }
+        setState(() {
+
+        });
+      },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
           height: 40,
+          decoration: BoxDecoration(
+              color: Color(0xffF4F4F4),
+              borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [Icon(icon), Text(title)],
             ),
           ),
-          decoration: BoxDecoration(
-              color: Color(0xffF4F4F4),
-              borderRadius: BorderRadius.circular(10)),
         ),
       ),
     );
@@ -410,7 +428,8 @@ class _HomePageState extends State<Homepage> {
       color: selected ? Colors.grey : Colors.white,
       child: InkWell(
         onTap: () {
-          Navigator.pop(context);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const ProfilePage()));
+
           setState(() {
             if (id == 1) {
               currentPage = DrawerSections.home;

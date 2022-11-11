@@ -12,9 +12,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController phoneControler = TextEditingController();
-  TextEditingController passwordControler = TextEditingController();
-  TextEditingController nameControler = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   void signup(String name, phone, password) async {
     try {
@@ -24,7 +24,7 @@ class _SignUpPageState extends State<SignUpPage> {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
         print(data);
-        print('successfullt');
+        print('successful');
       } else {
         print('failed');
       }
@@ -70,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
           Container(
             width: 300,
             child: TextFormField(
-              controller: nameControler,
+              controller: nameController,
               decoration: InputDecoration(
                   labelText: 'Tên người dùng',
                   prefixIcon: Icon(Icons.account_circle_outlined)),
@@ -79,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
           Container(
             width: 300,
             child: TextFormField(
-              controller: phoneControler,
+              controller: phoneController,
               decoration: InputDecoration(
                   labelText: 'Số điện thoại',
                   prefixIcon: Icon(Icons.phone)),
@@ -89,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
             width: 300,
             child: TextFormField(
               obscureText: true,
-              controller: passwordControler,
+              controller: passwordController,
               decoration: InputDecoration(
                   labelText: 'Mật khẩu', prefixIcon: Icon(Icons.password)),
             ),
@@ -106,9 +106,9 @@ class _SignUpPageState extends State<SignUpPage> {
     return  GestureDetector(
       onTap: () {
         signup(
-            nameControler.text.toString(),
-            phoneControler.text.toString(),
-            passwordControler.text.toString());
+            nameController.text.toString(),
+            phoneController.text.toString(),
+            passwordController.text.toString());
 
         // Navigator.of(context).push(MaterialPageRoute(builder: (context)=> LoginPage()));
       },
