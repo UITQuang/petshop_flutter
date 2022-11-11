@@ -1,7 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
+import 'package:project1/src/ui/cart/Cart.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../services/utilities/colors.dart';
 import '../product/detail_product.dart';
@@ -25,10 +28,39 @@ class _HomePageState extends State<Homepage> {
         backgroundColor: const Color(0xff1F1D48),
         actions: [
           Expanded(child: searchFilter()),
-          const Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Icon(Icons.shopping_bag_outlined),
-          ),
+          Stack(
+            children: [
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 4.0),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (_) => Cart()));
+                      },
+                      icon: Icon(Icons.shopping_bag_outlined)),
+                ),
+              ),
+              Positioned(
+                right: 2,
+                top: 2,
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                      color: SECONDARY_COLOR, shape: BoxShape.circle),
+                  child: Center(
+                    child: Text(
+                      context.watch<CartProvider>().items.length.toString(),
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(5),
@@ -149,7 +181,8 @@ class _HomePageState extends State<Homepage> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 5.0, ),
+                                    top: 5.0,
+                                  ),
                                   child: Container(
                                     color: Colors.white,
                                     width:
@@ -166,7 +199,7 @@ class _HomePageState extends State<Homepage> {
               } else {
                 return GridView.count(
                   crossAxisCount: 2,
-                  childAspectRatio: (itemWidth / itemHeight),
+                  childAspectRatio: (1 / 1.5),
                   children: List.generate(snapshot.data!.length, (index) {
                     return itemProduct(
                       snapshot.data![index]['id'],
@@ -181,17 +214,17 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget itemProduct(
-      int id,
+    int id,
     String networkImage,
     String title,
     String price,
   ) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => DetailProductScreen(
-              id:id
-            )));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DetailProductScreen(
+                  id: id,
+                )));
         print(title + ':$price đồng');
       },
       child: Padding(
@@ -325,9 +358,8 @@ class _HomePageState extends State<Homepage> {
                           color: Colors.black87,
                           fontSize: 18,
                           fontWeight: FontWeight.w300),
-                      onChanged: (value){
-                        setState(() {
-                        });
+                      onChanged: (value) {
+                        setState(() {});
                       },
                     ),
                   ),
