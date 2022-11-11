@@ -437,14 +437,14 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
               Expanded(
                   flex: 1,
                   child: ElevatedButton(
-                      onPressed: () {
+                      onPressed:  ()  {
                         // _modalBottomSheetMenu();
                         context.read<CartProvider>().addItem(
                               productId: 'itemId.toString()',
                               title: 'title.toString()',
                               amount: 1,
-                              price: 'price.toString()',
-                              image: picture.toString(),
+                              price: '178.000',
+                              image: './assets/images/product.png',
                               type: 'productType.toString()',
                             );
                       },

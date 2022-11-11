@@ -165,7 +165,7 @@ class CartItem extends StatelessWidget {
                                                 color: Colors.grey,
                                                 size: 18,
                                               ),
-                                              Text(this.price,
+                                              Text('${double.parse(this.price)*this.amount}00',
                                                   style: TextStyle(
                                                       fontSize: 20,
                                                       fontWeight:

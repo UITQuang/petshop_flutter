@@ -50,4 +50,20 @@ class CartProvider extends ChangeNotifier {
     _items.remove(productId);
     notifyListeners();
   }
+
+  double totalProductCost() {
+    double total = 0.0;
+    _items.forEach((key, value) {
+      total = total + double.parse(value.price) * value.amount;
+    });
+    return total;
+  }
+
+  double totalPay(shipCost) {
+    double total = 0.0;
+    _items.forEach((key, value) {
+      total = total + double.parse(value.price) * value.amount;
+    });
+    return total + shipCost;
+  }
 }

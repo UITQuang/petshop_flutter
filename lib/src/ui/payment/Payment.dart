@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:project1/src/ui/payment/After_Pay.dart';
+import 'package:provider/provider.dart';
 import 'package:vnpay_flutter/vnpay_flutter.dart';
 import 'package:momo_vn/momo_vn.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../providers/cart_provider/CartProvider.dart';
+import 'components/PaymentItem.dart';
 import 'method_payment.dart';
-
 
 class Payment extends StatefulWidget {
   const Payment({Key? key}) : super(key: key);
   @override
   State<Payment> createState() => _PaymentState();
 }
+
 //vnpay
 class _PaymentState extends State<Payment> {
   var title;
   _PaymentState({this.title = 'Giỏ hàng'});
-  @override
 
+  @override
   String responseCode = '';
   String vnp_TxnRef = '';
   String method = "Thanh toán bằng Momo"; //1:momo 2:vnpay 3:cod
@@ -37,17 +40,17 @@ class _PaymentState extends State<Payment> {
     _paymentStatus = "";
     initPlatformState();
   }
+
   Future<void> initPlatformState() async {
     if (!mounted) return;
-    setState(() {
-    });
+    setState(() {});
   }
-
-
 
   Widget build(BuildContext context) {
     // TODO: implement build
+    final cartItemsData = Provider.of<CartProvider>(context);
     var size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),
       appBar: AppBar(
@@ -64,161 +67,181 @@ class _PaymentState extends State<Payment> {
           shrinkWrap: true,
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 10.0),
           children: <Widget>[
-            Row(children: <Widget>[
-              showInfoBuyer()
+            Row(children: <Widget>[showInfoBuyer()]),
+            Column(children: <Widget>[
+              for (int i = 0; i < cartItemsData.items.length; i++)
+                showProductItem(context, cartItemsData.items.values.toList()[i])
             ]),
-            Column(
-                children: <Widget> [
-                  for(int i = 0; i< 2; i++)
-                    showProduct()
-                ]
-            ),
             Row(children: <Widget>[
               Container(
                   width: size.width,
                   color: Colors.white,
                   margin: EdgeInsets.only(top: 10.0),
-                  padding: EdgeInsets.fromLTRB(22.0,15.0,22.0,15.0),
+                  padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          child:
-                          Text('Tin nhắn:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                          child: Text('Tin nhắn:',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500)),
                         ),
                         Container(
                           child: const Text('Lưu ý cho người bán...',
-                              style: TextStyle(color: Color.fromRGBO(152, 152, 152, 1),fontSize: 16, fontWeight: FontWeight.w400)),
+                              style: TextStyle(
+                                  color: Color.fromRGBO(152, 152, 152, 1),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400)),
                         )
                       ]))
             ]),
             Row(children: <Widget>[
               Container(
-                //width: x,
+                  //width: x,
                   width: size.width,
                   color: Colors.white,
                   margin: EdgeInsets.only(top: 10.0),
-                  padding: EdgeInsets.fromLTRB(22.0,15.0,22.0,15.0),
+                  padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          child:
-                          Text('Tổng số tiền:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                          child: Text('Tổng số tiền:',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500)),
                         ),
                         Container(
-                          child: const Text('₫198.000',
-                              style: TextStyle(color: Color.fromRGBO(31, 29, 72, 1),fontSize: 26, fontWeight: FontWeight.bold)),
+                          child: Text('₫${cartItemsData.totalProductCost()}00',
+                              style: TextStyle(
+                                  color: Color.fromRGBO(31, 29, 72, 1),
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold)),
                         )
                       ]))
             ]),
-            Row(
-                children: <Widget>[
-                  Container(
-                      width: size.width ,
-                      color: Colors.white,
-                      margin: EdgeInsets.only(top: 10.0),
-                      padding: EdgeInsets.fromLTRB(22.0,15.0,15.0,15.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text('Chi tiết thanh toán',textAlign: TextAlign.left, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
-                                    width: size.width *0.85,
-                                    child:
-                                    Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                            child:
-                                            Text('Tổng tiền hàng', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
-                                          ),
-                                          Container(
-                                            child: const Text('₫178.000',
-                                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
-                                          ),
-                                        ]
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
-                                    width: size.width *0.85,
-                                    child:
-                                    Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                            child:
-                                            Text('Tổng tiền vận chuyển', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
-                                          ),
-                                          Container(
-                                            child: const Text('₫20.000',
-                                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
-                                          ),
-                                        ]
-                                    ),
-                                  ),
-                                  Container(
-                                    width: size.width *0.89,
-                                    child:
-                                    Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                            child:
-                                            Text('Tổng thanh toán', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                          ),
-                                          Container(
-                                            child: const Text('₫198.000',
-                                                style: TextStyle(color: Color.fromRGBO(31, 29, 72, 1),fontSize: 26, fontWeight: FontWeight.bold)),
-                                          ),
-                                        ]
-                                    ),
-                                  ),
-                                ]
-                            ),
-
-                          ]))
-                ]),
+            Row(children: <Widget>[
+              Container(
+                  width: size.width,
+                  color: Colors.white,
+                  margin: EdgeInsets.only(top: 10.0),
+                  padding: EdgeInsets.fromLTRB(22.0, 15.0, 15.0, 15.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Chi tiết thanh toán',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500)),
+                              Container(
+                                margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
+                                width: size.width * 0.85,
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        child: Text('Tổng tiền hàng',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400)),
+                                      ),
+                                      Container(
+                                        child: Text(
+                                            '₫${cartItemsData.totalProductCost()}00',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400)),
+                                      ),
+                                    ]),
+                              ),
+                              Container(
+                                margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
+                                width: size.width * 0.85,
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        child: Text('Tổng tiền vận chuyển',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400)),
+                                      ),
+                                      Container(
+                                        child: const Text('₫20.000',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400)),
+                                      ),
+                                    ]),
+                              ),
+                              Container(
+                                width: size.width * 0.89,
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        child: Text('Tổng thanh toán',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500)),
+                                      ),
+                                      Container(
+                                        child: Text('₫${cartItemsData.totalPay(20)}00',
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    31, 29, 72, 1),
+                                                fontSize: 26,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                    ]),
+                              ),
+                            ]),
+                      ]))
+            ]),
             Row(children: <Widget>[
               InkWell(
                 onTap: () async {
-                  final result = await Navigator.push(context, MaterialPageRoute(builder: (context)=>MethodPayment()));
+                  final result = await Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MethodPayment()));
                   setState(() {
                     method = result;
                   });
                 },
                 child: Container(
-                  //width: x,
+                    //width: x,
                     width: size.width,
                     color: Colors.white,
                     margin: EdgeInsets.only(top: 10.0),
-                    padding: EdgeInsets.fromLTRB(22.0,15.0,22.0,15.0),
+                    padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Container(
-                            child:
-                            Text('Hình thức thanh toán', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                            child: Text('Hình thức thanh toán',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w500)),
                           ),
                           Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children:  <Widget> [
-                                Text(
-                                    method?? "",
-                                    style: TextStyle(overflow: TextOverflow.ellipsis ,color: Color.fromRGBO(152, 152, 152, 1),fontSize: 14, fontWeight: FontWeight.w400)),
-
+                              children: <Widget>[
+                                Text(method ?? "",
+                                    style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        color: Color.fromRGBO(152, 152, 152, 1),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400)),
                                 Icon(
                                   size: 15,
                                   Icons.arrow_forward_ios_rounded,
                                   color: Color.fromRGBO(152, 152, 152, 1),
                                 )
                               ]),
-
                         ])),
               )
             ])
@@ -229,15 +252,13 @@ class _PaymentState extends State<Payment> {
           onTap: () {
             //Gửi thông tin đơn hàng lên server -> tạo đơn hàng
 
-            if(method == "Thanh toán bằng Momo"){
+            if (method == "Thanh toán bằng Momo") {
               // print("Thanh toán bằng Momo");
               onPaymentMomo();
-            }
-            else if(method == "Thanh toán bằng Vnpay"){
+            } else if (method == "Thanh toán bằng Vnpay") {
               // print("Thanh toán bằng Vnpay");
               onPaymentVnPay();
-            }
-            else {
+            } else {
               print("COD");
             }
           },
@@ -260,66 +281,7 @@ class _PaymentState extends State<Payment> {
     );
   }
 
-  Widget showProduct(){
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        color: Colors.white,
-        margin: EdgeInsets.only(top: 10.0),
-        padding: EdgeInsets.fromLTRB(15.0,15.0,15.0,15.0),
-        child: Row(
-            children:<Widget> [
-              Container(
-                width: 85,
-                height: 85,
-                margin: EdgeInsets.only(right: 10.0),
-                decoration: BoxDecoration(
-                    color: Colors.red[100],
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          "assets/images/product.png",
-                        ))),
-              ),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget> [
-                    Container(
-                      child:
-                      Text('Hạt dinh dưỡng cho mèo CATSON',textAlign: TextAlign.left, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                    ),
-                    Container(
-                      child:
-                      Text('Phân loại: Táo',textAlign: TextAlign.left, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.65,
-                      child:
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Container(
-                              child:
-                              Text('₫89.000', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
-                            ),
-                            Container(
-                              child: Text('x1',
-                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
-                            ),
-                          ]
-                      ),
-                    ),
-                  ]
-              )
-            ]
-        )
-    );
-  }
-
-  Widget showInfoBuyer(){
+  Widget showInfoBuyer() {
     return Container(
         width: MediaQuery.of(context).size.width,
         color: Colors.white,
@@ -350,13 +312,11 @@ class _PaymentState extends State<Payment> {
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width - 100,
-                      child: Wrap(
-                          children: [
-                            Text(
-                                'Ktx khu b, đại học quốc gia, phường Đông Hoà, Dĩ An, Bình Dương',
-                                style: TextStyle(fontSize: 14)),
-                          ]
-                      ),
+                      child: Wrap(children: [
+                        Text(
+                            'Ktx khu b, đại học quốc gia, phường Đông Hoà, Dĩ An, Bình Dương',
+                            style: TextStyle(fontSize: 14)),
+                      ]),
                     )
                   ])
             ]));
@@ -366,16 +326,17 @@ class _PaymentState extends State<Payment> {
   void onPaymentVnPay() async {
     final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
       url:
-      'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', //vnpay url, default is https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+          'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', //vnpay url, default is https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
       version: '2.0.1',
       tmnCode: 'F52HC9LF', //vnpay tmn code, get from vnpay
       txnRef: DateTime.now().millisecondsSinceEpoch.toString(),
       orderInfo: 'Pay 30.000 VND', //order info, default is Pay Order
       amount: 30000,
       returnUrl:
-      'http://schemas.android.com/apk/res/android', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
+          'http://schemas.android.com/apk/res/android', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
       ipAdress: '192.168.10.10',
-      vnpayHashKey: 'NAKQHMIIDOHWTSZSEMLFXYZNAJLSZAMS', //vnpay hash key, get from vnpay
+      vnpayHashKey:
+          'NAKQHMIIDOHWTSZSEMLFXYZNAJLSZAMS', //vnpay hash key, get from vnpay
       vnPayHashType: VNPayHashType
           .HMACSHA512, //hash type. Default is HmacSHA512, you can chang it in: https://sandbox.vnpayment.vn/merchantv2
     );
@@ -385,13 +346,20 @@ class _PaymentState extends State<Payment> {
         setState(() {
           responseCode = params['vnp_ResponseCode'];
           vnp_TxnRef = params['vnp_TxnRef'];
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay( title: "Đặt hàng thành công")));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AfterPay(title: "Đặt hàng thành công")));
         });
       },
       onPaymentError: (params) {
         setState(() {
           responseCode = 'Error';
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thất bại")));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AfterPay(title: "Đặt hàng thất bại")));
         });
       },
     );
@@ -415,8 +383,8 @@ class _PaymentState extends State<Payment> {
         partner: 'merchant',
         extra: "{\"key1\":\"value1\",\"key2\":\"value2\"}",
         isTestMode: true
-    //    pet_shop
-    );
+        //    pet_shop
+        );
     try {
       _momoPay.open(options);
     } catch (e) {
@@ -435,8 +403,7 @@ class _PaymentState extends State<Payment> {
       _paymentStatus += "\nTình trạng: Thành công.";
 
       // Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thành công")));
-    }
-    else {
+    } else {
       _paymentStatus += "\nTình trạng: Thất bại.";
       // Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thất bại")));
     }
@@ -456,7 +423,4 @@ class _PaymentState extends State<Payment> {
       _setState();
     });
   }
-
 }
-
-
