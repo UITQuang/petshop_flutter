@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class AfterPay extends StatelessWidget {
-  var title;
+  late String title;
 
   AfterPay({this.title = 'Đặt hàng thành công'});
   @override
