@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:project1/src/ui/home/home.dart';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:project1/src/ui/login/signup.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,16 +16,26 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  var box = Hive.box('userBox');
+
 
   void login(String phone, password) async {
+
+
     try {
-      Response response = await post(Uri.parse('https://meowmeowpetshop.xyz/api/v1/login-customer'),
+      Response response = await post(
+          Uri.parse('https://meowmeowpetshop.xyz/api/v1/login-customer'),
           body: {'phone': phone, 'password': password});
       if (response.statusCode == 200) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const Homepage()));
-
         var data = jsonDecode(response.body.toString());
-        print(data['data']['name']);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const Homepage()));
+        box.put("name",data['data']['name']);
+        box.put("phone",data['data']['phone']);
+        box.put("address",data['data']['address']);
+        box.put("email",data['data']['email']);
+        box.put("id",data['data']['id']);
+        print(box.get("name"));
         print('successful');
       } else {
         print('failed');
@@ -155,11 +166,9 @@ class _LoginPageState extends State<LoginPage> {
                 height: 15,
               ),
               GestureDetector(
-                onTap: (){
-                  // get(SignUpPage);
-
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> SignUpPage()));
-
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SignUpPage()));
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -170,7 +179,8 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.black12,
                       borderRadius: BorderRadius.circular(20)),
                 ),
-              )
+              ),
+
             ],
           ),
         ),
