@@ -26,6 +26,7 @@ class _HomePageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff1F1D48),
@@ -147,41 +148,39 @@ class _HomePageState extends State<Homepage> {
                         highlightColor: Colors.grey.shade100,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 8),
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5)),
+                                width:
+                                    MediaQuery.of(context).size.width * 0.4,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.3,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5.0, bottom: 5),
+                                child: Container(
+                                  color: Colors.white,
                                   width:
                                       MediaQuery.of(context).size.width * 0.4,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.3,
+                                  height: 3,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 5.0, bottom: 5),
-                                  child: Container(
-                                    color: Colors.white,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    height: 3,
-                                  ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 5.0,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 5.0,
-                                  ),
-                                  child: Container(
-                                    color: Colors.white,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    height: 3,
-                                  ),
+                                child: Container(
+                                  color: Colors.white,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  height: 3,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -230,11 +229,11 @@ class _HomePageState extends State<Homepage> {
   ) {
     return GestureDetector(
       onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => DetailProductScreen(
                   id: id,
                 )));
-        print(title + ':$price đồng');
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -424,12 +423,12 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget menuItem(int id, String title, IconData icon, bool selected) {
+    var container;
+
     return Material(
       color: selected ? Colors.grey : Colors.white,
       child: InkWell(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const ProfilePage()));
-
           setState(() {
             if (id == 1) {
               currentPage = DrawerSections.home;
@@ -449,9 +448,36 @@ class _HomePageState extends State<Homepage> {
               currentPage = DrawerSections.hotline;
             }
           });
+          if(currentPage==DrawerSections.information){
+            container= const ProfilePage();
+          }
+          else if(currentPage==DrawerSections.home){
+            container = const Homepage();
+          }
+          else if(currentPage==DrawerSections.hotline){
+            container = const Homepage();
+          }
+          else if(currentPage==DrawerSections.history){
+            container = const Homepage();
+          }
+          else if(currentPage==DrawerSections.history){
+            container = const Homepage();
+          }
+          else if(currentPage==DrawerSections.membershipCard){
+            container = const Homepage();
+          }
+          else if(currentPage==DrawerSections.logOut){
+            container = const Homepage();
+          }
+          else if(currentPage==DrawerSections.notification){
+            container = const Homepage();
+          }
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => container));
+
         },
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Row(
             children: [
               Expanded(flex: 1, child: Icon(icon)),

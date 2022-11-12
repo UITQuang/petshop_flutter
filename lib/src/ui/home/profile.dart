@@ -22,6 +22,22 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   var box = Hive.box('userBox');
 
+  _showDialog(String content) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Thông báo"),
+            content: Text(content),
+            actions: <Widget>[
+              OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Close"))
+            ],
+          );
+        });
+  }
+
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -44,23 +60,15 @@ class _ProfilePageState extends State<ProfilePage> {
           });
 
       if (response.statusCode == 200) {
-
         var data = jsonDecode(response.body.toString());
-        box.put("name",data['name']);
-        box.put("phone",data['phone']);
-        box.put("address",data['address']);
-        box.put("email",data['email']);
-        box.put("id",data['id']);
-        print('successful');
-  // setState(() {
-  //   nameController.text = box.get("name");
-  //   emailController.text = box.get("email");
-  //   phoneController.text = box.get("phone");
-  //   addressController.text = box.get("address");
-  // });
-
+        box.put("name", data['name']);
+        box.put("phone", data['phone']);
+        box.put("address", data['address']);
+        box.put("email", data['email']);
+        box.put("id", data['id']);
+        _showDialog("Cập nhật thành công!");
       } else {
-        print('failed');
+        _showDialog("Cập nhật thất bại!");
       }
     } catch (e) {
       print(e.toString());
