@@ -33,7 +33,7 @@ class Cart extends StatelessWidget {
           shrinkWrap: true,
           padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
           itemBuilder: (context, index) {
-            //print(cartItemsData.generalItems());
+            print(cartItemsData.generalItems());
             return //ListView(
                 //shrinkWrap: true,
                 //padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
