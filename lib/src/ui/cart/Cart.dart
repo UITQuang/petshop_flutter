@@ -41,12 +41,17 @@ class Cart extends StatelessWidget {
                 CartItem(
               productId: cartItemsData.items.keys.toList()[index],
               id: cartItemsData.items.values.toList()[index].id.toString(),
+              productTypeId: cartItemsData.items.values
+                  .toList()[index]
+                  .productTypeId
+                  .toString(),
               title:
                   cartItemsData.items.values.toList()[index].title.toString(),
               amount: cartItemsData.items.values.toList()[index].amount,
               price:
                   cartItemsData.items.values.toList()[index].price.toString(),
-              image: cartItemsData.items.values.toList()[index].image.toString(),
+              image:
+                  cartItemsData.items.values.toList()[index].image.toString(),
               type: cartItemsData.items.values.toList()[index].type.toString(),
             );
             //]);

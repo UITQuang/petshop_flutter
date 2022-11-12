@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 class CartItem extends StatelessWidget {
   final String id;
   final String productId;
+  final String productTypeId;
   final String title;
   final int amount;
   final String price;
@@ -15,7 +16,7 @@ class CartItem extends StatelessWidget {
   CartItem(
       {Key? key,
       required this.productId,
-      required this.id,
+      required this.id, required this.productTypeId,
       required this.title,
       required this.amount,
       required this.price,
@@ -45,14 +46,14 @@ class CartItem extends StatelessWidget {
                       children: <Widget>[
                         Column(children: <Widget>[
                           Container(
-                            width: 85,
-                            height: 85,
+                            width: 90,
+                            height: 90,
                             margin: EdgeInsets.only(right: 10.0),
                             decoration: BoxDecoration(
                                 color: Colors.red[100],
                                 image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: AssetImage(
+                                    image: NetworkImage(
                                       this.image,
                                     ))),
                           ),
@@ -66,14 +67,16 @@ class CartItem extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Container(
-                                        width: size - (85 + 20 + 36),
+                                        width: size - (85 + 20 + 50),
                                         child: Text(
                                           this.title,
+                                          softWrap: true,
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500),
                                         )),
                                     Container(
+                                      margin: EdgeInsets.only(left: 5),
                                       width: 20,
                                       height: 20,
                                       alignment: Alignment.center,
@@ -97,11 +100,11 @@ class CartItem extends StatelessWidget {
                                           )),
                                     ),
                                   ]),
-                              SizedBox(
-                                height: 20,
-                              ),
                               Container(
-                                width: size - (85 + 15 * 2 + 10),
+                                margin: EdgeInsets.fromLTRB(0, 8, 0, 10),
+                                child: Text('Loại: ${this.type}', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),),),
+                              Container(
+                                width: size - (85 + 15 * 2 + 12),
                                 child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -165,7 +168,7 @@ class CartItem extends StatelessWidget {
                                                 color: Colors.grey,
                                                 size: 18,
                                               ),
-                                              Text('${double.parse(this.price)*this.amount}00',
+                                              Text('${double.parse(this.price)*this.amount}',
                                                   style: TextStyle(
                                                       fontSize: 20,
                                                       fontWeight:

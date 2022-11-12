@@ -20,7 +20,7 @@ Widget showProductItem(context, cartItem) {
               color: Colors.red[100],
               image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: AssetImage(
+                  image: NetworkImage(
                     cartItem.image.toString(),
                   ))),
         ),
@@ -28,8 +28,10 @@ Widget showProductItem(context, cartItem) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
+                width: MediaQuery.of(context).size.width - 125,
                 child: Text(cartItem.title.toString(),
                     textAlign: TextAlign.left,
+                    softWrap: true,
                     style:
                     TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
               ),
@@ -49,7 +51,7 @@ Widget showProductItem(context, cartItem) {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Container(
-                        child: Text('₫${double.parse(cartItem.price) * cartItem.amount}00',
+                        child: Text('₫${double.parse(cartItem.price) * cartItem.amount}',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w400)),
                       ),

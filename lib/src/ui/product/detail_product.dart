@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/cart_provider/CartProvider.dart';
@@ -19,13 +20,23 @@ class DetailProductScreen extends StatefulWidget {
 
 class _DetailProductScreenState extends State<DetailProductScreen> {
   final ScrollController _firstController = ScrollController();
+
+  String activeTypeId = "";
   String picture = "";
   String price = "";
+  String title = "";
+
+
+  var box = Hive.box('productBox');
+
   void _changeProduct(iProduct) {
     print(iProduct.picture);
+    print(iProduct.id);
     setState(() {
       picture = iProduct!.picture;
       price = iProduct!.price;
+      activeTypeId = iProduct!.id.toString();
+      title = iProduct!.title;
     });
   }
 
@@ -47,6 +58,18 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       if (!snapshot.hasData) {
                         return Text("loadding");
                       } else {
+                        print(
+                            'xxxxxxxxxxx${widget.id}: ${snapshot.data!.product!.itemId}');
+
+                        box.put('productInfo', {
+                          'id': snapshot.data!.product!.itemId.toString(),
+                          'typeId': activeTypeId,
+                          'title': snapshot.data!.product!.title.toString(),
+                          'price': snapshot.data!.product!.price.toString(),
+                          'image': AppUrl.url +snapshot.data!.product!.picture.toString(),
+                          'type': title.toString()
+                        });
+
                         return Column(
                           children: [
                             //Thông tin sản phẩm
@@ -437,15 +460,16 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
               Expanded(
                   flex: 1,
                   child: ElevatedButton(
-                      onPressed:  ()  {
+                      onPressed: () {
                         // _modalBottomSheetMenu();
                         context.read<CartProvider>().addItem(
-                              productId: 'itemId.toString()',
-                              title: 'title.toString()',
+                              productId: box.get('productInfo')['id'],
+                              productTypeId: box.get('productInfo')['typeId'],
+                              title: box.get('productInfo')['title'],
                               amount: 1,
-                              price: '178.000',
-                              image: './assets/images/product.png',
-                              type: 'productType.toString()',
+                              price: box.get('productInfo')['price'],
+                              image: box.get('productInfo')['image'],
+                              type: box.get('productInfo')['type'],
                             );
                       },
                       style: ElevatedButton.styleFrom(
@@ -629,6 +653,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   }
 
   Widget _listProductType(iProduct) {
+    print('a: ${iProduct.id}');
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       child: ElevatedButton(

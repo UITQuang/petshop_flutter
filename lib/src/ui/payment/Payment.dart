@@ -111,7 +111,7 @@ class _PaymentState extends State<Payment> {
                                   fontSize: 16, fontWeight: FontWeight.w500)),
                         ),
                         Container(
-                          child: Text('₫${cartItemsData.totalProductCost()}00',
+                          child: Text('₫${cartItemsData.totalProductCost()}',
                               style: TextStyle(
                                   color: Color.fromRGBO(31, 29, 72, 1),
                                   fontSize: 26,
@@ -151,7 +151,7 @@ class _PaymentState extends State<Payment> {
                                       ),
                                       Container(
                                         child: Text(
-                                            '₫${cartItemsData.totalProductCost()}00',
+                                            '₫${cartItemsData.totalProductCost()}',
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w400)),
@@ -192,7 +192,7 @@ class _PaymentState extends State<Payment> {
                                                 fontWeight: FontWeight.w500)),
                                       ),
                                       Container(
-                                        child: Text('₫${cartItemsData.totalPay(20)}00',
+                                        child: Text('₫${cartItemsData.totalPay(20)}',
                                             style: TextStyle(
                                                 color: Color.fromRGBO(
                                                     31, 29, 72, 1),

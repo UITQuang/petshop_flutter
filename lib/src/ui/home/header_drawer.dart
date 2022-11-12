@@ -35,14 +35,14 @@ class _HeaderDrawerState extends State<HeaderDrawer> {
                   ),
                 ),
                 Positioned(
-                  right: 0,
-                  bottom: -1,
+                    right: 0,
+                    bottom: -1,
                     child: SizedBox(
                         child: GestureDetector(
 
-                  onTap: () {},
-                  child: const Icon(Icons.camera_alt_outlined, color: Colors.white,),
-                )))
+                          onTap: () {},
+                          child: const Icon(Icons.camera_alt_outlined, color: Colors.white,),
+                        )))
               ],
             ),
           ),

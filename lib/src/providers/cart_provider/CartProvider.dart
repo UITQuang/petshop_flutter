@@ -11,37 +11,87 @@ class CartProvider extends ChangeNotifier {
 
   void addItem({
     required String productId,
+    productTypeId,
     title,
     amount,
     price,
     image,
     type,
   }) {
-    if (_items.containsKey(productId)) {
-      _items.update(
-          productId,
-          (value) => CartItem(
-                productId: productId,
-                id: value.id,
-                title: value.title,
-                amount: value.amount + 1,
-                price: value.price,
-                image: value.image,
-                type: value.type,
-              ));
-      notifyListeners();
-    } else {
+
+    void _addNoneExistProduct(_items) {
       _items.putIfAbsent(
           productId,
-          () => CartItem(
-                productId: productId,
-                id: DateTime.now().toString(),
-                title: title.toString(),
-                amount: amount,
-                price: price.toString(),
-                image: image.toString(),
-                type: type.toString(),
-              ));
+              () => CartItem(
+            productId: productId,
+            id: DateTime.now().toString(),
+            productTypeId: productTypeId.toString(),
+            title: title.toString(),
+            amount: amount,
+            price: price.toString(),
+            image: image.toString(),
+            type: type.toString(),
+          ));
+    }
+    void _addNoneExistedProductType(_items) {
+      _items.putIfAbsent(
+          '${productId}_${productTypeId}',
+              () => CartItem(
+            productId: productId,
+            id: DateTime.now().toString(),
+            productTypeId: productTypeId.toString(),
+            title: title.toString(),
+            amount: amount,
+            price: price.toString(),
+            image: image.toString(),
+            type: type.toString(),
+          ));
+    }
+    void _updateExistedProductType(_items) {
+      _items.update(
+          '${productId}_${productTypeId}',
+              (value) => CartItem(
+            productId: productId,
+            id: value.id,
+            productTypeId: productTypeId,
+            title: value.title,
+            amount: value.amount + 1,
+            price: value.price,
+            image: value.image,
+            type: value.type,
+          ));
+    }
+
+    void _updateFirstExistedProduct(_items) {
+      _items.update(
+          productId,
+              (value) => CartItem(
+            productId: productId,
+            id: value.id,
+            productTypeId: productTypeId,
+            title: value.title,
+            amount: value.amount + 1,
+            price: value.price,
+            image: value.image,
+            type: value.type,
+          ));
+    }
+
+    if (_items.containsKey(productId)) {
+      if(items[productId]!.productTypeId == productTypeId) {
+        _updateFirstExistedProduct(_items);
+        notifyListeners();
+      } else {
+        if(_items.containsKey('${productId}_${productTypeId}')) {
+          _updateExistedProductType(_items);
+          notifyListeners();
+        } else {
+          _addNoneExistedProductType(_items);
+          notifyListeners();
+        }
+      }
+    } else {
+      _addNoneExistProduct(_items);
       notifyListeners();
     }
   }
