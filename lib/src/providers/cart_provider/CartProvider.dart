@@ -116,4 +116,17 @@ class CartProvider extends ChangeNotifier {
     });
     return total + shipCost;
   }
+
+  List generalItems () {
+    List data = [];
+    Map dataItem = {};
+    for(int i = 0; i < this.items.length; i++) {
+      dataItem['item_id'] = this.items.values.toList()[i].productId.toString();
+      dataItem['product_type_id'] = this.items.values.toList()[i].productTypeId.toString();
+      dataItem['price'] = this.items.values.toList()[i].price.toString();
+      dataItem['quantity'] = this.items.values.toList()[i].amount.toString();
+      data.add(dataItem);
+    }
+    return data;
+  }
 }

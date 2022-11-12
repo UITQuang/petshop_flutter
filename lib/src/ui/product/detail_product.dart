@@ -58,9 +58,6 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       if (!snapshot.hasData) {
                         return Text("loadding");
                       } else {
-                        print(
-                            'xxxxxxxxxxx${widget.id}: ${snapshot.data!.product!.itemId}');
-
                         box.put('productInfo', {
                           'id': snapshot.data!.product!.itemId.toString(),
                           'typeId': activeTypeId,
@@ -653,7 +650,6 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   }
 
   Widget _listProductType(iProduct) {
-    print('a: ${iProduct.id}');
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       child: ElevatedButton(
