@@ -1,12 +1,17 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
 import 'package:project1/src/ui/payment/After_Pay.dart';
 import 'package:provider/provider.dart';
 import 'package:vnpay_flutter/vnpay_flutter.dart';
 import 'package:momo_vn/momo_vn.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:http/http.dart' as http;
 import '../../providers/cart_provider/CartProvider.dart';
+import '../../services/utilities/app_url.dart';
 import 'components/PaymentItem.dart';
 import 'method_payment.dart';
 
@@ -18,7 +23,9 @@ class Payment extends StatefulWidget {
 
 //vnpay
 class _PaymentState extends State<Payment> {
+  var box = Hive.box('userBox');
   var title;
+  int feeShip = 20000;
   _PaymentState({this.title = 'Giỏ hàng'});
 
   @override
@@ -39,12 +46,16 @@ class _PaymentState extends State<Payment> {
     _momoPay.on(MomoVn.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _paymentStatus = "";
     initPlatformState();
+
   }
 
   Future<void> initPlatformState() async {
     if (!mounted) return;
     setState(() {});
   }
+
+
+
 
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -192,7 +203,7 @@ class _PaymentState extends State<Payment> {
                                                 fontWeight: FontWeight.w500)),
                                       ),
                                       Container(
-                                        child: Text('₫${cartItemsData.totalPay(20)}',
+                                        child: Text('₫${cartItemsData.totalPay(feeShip)}',
                                             style: TextStyle(
                                                 color: Color.fromRGBO(
                                                     31, 29, 72, 1),
@@ -250,17 +261,32 @@ class _PaymentState extends State<Payment> {
         color: Color.fromRGBO(31, 29, 72, 1),
         child: InkWell(
           onTap: () {
-            //Gửi thông tin đơn hàng lên server -> tạo đơn hàng
+            createOrder(
+              order_code: DateTime.now().millisecondsSinceEpoch.toString(),
+              o_name: box.get("name"),
+              o_email: box.get("email"),
+              o_phone: box.get("phone"),
+              o_address: box.get("address"),
+              user_id: "1",
+              order_description: "",
+              total_payment: cartItemsData.totalPay(feeShip).toString(),
+              amount: cartItemsData.totalProductCost().toString() ,
+              arr_product: cartItemsData.generalItems()
+            );
 
-            if (method == "Thanh toán bằng Momo") {
-              // print("Thanh toán bằng Momo");
-              onPaymentMomo();
-            } else if (method == "Thanh toán bằng Vnpay") {
-              // print("Thanh toán bằng Vnpay");
-              onPaymentVnPay();
-            } else {
-              print("COD");
-            }
+            // print(box.get("name"));
+            // print(box.get("email"));
+            // print(box.get("phone"));
+            // print(box.get("address"));
+            // print(box.get("id"));
+            // print(cartItemsData.totalPay(20));
+            // print(cartItemsData.generalItems());
+
+
+
+            //Gửi thông tin đơn hàng lên server -> tạo đơn hàng
+            //
+
           },
           child: const SizedBox(
             height: kToolbarHeight,
@@ -307,14 +333,14 @@ class _PaymentState extends State<Payment> {
                           style: TextStyle(fontSize: 14)),
                     ),
                     Container(
-                      child: Text('Nguyễn Quang Linh | 0388888888',
+                      child: Text('${box.get("name") ?? ''} | ${box.get("phone")??''} ',
                           style: TextStyle(fontSize: 14)),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width - 100,
                       child: Wrap(children: [
                         Text(
-                            'Ktx khu b, đại học quốc gia, phường Đông Hoà, Dĩ An, Bình Dương',
+                            '${box.get("address")}',
                             style: TextStyle(fontSize: 14)),
                       ]),
                     )
@@ -323,15 +349,15 @@ class _PaymentState extends State<Payment> {
   }
 
   //thanh toán vnpay
-  void onPaymentVnPay() async {
+  void onPaymentVnPay(order_code,total_payment) async {
     final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
       url:
           'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', //vnpay url, default is https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
       version: '2.0.1',
       tmnCode: 'F52HC9LF', //vnpay tmn code, get from vnpay
-      txnRef: DateTime.now().millisecondsSinceEpoch.toString(),
-      orderInfo: 'Pay 30.000 VND', //order info, default is Pay Order
-      amount: 30000,
+      txnRef: order_code,
+      orderInfo: 'Thanh toán đơn hàng', //order info, default is Pay Order
+      amount: double.tryParse(total_payment.toString())?? 0.0,
       returnUrl:
           'http://schemas.android.com/apk/res/android', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
       ipAdress: '192.168.10.10',
@@ -346,20 +372,13 @@ class _PaymentState extends State<Payment> {
         setState(() {
           responseCode = params['vnp_ResponseCode'];
           vnp_TxnRef = params['vnp_TxnRef'];
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AfterPay(title: "Đặt hàng thành công")));
+          //Navigator.push(context,MaterialPageRoute( builder: (context) =>AfterPay(title: "Đặt hàng thành công")));
         });
       },
       onPaymentError: (params) {
         setState(() {
           responseCode = 'Error';
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AfterPay(title: "Đặt hàng thất bại")));
+         // Navigator.push( context,MaterialPageRoute( builder: (context) => AfterPay(title: "Đặt hàng thất bại")));
         });
       },
     );
@@ -367,19 +386,19 @@ class _PaymentState extends State<Payment> {
 
   //thanh toán bằng momo
   @override
-  void onPaymentMomo() async {
+  void onPaymentMomo(order_code,total_payment) async {
     MomoPaymentInfo options = MomoPaymentInfo(
         merchantName: "MoMo",
         appScheme: "pet_shop",
         merchantCode: 'MOMOIQA420180417',
         partnerCode: 'pet_shop',
-        amount: 60000,
-        orderId: '0123',
+        amount: int.parse(total_payment.toString()) ?? 0,
+        orderId: order_code.toString() ,
         orderLabel: 'Thanh toán đơn hàng',
         merchantNameLabel: "Thanh toán MoMo",
-        fee: 10,
+        fee: feeShip,
         description: 'Thanh toán đơn hàng',
-        username: '01234567890',
+        username: box.get("name"),
         partner: 'merchant',
         extra: "{\"key1\":\"value1\",\"key2\":\"value2\"}",
         isTestMode: true
@@ -422,5 +441,46 @@ class _PaymentState extends State<Payment> {
       _momoPaymentResult = response;
       _setState();
     });
+  }
+
+  void createOrder({String? order_code, String? o_name,
+    String? o_phone ,String? o_email,String? amount,String? total_payment,
+    String?  o_address,String? user_id,String? order_description,List<dynamic>? arr_product}) async {
+    try {
+      http.Response response = await http.post(Uri.parse(AppUrl.createOrder),
+      // http.Response response = await http.post(Uri.parse("http://127.0.0.1:8000/api/v1/order"),
+          body:{
+            'order_code': order_code,
+            'o_name': o_name,
+            'o_phone': o_phone,
+            'o_email': o_email,
+            'amount': amount,
+            'total_payment' : total_payment,
+            'o_address' :  o_address,
+            'user_id' : user_id,
+            'order_description' : '',
+            'arr_product' : json.encode(arr_product)
+          }
+          );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body.toString());
+        String order_code = data["order_code"].toString();
+        int total_payment = data["total_payment"];
+
+        if (method == "Thanh toán bằng Momo") {
+          // print("Thanh toán bằng Momo");
+          onPaymentMomo(order_code,total_payment);
+        } else if (method == "Thanh toán bằng Vnpay") {
+          // print("Thanh toán bằng Vnpay");
+          onPaymentVnPay(order_code,total_payment);
+        } else {
+          print("COD");
+        }
+      } else {
+        print('failed');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
