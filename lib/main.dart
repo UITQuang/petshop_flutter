@@ -25,7 +25,7 @@ void main() async{
     child: MaterialApp(
         theme: ThemeData(primaryColor: Colors.pinkAccent),
         debugShowCheckedModeBanner: false,
-        home: Homepage()),
+        home: LoginPage()),
   ));
 
 }
