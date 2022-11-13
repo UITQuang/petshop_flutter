@@ -341,20 +341,20 @@ class _HomePageState extends State<Homepage> {
         children: [
           Expanded(
             child: Container(
-              margin: EdgeInsets.fromLTRB(5, 10, 0, 5),
+              margin: const EdgeInsets.fromLTRB(5, 10, 0, 5),
               // height: 50,
               decoration: BoxDecoration(
-                  color: Color(0xFFF9F9FB),
-                  border: Border.all(color: Color(0xFFE2E8F0)),
+                  color: const Color(0xFFF9F9FB),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
                   borderRadius: BorderRadius.circular(5)),
-              padding: EdgeInsets.symmetric(horizontal: (8), vertical: (7)),
+              padding: const EdgeInsets.symmetric(horizontal: (8), vertical: (7)),
               child: Row(
                 children: [
                   const Icon(
                     Icons.search_outlined,
                     color: Colors.grey,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: (12),
                   ),
                   Expanded(

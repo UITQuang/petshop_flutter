@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../providers/cart_provider/CartProvider.dart';
 import '../../services/utilities/app_url.dart';
@@ -56,7 +57,47 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                     future: productService.getDetailProduct(widget.id),
                     builder: (context, AsyncSnapshot<ProductDetail> snapshot) {
                       if (!snapshot.hasData) {
-                        return Text("loadding");
+                        return  Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  width:
+                                  MediaQuery.of(context).size.width * 0.9,
+                                  height:
+                                  MediaQuery.of(context).size.width * 0.7,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  child: Container(
+                                    color: Colors.white,
+                                    width:
+                                    MediaQuery.of(context).size.width * 0.4,
+                                    height: 3,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 10.0,
+                                  ),
+                                  child: Container(
+                                    color: Colors.white,
+                                    width:
+                                    MediaQuery.of(context).size.width * 0.9,
+                                    height: MediaQuery.of(context).size.width * 0.1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       } else {
                         box.put('productInfo', {
                           'id': snapshot.data!.product!.itemId.toString(),
