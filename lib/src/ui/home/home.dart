@@ -274,16 +274,9 @@ class _HomePageState extends State<Homepage> {
                       width: 10,
                     ),
                   ),
-                  // Text(
-                  //   '₫' '$price+$price*10%',
-                  //   style: const TextStyle(
-                  //       fontWeight: FontWeight.w200,
-                  //       fontSize: 20,
-                  //       decoration: TextDecoration.lineThrough),
-                  // )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
             ],
