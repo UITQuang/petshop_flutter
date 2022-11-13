@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/cart_provider/CartProvider.dart';
 import '../../services/api/order_service.dart';
+import '../home/profile.dart';
 import '../payment/components/PaymentItem.dart';
 
 
@@ -89,8 +90,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                 children: <Widget>[
                                   Column(children: <Widget>[
                                     Container(
-                                        width: 30,
-                                        margin: EdgeInsets.only(right: 10),
+                                        width: 20,
+                                        margin: EdgeInsets.only(right: 6),
                                         child: Icon(
                                           Icons.place,
                                           color: Colors.black,
@@ -235,7 +236,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
         width: MediaQuery.of(context).size.width,
         color: Colors.white,
         margin: EdgeInsets.only(top: 10.0),
-        padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+        padding: EdgeInsets.fromLTRB(5.0, 15.0, 15.0, 5.0),
         child: Row(children: <Widget>[
           Container(
             width: 85,
@@ -256,13 +257,13 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       textAlign: TextAlign.left,
                       softWrap: true,
                       style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 ),
                 Container(
                   child: Text('Phân loại: ${item["classify"].toString()}',
                       textAlign: TextAlign.left,
                       style:
-                      TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
+                      TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
                 ),
                 SizedBox(
                   height: 8,
@@ -288,6 +289,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
               ])
         ]));
   }
+
 
 }
 

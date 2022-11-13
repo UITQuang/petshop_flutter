@@ -130,4 +130,9 @@ class CartProvider extends ChangeNotifier {
     }
     return data;
   }
+
+  void removeAll() {
+    _items.clear();
+    notifyListeners();
+  }
 }
