@@ -139,6 +139,17 @@ class _HomePageState extends State<Homepage> {
         child: FutureBuilder(
             future: productService.getProductList(),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              var mapsnapshot=new Map();
+              int lengthSearch=0;
+              for (int i=0; i<snapshot.data!.length;i++){
+                String name = snapshot.data![i]['title'];
+
+                if(name.toLowerCase().contains(searchController.text.toLowerCase())){
+                  mapsnapshot[lengthSearch]=snapshot.data![i];
+                  lengthSearch++;
+
+                }
+              }
               if (!snapshot.hasData) {
                 return GridView.count(
                     shrinkWrap: true,
@@ -196,30 +207,42 @@ class _HomePageState extends State<Homepage> {
                   scrollDirection: Axis.vertical,
                   crossAxisCount: 2,
                   childAspectRatio: (1 / 1.5),
-                  children: List.generate(snapshot.data!.length, (index) {
-                    String name = snapshot.data![index]['title'];
-                    if (searchController.text.isEmpty) {
+                  children: List.generate(mapsnapshot.length, (index) {
+
                       return itemProduct(
-                        snapshot.data![index]['id'],
+                        mapsnapshot[index]['id'],
                         AppUrl.url +
-                            snapshot.data![index]['picture'].toString(),
-                        snapshot.data![index]['title'].toString(),
-                        snapshot.data![index]['price'].toString(),
+                            mapsnapshot[index]['picture'].toString(),
+                        mapsnapshot[index]['title'].toString(),
+                        mapsnapshot[index]['price'].toString(),
                       );
-                    } else if (name
-                        .toLowerCase()
-                        .contains(searchController.text.toLowerCase())) {
-                      return itemProduct(
-                        snapshot.data![index]['id'],
-                        AppUrl.url +
-                            snapshot.data![index]['picture'].toString(),
-                        snapshot.data![index]['title'].toString(),
-                        snapshot.data![index]['price'].toString(),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  }),
+
+                  }
+                  // children: List.generate(snapshot.data!.length, (index) {
+                  //   String name = snapshot.data![index]['title'];
+                  //   if (searchController.text.isEmpty) {
+                  //     return itemProduct(
+                  //       snapshot.data![index]['id'],
+                  //       AppUrl.url +
+                  //           snapshot.data![index]['picture'].toString(),
+                  //       snapshot.data![index]['title'].toString(),
+                  //       snapshot.data![index]['price'].toString(),
+                  //     );
+                  //   } else if (name
+                  //       .toLowerCase()
+                  //       .contains(searchController.text.toLowerCase())) {
+                  //     return itemProduct(
+                  //       snapshot.data![index]['id'],
+                  //       AppUrl.url +
+                  //           snapshot.data![index]['picture'].toString(),
+                  //       snapshot.data![index]['title'].toString(),
+                  //       snapshot.data![index]['price'].toString(),
+                  //     );
+                  //   } else {
+                  //     return Container();
+                  //   }
+                  // }
+                  ),
                 );
               }
             }));
@@ -420,7 +443,7 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget menuItem(int id, String title, IconData icon, bool selected) {
-    var container;
+
 
     return Material(
       color: selected ? Colors.grey : Colors.white,
@@ -445,32 +468,36 @@ class _HomePageState extends State<Homepage> {
               currentPage = DrawerSections.hotline;
             }
           });
-          if (currentPage!=DrawerSections.hotline) {
+
             if(currentPage==DrawerSections.information){
-              container= const ProfilePage();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const ProfilePage()));
             }
             else if(currentPage==DrawerSections.home){
-              container = const Homepage();
+              Navigator.pop(context);
             }
             else if(currentPage==DrawerSections.history){
-              container = const History();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const History()));
             }
             else if(currentPage==DrawerSections.membershipCard){
-              container = const Homepage();
+              Navigator.pop(context);
             }
             else if(currentPage==DrawerSections.logOut){
-              container = const Homepage();
+              Navigator.pop(context);
             }
             else if(currentPage==DrawerSections.notification){
-              container =  PromotionNotice();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) =>  PromotionNotice()));
             }
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => container));
-          }
-          else{
-          launch('tel://0853685806');
+            else if(currentPage==DrawerSections.hotline){
+              launch('tel://0853685806');
+            }
+else if(currentPage==DrawerSections.category){
+  Navigator.pop(context);
+            }
 
-          }
+
 
         },
         child: Padding(
