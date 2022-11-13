@@ -30,67 +30,68 @@ class _HomePageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xff1F1D48),
-        actions: [
-          Expanded(child: searchFilter()),
-          Stack(
-            children: [
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 4.0),
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (_) => Cart()));
-                      },
-                      icon: Icon(Icons.shopping_bag_outlined)),
-                ),
-              ),
-              Positioned(
-                right: 2,
-                top: 2,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                      color: SECONDARY_COLOR, shape: BoxShape.circle),
-                  child: Center(
-                    child: Text(
-                      context.watch<CartProvider>().items.length.toString(),
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+    return SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color(0xff1F1D48),
+            actions: [
+              Expanded(child: searchFilter()),
+              Stack(
+                children: [
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context, MaterialPageRoute(builder: (_) => Cart()));
+                          },
+                          icon: Icon(Icons.shopping_bag_outlined)),
                     ),
                   ),
-                ),
+                  Positioned(
+                    right: 2,
+                    top: 2,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                          color: SECONDARY_COLOR, shape: BoxShape.circle),
+                      child: Center(
+                        child: Text(
+                          context.watch<CartProvider>().items.length.toString(),
+                          textAlign: TextAlign.center,
+                          style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               )
             ],
-          )
-        ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(5),
-          child: Container(
-            color: Colors.grey[200],
-            height: 1.0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(5),
+              child: Container(
+                color: Colors.grey[200],
+                height: 1.0,
+              ),
+            ),
+            titleSpacing: 10,
+            automaticallyImplyLeading: true,
           ),
-        ),
-        titleSpacing: 10,
-        automaticallyImplyLeading: true,
-      ),
-      body: bodyView(),
-      drawer: Drawer(
-        child: Container(
-            child: Column(
-          children: [
-            const HeaderDrawer(),
-            listDrawer(),
-            footDrawer(),
-          ],
-        )),
-      ),
-    );
+          body: bodyView(),
+          drawer: Drawer(
+            child: Container(
+                child: Column(
+                  children: [
+                    const HeaderDrawer(),
+                    listDrawer(),
+                    footDrawer(),
+                  ],
+                )),
+          ),
+        ));
   }
 
   Widget bodyView() {
