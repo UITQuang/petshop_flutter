@@ -54,12 +54,12 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               headerView(),
               inputInformation(
-                  phoneNumberController, "Số điện thoại", Icons.phone),
+                  phoneNumberController, "Số điện thoại", Icons.phone,false),
               const SizedBox(
                 height: 30,
               ),
               inputInformation(
-                  passwordController, "Mật khẩu", Icons.password_outlined),
+                  passwordController, "Mật khẩu", Icons.password_outlined, true),
               Padding(
                 padding: const EdgeInsets.only(bottom: 30.0, top: 30.0),
                 child: Row(
@@ -99,18 +99,18 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.7,
       child: Column(
-        children: const [
+        children:  [
           SizedBox(
-            height: 70,
+            height: MediaQuery.of(context).size.height*0.1,
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
               "Welcome Back",
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(bottom: 70.0),
             child: Center(
               child: Text(
@@ -134,13 +134,13 @@ class _LoginPageState extends State<LoginPage> {
       child: Container(
         alignment: Alignment.center,
         width: MediaQuery.of(context).size.width * 0.8,
-        height: 50,
+        height: 60,
         decoration: BoxDecoration(
-            color: Colors.black12, borderRadius: BorderRadius.circular(20)),
+            color: const Color(0xff1F1D48), borderRadius: BorderRadius.circular(15)),
         child: const Text(
           'Đăng Nhập',
           style: TextStyle(
-              color: Color(0xff1F1D48),
+              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w400),
         ),
@@ -209,10 +209,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget inputInformation(TextEditingController textEditingController,
-      String title, IconData icon) {
-    return Container(
+      String title, IconData icon, bool obs) {
+    return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
       child: TextFormField(
+        obscureText: obs,
           controller: textEditingController,
           decoration: InputDecoration(
             labelText: title,
