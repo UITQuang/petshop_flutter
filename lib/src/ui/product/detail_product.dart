@@ -162,7 +162,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                             children: [
                                               Container(
                                                 child: Padding(
-                                                  padding: EdgeInsets.all(10),
+                                                  padding: EdgeInsets.all(0),
                                                   child: IconButton(
                                                     onPressed: () {
                                                       Navigator.push(
@@ -181,8 +181,8 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                                 right: 3,
                                                 top: 6,
                                                 child: Container(
-                                                  width: 25,
-                                                  height: 25,
+                                                  width: 15,
+                                                  height: 15,
                                                   decoration: BoxDecoration(
                                                       color: SECONDARY_COLOR,
                                                       shape: BoxShape.circle),
@@ -196,7 +196,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
-                                                          fontSize: 18,
+                                                          fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.w500),
                                                     ),
