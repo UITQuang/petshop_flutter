@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -129,11 +130,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   children: [
                                     ElevatedButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Homepage()));
+                                        Navigator.pop(context);
                                       },
                                       style: ElevatedButton.styleFrom(
                                           minimumSize: const Size(40, 40),
