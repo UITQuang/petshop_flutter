@@ -10,6 +10,7 @@ import 'package:project1/src/ui/cart/Cart.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../services/utilities/colors.dart';
 import '../notice/promotion_notice.dart';
 import '../product/detail_product.dart';
@@ -443,29 +444,32 @@ class _HomePageState extends State<Homepage> {
               currentPage = DrawerSections.hotline;
             }
           });
-          if(currentPage==DrawerSections.information){
-            container= const ProfilePage();
+          if (currentPage!=DrawerSections.hotline) {
+            if(currentPage==DrawerSections.information){
+              container= const ProfilePage();
+            }
+            else if(currentPage==DrawerSections.home){
+              container = const Homepage();
+            }
+            else if(currentPage==DrawerSections.history){
+              container = const History();
+            }
+            else if(currentPage==DrawerSections.membershipCard){
+              container = const Homepage();
+            }
+            else if(currentPage==DrawerSections.logOut){
+              container = const Homepage();
+            }
+            else if(currentPage==DrawerSections.notification){
+              container =  PromotionNotice();
+            }
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => container));
           }
-          else if(currentPage==DrawerSections.home){
-            container = const Homepage();
+          else{
+          launch('tel://0853685806');
+
           }
-          else if(currentPage==DrawerSections.hotline){
-            container = const Homepage();
-          }
-          else if(currentPage==DrawerSections.history){
-            container = const History();
-          }
-          else if(currentPage==DrawerSections.membershipCard){
-            container = const Homepage();
-          }
-          else if(currentPage==DrawerSections.logOut){
-            container = const Homepage();
-          }
-          else if(currentPage==DrawerSections.notification){
-            container =  PromotionNotice();
-          }
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => container));
 
         },
         child: Padding(
