@@ -14,5 +14,8 @@ class AppUrl {
 
   //order
   static const String createOrder = baseUrl + 'order';
+  static const String getListOrder = baseUrl + 'get-list-order';
+  static const String getDetailOrder = baseUrl + 'get-detail-order';
+
 
 }

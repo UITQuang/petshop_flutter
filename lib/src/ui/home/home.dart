@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
+import 'package:project1/src/ui/history/history.dart';
 import 'package:project1/src/ui/home/profile.dart';
 
 import 'package:project1/src/ui/cart/Cart.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shimmer/shimmer.dart';
 import '../../services/utilities/colors.dart';
+import '../notice/promotion_notice.dart';
 import '../product/detail_product.dart';
 import 'header_drawer.dart';
 
@@ -458,10 +460,7 @@ class _HomePageState extends State<Homepage> {
             container = const Homepage();
           }
           else if(currentPage==DrawerSections.history){
-            container = const Homepage();
-          }
-          else if(currentPage==DrawerSections.history){
-            container = const Homepage();
+            container = const History();
           }
           else if(currentPage==DrawerSections.membershipCard){
             container = const Homepage();
@@ -470,7 +469,7 @@ class _HomePageState extends State<Homepage> {
             container = const Homepage();
           }
           else if(currentPage==DrawerSections.notification){
-            container = const Homepage();
+            container =  PromotionNotice();
           }
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => container));
