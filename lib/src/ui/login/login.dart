@@ -17,6 +17,21 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   var box = Hive.box('userBox');
+  _showDialog(String content) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Thông báo"),
+            content: Text(content),
+            actions: <Widget>[
+              OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Close"))
+            ],
+          );
+        });
+  }
 
   void login(String phone, password) async {
     try {
@@ -33,14 +48,14 @@ class _LoginPageState extends State<LoginPage> {
         box.put("email", data['data']['email']);
         box.put("id", data['data']['id']);
         print(box.get("name"));
-        print('successful');
       } else {
-        print('failed');
+        _showDialog("Sai thông tin đăng nhập");
       }
     } catch (e) {
       print(e.toString());
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
