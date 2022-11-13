@@ -267,25 +267,12 @@ class _PaymentState extends State<Payment> {
               o_email: box.get("email"),
               o_phone: box.get("phone"),
               o_address: box.get("address"),
-              user_id: "1",
+              user_id: box.get("id").toString(),
               order_description: "",
               total_payment: cartItemsData.totalPay(feeShip).toString(),
               amount: cartItemsData.totalProductCost().toString() ,
               arr_product: cartItemsData.generalItems()
             );
-
-            // print(box.get("name"));
-            // print(box.get("email"));
-            // print(box.get("phone"));
-            // print(box.get("address"));
-            // print(box.get("id"));
-            // print(cartItemsData.totalPay(20));
-            // print(cartItemsData.generalItems());
-
-
-
-            //Gửi thông tin đơn hàng lên server -> tạo đơn hàng
-            //
 
           },
           child: const SizedBox(
@@ -372,13 +359,13 @@ class _PaymentState extends State<Payment> {
         setState(() {
           responseCode = params['vnp_ResponseCode'];
           vnp_TxnRef = params['vnp_TxnRef'];
-          //Navigator.push(context,MaterialPageRoute( builder: (context) =>AfterPay(title: "Đặt hàng thành công")));
+          Navigator.push(context,MaterialPageRoute( builder: (context) =>AfterPay(title: "Đặt hàng thành công")));
         });
       },
       onPaymentError: (params) {
         setState(() {
           responseCode = 'Error';
-         // Navigator.push( context,MaterialPageRoute( builder: (context) => AfterPay(title: "Đặt hàng thất bại")));
+         Navigator.push( context,MaterialPageRoute( builder: (context) => AfterPay(title: "Đặt hàng thất bại")));
         });
       },
     );
@@ -421,10 +408,10 @@ class _PaymentState extends State<Payment> {
     if (_momoPaymentResult.isSuccess == true) {
       _paymentStatus += "\nTình trạng: Thành công.";
 
-      // Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thành công")));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thành công")));
     } else {
       _paymentStatus += "\nTình trạng: Thất bại.";
-      // Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thất bại")));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thất bại")));
     }
     print(_paymentStatus);
   }
@@ -474,6 +461,7 @@ class _PaymentState extends State<Payment> {
           // print("Thanh toán bằng Vnpay");
           onPaymentVnPay(order_code,total_payment);
         } else {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thành công")));
           print("COD");
         }
       } else {

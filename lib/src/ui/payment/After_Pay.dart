@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:project1/src/ui/history/history.dart';
+import 'package:project1/src/ui/home/home.dart';
 
 class AfterPay extends StatelessWidget {
   late String title;
@@ -66,7 +68,9 @@ class AfterPay extends StatelessWidget {
                                           side: BorderSide(
                                               width: 1, color: Colors.white),
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(context,MaterialPageRoute( builder: (context) =>Homepage()));
+                                        },
                                         child: Text(
                                           'Trang chủ',
                                           style: TextStyle(
@@ -84,9 +88,11 @@ class AfterPay extends StatelessWidget {
                                           side: BorderSide(
                                               width: 1, color: Colors.white),
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(context,MaterialPageRoute( builder: (context) =>History()));
+                                        },
                                         child: Text(
-                                          'Đơn mua',
+                                          'Đơn đã mua',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 16,
