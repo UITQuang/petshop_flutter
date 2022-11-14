@@ -460,7 +460,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
               ],
             )),
         bottomNavigationBar: Container(
-          height: 60,
+          height: 50,
           color: SECONDARY_COLOR,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -482,7 +482,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           Icon(
                             Icons.chat,
                             color: PRIMARY_COLOR,
-                            size: 35,
+                            size: 30,
                           ),
                           Text(
                             'Chat ngay',
@@ -517,7 +517,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           Icon(
                             Icons.add_shopping_cart,
                             color: PRIMARY_COLOR,
-                            size: 35,
+                            size: 30,
                           ),
                           Text(
                             'Thêm vào giỏ hàng',
@@ -566,84 +566,85 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
         isScrollControlled: false,
         context: context,
         builder: (builder) {
-          return Container(
-            height: size.height * 0.5,
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(10.0))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _curentProductType(),
-                    const Divider(
-                      color: Colors.grey,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+          return SafeArea(
+            child: Wrap(children: [
+              Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10.0),
+                          topRight: Radius.circular(10.0))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _curentProductType(),
+                      const Divider(
+                        color: Colors.grey,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Mùi hương',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              Wrap(
+                                children: [
+                                  for (int i = 0; i < productType.length; i++)
+                                    _listProductType(productType[i])
+                                ],
+                              ),
+                            ]),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Mùi hương',
+                              'Số lượng',
+                              textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            Wrap(
-                              children: [
-                                for (int i = 0; i < productType.length; i++)
-                                  _listProductType(productType[i])
-                              ],
-                            ),
-                          ]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Số lượng',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Row(children: [
-                            IconButton(
-                                icon: Icon(Icons.remove), onPressed: () {}),
-                            const Text('1'),
-                            IconButton(icon: Icon(Icons.add), onPressed: () {})
-                          ])
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print('Mua ngay');
-                        },
-                        style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.all(0),
-                            backgroundColor: PRIMARY_COLOR),
-                        child: const Text(
-                          'Thêm vào giỏ hàng',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                            Row(children: [
+                              IconButton(
+                                  icon: Icon(Icons.remove), onPressed: () {}),
+                              const Text('1'),
+                              IconButton(icon: Icon(Icons.add), onPressed: () {})
+                            ])
+                          ],
                         ),
                       ),
-                    )
-                  ],
-                )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            print('Mua ngay');
+                          },
+                          style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(0),
+                              backgroundColor: PRIMARY_COLOR),
+                          child: const Text(
+                            'Thêm vào giỏ hàng',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
+            ],)
           );
         });
   }

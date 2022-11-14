@@ -91,240 +91,241 @@ class _PaymentState extends State<Payment> {
     final cartItemsData = Provider.of<CartProvider>(context);
     var size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: Color.fromRGBO(244, 244, 244, 1),
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(31, 29, 72, 1),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(title, style: TextStyle(fontSize: 20)),
-      ),
-      body: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 10.0),
-          children: <Widget>[
-            Row(children: <Widget>[showInfoBuyer()]),
-            Column(children: <Widget>[
-              for (int i = 0; i < cartItemsData.items.length; i++)
-                showProductItem(context, cartItemsData.items.values.toList()[i])
-            ]),
-            Row(children: <Widget>[
-              Container(
-                  width: size.width,
-                  color: Colors.white,
-                  margin: EdgeInsets.only(top: 10.0),
-                  padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          child: const Text('Tin nhắn:',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w500)),
-                        ),
-                        Container(
-                          child: const Text('Lưu ý cho người bán...',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(152, 152, 152, 1),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400)),
-                        )
-                      ]))
-            ]),
-            Row(children: <Widget>[
-              Container(
-                  //width: x,
-                  width: size.width,
-                  color: Colors.white,
-                  margin: EdgeInsets.only(top: 10.0),
-                  padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          child: const Text('Tổng số tiền:',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w500)),
-                        ),
-                        Container(
-                          child: Text('₫${cartItemsData.totalProductCost()}',
-                              style: const TextStyle(
-                                  color: Color.fromRGBO(31, 29, 72, 1),
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.bold)),
-                        )
-                      ]))
-            ]),
-            Row(children: <Widget>[
-              Container(
-                  width: size.width,
-                  color: Colors.white,
-                  margin: EdgeInsets.only(top: 10.0),
-                  padding: EdgeInsets.fromLTRB(22.0, 15.0, 15.0, 15.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Text('Chi tiết thanh toán',
-                                  textAlign: TextAlign.left,
+    return SafeArea(
+        child: Scaffold(
+          backgroundColor: Color.fromRGBO(244, 244, 244, 1),
+          appBar: AppBar(
+            backgroundColor: Color.fromRGBO(31, 29, 72, 1),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(title, style: TextStyle(fontSize: 20)),
+          ),
+          body: ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10.0),
+              children: <Widget>[
+                Row(children: <Widget>[showInfoBuyer()]),
+                Column(children: <Widget>[
+                  for (int i = 0; i < cartItemsData.items.length; i++)
+                    showProductItem(context, cartItemsData.items.values.toList()[i])
+                ]),
+                Row(children: <Widget>[
+                  Container(
+                      width: size.width,
+                      color: Colors.white,
+                      margin: EdgeInsets.only(top: 10.0),
+                      padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              child: const Text('Tin nhắn:',
                                   style: TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.w500)),
+                            ),
+                            Container(
+                              child: const Text('Lưu ý cho người bán...',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(152, 152, 152, 1),
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w500)),
-                              Container(
-                                margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
-                                width: size.width * 0.85,
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        child: const Text('Tổng tiền hàng',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w400)),
-                                      ),
-                                      Container(
-                                        child: Text(
-                                            '₫${cartItemsData.totalProductCost()}',
-                                            style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w400)),
-                                      ),
-                                    ]),
-                              ),
-                              Container(
-                                margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
-                                width: size.width * 0.85,
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        child: const Text('Tổng tiền vận chuyển',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w400)),
-                                      ),
-                                      Container(
-                                        child: const Text('₫20.000',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w400)),
-                                      ),
-                                    ]),
-                              ),
-                              Container(
-                                width: size.width * 0.89,
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        child: const Text('Tổng thanh toán',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500)),
-                                      ),
-                                      Container(
-                                        child: Text('₫${cartItemsData.totalPay(feeShip)}',
-                                            style: const TextStyle(
-                                                color: Color.fromRGBO(
-                                                    31, 29, 72, 1),
-                                                fontSize: 26,
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-                                    ]),
-                              ),
-                            ]),
-                      ]))
-            ]),
-            Row(children: <Widget>[
-              InkWell(
-                onTap: () async {
-                  final result = await Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MethodPayment()));
-                  setState(() {
-                    method = result;
-                  });
-                },
-                child: Container(
+                                      fontWeight: FontWeight.w400)),
+                            )
+                          ]))
+                ]),
+                Row(children: <Widget>[
+                  Container(
                     //width: x,
-                    width: size.width,
-                    color: Colors.white,
-                    margin: EdgeInsets.only(top: 10.0),
-                    padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            child: const Text('Hình thức thanh toán',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500)),
-                          ),
-                          Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(method ?? "",
-                                    style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        color: Color.fromRGBO(152, 152, 152, 1),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400)),
-                                const Icon(
-                                  size: 15,
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Color.fromRGBO(152, 152, 152, 1),
-                                )
-                              ]),
-                        ])),
-              )
-            ])
-          ]),
-      bottomNavigationBar: Material(
-        color: Color.fromRGBO(31, 29, 72, 1),
-        child: InkWell(
-          onTap: () {
-            if(box.get("address").toString() == ""){
-              _showDialog(context);
-            }else{
-              createOrder(
-                  order_code: DateTime.now().millisecondsSinceEpoch.toString(),
-                  o_name: box.get("name"),
-                  o_email: box.get("email"),
-                  o_phone: box.get("phone"),
-                  o_address: box.get("address"),
-                  user_id: box.get("id").toString(),
-                  order_description: "",
-                  total_payment: cartItemsData.totalPay(feeShip).toString(),
-                  amount: cartItemsData.totalProductCost().toString() ,
-                  arr_product: cartItemsData.generalItems()
-              );
-              cartItemsData.removeAll();
-            }
-          },
-          child: const SizedBox(
-            height: kToolbarHeight,
-            width: double.infinity,
-            child: Center(
-              child: Text(
-                'MUA HÀNG',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                      width: size.width,
+                      color: Colors.white,
+                      margin: EdgeInsets.only(top: 10.0),
+                      padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              child: const Text('Tổng số tiền:',
+                                  style: TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.w500)),
+                            ),
+                            Container(
+                              child: Text('₫${cartItemsData.totalProductCost()}',
+                                  style: const TextStyle(
+                                      color: Color.fromRGBO(31, 29, 72, 1),
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.bold)),
+                            )
+                          ]))
+                ]),
+                Row(children: <Widget>[
+                  Container(
+                      width: size.width,
+                      color: Colors.white,
+                      margin: EdgeInsets.only(top: 10.0),
+                      padding: EdgeInsets.fromLTRB(22.0, 15.0, 15.0, 15.0),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  const Text('Chi tiết thanh toán',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500)),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
+                                    width: size.width * 0.85,
+                                    child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            child: const Text('Tổng tiền hàng',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400)),
+                                          ),
+                                          Container(
+                                            child: Text(
+                                                '₫${cartItemsData.totalProductCost()}',
+                                                style: const TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400)),
+                                          ),
+                                        ]),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
+                                    width: size.width * 0.85,
+                                    child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            child: const Text('Tổng tiền vận chuyển',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400)),
+                                          ),
+                                          Container(
+                                            child: const Text('₫20.000',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400)),
+                                          ),
+                                        ]),
+                                  ),
+                                  Container(
+                                    width: size.width * 0.89,
+                                    child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            child: const Text('Tổng thanh toán',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500)),
+                                          ),
+                                          Container(
+                                            child: Text('₫${cartItemsData.totalPay(feeShip)}',
+                                                style: const TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        31, 29, 72, 1),
+                                                    fontSize: 26,
+                                                    fontWeight: FontWeight.bold)),
+                                          ),
+                                        ]),
+                                  ),
+                                ]),
+                          ]))
+                ]),
+                Row(children: <Widget>[
+                  InkWell(
+                    onTap: () async {
+                      final result = await Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MethodPayment()));
+                      setState(() {
+                        method = result;
+                      });
+                    },
+                    child: Container(
+                      //width: x,
+                        width: size.width,
+                        color: Colors.white,
+                        margin: EdgeInsets.only(top: 10.0),
+                        padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                child: const Text('Hình thức thanh toán',
+                                    style: TextStyle(
+                                        fontSize: 16, fontWeight: FontWeight.w500)),
+                              ),
+                              Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(method ?? "",
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: Color.fromRGBO(152, 152, 152, 1),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400)),
+                                    const Icon(
+                                      size: 15,
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: Color.fromRGBO(152, 152, 152, 1),
+                                    )
+                                  ]),
+                            ])),
+                  )
+                ])
+              ]),
+          bottomNavigationBar: Material(
+            color: Color.fromRGBO(31, 29, 72, 1),
+            child: InkWell(
+              onTap: () {
+                if(box.get("address").toString() == ""){
+                  _showDialog(context);
+                }else{
+                  createOrder(
+                      order_code: DateTime.now().millisecondsSinceEpoch.toString(),
+                      o_name: box.get("name"),
+                      o_email: box.get("email"),
+                      o_phone: box.get("phone"),
+                      o_address: box.get("address"),
+                      user_id: box.get("id").toString(),
+                      order_description: "",
+                      total_payment: cartItemsData.totalPay(feeShip).toString(),
+                      amount: cartItemsData.totalProductCost().toString() ,
+                      arr_product: cartItemsData.generalItems()
+                  );
+                  cartItemsData.removeAll();
+                }
+              },
+              child: const SizedBox(
+                height: kToolbarHeight,
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    'MUA HÀNG',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget showInfoBuyer() {

@@ -14,8 +14,8 @@ class Cart extends StatelessWidget {
     final cartItemsData = Provider.of<CartProvider>(context);
     //print(cartItemsData.items['product']?.title);
     // TODO: implement build
-    return MaterialApp(
-        home: Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(31, 29, 72, 1),
         leading: IconButton(
@@ -26,37 +26,38 @@ class Cart extends StatelessWidget {
         ),
         title: Text(title, style: TextStyle(fontSize: 20)),
       ),
-      body: ListView.builder(
-          itemCount: cartItemsData.items.length,
-          scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
-          shrinkWrap: true,
-          padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-          itemBuilder: (context, index) {
-            print(cartItemsData.generalItems());
-            return //ListView(
+      body:ListView.builder(
+            itemCount: cartItemsData.items.length,
+            scrollDirection: Axis.vertical,
+            physics: const BouncingScrollPhysics(),
+            shrinkWrap: true,
+            padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+            itemBuilder: (context, index) {
+              print(cartItemsData.generalItems());
+              return //ListView(
                 //shrinkWrap: true,
                 //padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                 //children: <Widget>[
                 //?. . - null handle value error
                 CartItem(
-              productId: cartItemsData.items.keys.toList()[index],
-              id: cartItemsData.items.values.toList()[index].id.toString(),
-              productTypeId: cartItemsData.items.values
-                  .toList()[index]
-                  .productTypeId
-                  .toString(),
-              title:
+                  productId: cartItemsData.items.keys.toList()[index],
+                  id: cartItemsData.items.values.toList()[index].id.toString(),
+                  productTypeId: cartItemsData.items.values
+                      .toList()[index]
+                      .productTypeId
+                      .toString(),
+                  title:
                   cartItemsData.items.values.toList()[index].title.toString(),
-              amount: cartItemsData.items.values.toList()[index].amount,
-              price:
+                  amount: cartItemsData.items.values.toList()[index].amount,
+                  price:
                   cartItemsData.items.values.toList()[index].price.toString(),
-              image:
+                  image:
                   cartItemsData.items.values.toList()[index].image.toString(),
-              type: cartItemsData.items.values.toList()[index].type.toString(),
-            );
-            //]);
-          }),
+                  type: cartItemsData.items.values.toList()[index].type.toString(),
+                );
+              //]);
+            }),
+
       bottomNavigationBar: Material(
         color: Color.fromRGBO(31, 29, 72, 1),
         child: InkWell(
