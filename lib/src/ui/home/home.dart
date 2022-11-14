@@ -98,8 +98,12 @@ class _HomePageState extends State<Homepage> {
     return SafeArea(
         child: SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 10,),
           carouselSlider(),
+          SizedBox(height: 10,),
+
           listFilter(),
           listProduct(),
         ],
@@ -108,28 +112,33 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget carouselSlider() {
-    return CarouselSlider(
-      items: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Image.asset("assets/images/chovameo.jpg", fit: BoxFit.fill),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Image.asset(
-            "assets/images/meo.jpg",
-            fit: BoxFit.fill,
-          ),
-        ),
-      ],
-      options: CarouselOptions(
-        autoPlay: true,
-        enlargeCenterPage: true,
-        viewportFraction: 0.6,
-        aspectRatio: 2.8,
-        initialPage: 2,
-      ),
-    );
+    NoticeProvider noticeProvider = NoticeProvider();
+    return FutureBuilder(
+        future: noticeProvider.getBannerList(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData){
+            return Text("");
+          }else{
+            int count_banner = int.parse(snapshot.data["count_banner"].toString());
+            return CarouselSlider(
+              items: [
+                for(int i = 0 ; i <  count_banner; i++)
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Image.network(AppUrl.url+snapshot.data["list_banner"][i]["picture"], fit: BoxFit.fill),
+                ),
+              ],
+              options: CarouselOptions(
+                autoPlay: true,
+                enlargeCenterPage: true,
+                viewportFraction: 0.6,
+                aspectRatio: 2.8,
+                initialPage: count_banner,
+              ),
+            );
+          }
+        });
+
   }
 
   Widget listProduct() {
