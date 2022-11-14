@@ -52,7 +52,6 @@ class _LoginPageState extends State<LoginPage> {
         _showDialog("Sai thông tin đăng nhập");
       }
     } catch (e) {
-      print(e.toString());
     }
   }
 
