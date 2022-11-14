@@ -563,7 +563,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
     price = productType[0]!.price;
     ProductService productService = ProductService();
     showModalBottomSheet(
-        isScrollControlled: false,
+        isScrollControlled: true,
         context: context,
         builder: (builder) {
           return SafeArea(
