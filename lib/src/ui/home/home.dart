@@ -139,17 +139,7 @@ class _HomePageState extends State<Homepage> {
         child: FutureBuilder(
             future: productService.getProductList(),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-              var mapsnapshot=new Map();
-              int lengthSearch=0;
-              for (int i=0; i<snapshot.data!.length;i++){
-                String name = snapshot.data![i]['title'];
 
-                if(name.toLowerCase().contains(searchController.text.toLowerCase())){
-                  mapsnapshot[lengthSearch]=snapshot.data![i];
-                  lengthSearch++;
-
-                }
-              }
               if (!snapshot.hasData) {
                 return GridView.count(
                     shrinkWrap: true,
@@ -201,6 +191,17 @@ class _HomePageState extends State<Homepage> {
                       );
                     }));
               } else {
+                var mapsnapshot=new Map();
+                int lengthSearch=0;
+                for (int i=0; i<snapshot.data!.length;i++){
+                  String name = snapshot.data![i]['title'];
+
+                  if(name.toLowerCase().contains(searchController.text.toLowerCase())){
+                    mapsnapshot[lengthSearch]=snapshot.data![i];
+                    lengthSearch++;
+
+                  }
+                }
                 return GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
