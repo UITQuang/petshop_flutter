@@ -27,7 +27,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   String picture = "";
   String price = "";
   String title = "";
-
+  int amount = 1;
 
   var box = Hive.box('productBox');
 
@@ -40,6 +40,22 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
       activeTypeId = iProduct!.id.toString();
       title = iProduct!.title;
     });
+  }
+
+  void _increaseAmount() {
+    setState(() {
+      amount = amount + 1;
+    });
+  }
+
+  void _decreaseAmount() {
+    if (amount > 1) {
+      setState(() {
+        amount = amount - 1;
+      });
+    } else {
+      print("Error: amount must be large than 1");
+    }
   }
 
   @override
@@ -58,7 +74,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                     future: productService.getDetailProduct(widget.id),
                     builder: (context, AsyncSnapshot<ProductDetail> snapshot) {
                       if (!snapshot.hasData) {
-                        return  Shimmer.fromColors(
+                        return Shimmer.fromColors(
                           baseColor: Colors.grey.shade300,
                           highlightColor: Colors.grey.shade100,
                           child: Padding(
@@ -70,9 +86,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5)),
                                   width:
-                                  MediaQuery.of(context).size.width * 0.9,
+                                      MediaQuery.of(context).size.width * 0.9,
                                   height:
-                                  MediaQuery.of(context).size.width * 0.7,
+                                      MediaQuery.of(context).size.width * 0.7,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -80,7 +96,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   child: Container(
                                     color: Colors.white,
                                     width:
-                                    MediaQuery.of(context).size.width * 0.4,
+                                        MediaQuery.of(context).size.width * 0.4,
                                     height: 3,
                                   ),
                                 ),
@@ -91,8 +107,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   child: Container(
                                     color: Colors.white,
                                     width:
-                                    MediaQuery.of(context).size.width * 0.9,
-                                    height: MediaQuery.of(context).size.width * 0.1,
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    height:
+                                        MediaQuery.of(context).size.width * 0.1,
                                   ),
                                 ),
                               ],
@@ -105,8 +122,10 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           'typeId': activeTypeId,
                           'title': snapshot.data!.product!.title.toString(),
                           'price': snapshot.data!.product!.price.toString(),
-                          'image': AppUrl.url +snapshot.data!.product!.picture.toString(),
-                          'type': title.toString()
+                          'image': AppUrl.url +
+                              snapshot.data!.product!.picture.toString(),
+                          'type': title.toString(),
+                          'amount': amount
                         });
 
                         return Column(
@@ -501,7 +520,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               productId: box.get('productInfo')['id'],
                               productTypeId: box.get('productInfo')['typeId'],
                               title: box.get('productInfo')['title'],
-                              amount: 1,
+                              amount: box.get('productInfo')['amount'],
                               price: box.get('productInfo')['price'],
                               image: box.get('productInfo')['image'],
                               type: box.get('productInfo')['type'],
@@ -567,7 +586,8 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
         context: context,
         builder: (builder) {
           return SafeArea(
-            child: Wrap(children: [
+              child: Wrap(
+            children: [
               Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: const BoxDecoration(
@@ -613,9 +633,16 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                             ),
                             Row(children: [
                               IconButton(
-                                  icon: Icon(Icons.remove), onPressed: () {}),
-                              const Text('1'),
-                              IconButton(icon: Icon(Icons.add), onPressed: () {})
+                                  icon: Icon(Icons.remove),
+                                  onPressed: () {
+                                    _decreaseAmount();
+                                  }),
+                              Text(box.get('productInfo')['amount'].toString()),
+                              IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () {
+                                    _increaseAmount();
+                                  })
                             ])
                           ],
                         ),
@@ -644,8 +671,8 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                       )
                     ],
                   )),
-            ],)
-          );
+            ],
+          ));
         });
   }
 
