@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:provider/provider.dart';
 
-class CartItem extends StatelessWidget {
+class CartItem extends StatefulWidget {
   final String id;
   final String productId;
   final String productTypeId;
@@ -16,7 +16,8 @@ class CartItem extends StatelessWidget {
   CartItem(
       {Key? key,
       required this.productId,
-      required this.id, required this.productTypeId,
+      required this.id,
+      required this.productTypeId,
       required this.title,
       required this.amount,
       required this.price,
@@ -24,8 +25,15 @@ class CartItem extends StatelessWidget {
       required this.type})
       : super(key: key);
 
+  @override
+  State<CartItem> createState() => _CartItemState();
+}
+
+class _CartItemState extends State<CartItem> {
+
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size.width;
+
     return Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +62,7 @@ class CartItem extends StatelessWidget {
                                 image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
-                                      this.image,
+                                      this.widget.image,
                                     ))),
                           ),
                         ]),
@@ -69,7 +77,7 @@ class CartItem extends StatelessWidget {
                                     Container(
                                         width: size - (85 + 20 + 50),
                                         child: Text(
-                                          this.title,
+                                          this.widget.title,
                                           softWrap: true,
                                           style: TextStyle(
                                               fontSize: 16,
@@ -91,7 +99,7 @@ class CartItem extends StatelessWidget {
                                           onPressed: () {
                                             Provider.of<CartProvider>(context,
                                                     listen: false)
-                                                .removeItem(productId);
+                                                .removeItem(widget.productId);
                                           },
                                           icon: Icon(
                                             Icons.delete_forever_rounded,
@@ -102,7 +110,13 @@ class CartItem extends StatelessWidget {
                                   ]),
                               Container(
                                 margin: EdgeInsets.fromLTRB(0, 8, 0, 10),
-                                child: Text('Loại: ${this.type}', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),),),
+                                child: Text(
+                                  'Loại: ${this.widget.type}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14),
+                                ),
+                              ),
                               Container(
                                 width: size - (85 + 15 * 2 + 12),
                                 child: Row(
@@ -121,10 +135,17 @@ class CartItem extends StatelessWidget {
                                                       width: 1.0,
                                                       color: Color.fromRGBO(
                                                           186, 186, 186, 1))),
-                                              child: Icon(
-                                                Icons.remove,
-                                                color: Colors.black,
-                                                size: 14,
+                                              child: Center(
+                                                child: IconButton(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      0, 0, 1, 1),
+                                                  iconSize: 14,
+                                                  icon: Icon(Icons.remove),
+                                                  color: Colors.black,
+                                                  onPressed: () {
+                                                    print(this.widget.amount);
+                                                  },
+                                                ),
                                               )),
                                           Container(
                                               width: 20,
@@ -137,7 +158,7 @@ class CartItem extends StatelessWidget {
                                                       color: Color.fromRGBO(
                                                           186, 186, 186, 1))),
                                               child: Text(
-                                                  this.amount.toString(),
+                                                  this.widget.amount.toString(),
                                                   style:
                                                       TextStyle(fontSize: 15))),
                                           Container(
@@ -149,10 +170,17 @@ class CartItem extends StatelessWidget {
                                                       width: 1.0,
                                                       color: Color.fromRGBO(
                                                           186, 186, 186, 1))),
-                                              child: Icon(
-                                                Icons.add,
-                                                color: Colors.black,
-                                                size: 14,
+                                              child: Center(
+                                                child: IconButton(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      0, 0, 1, 1),
+                                                  iconSize: 14,
+                                                  icon: Icon(Icons.add),
+                                                  color: Colors.black,
+                                                  onPressed: () {
+                                                    print(this.widget.amount);
+                                                  },
+                                                ),
                                               )),
                                         ]),
                                       ),
@@ -168,7 +196,8 @@ class CartItem extends StatelessWidget {
                                                 color: Colors.grey,
                                                 size: 18,
                                               ),
-                                              Text('${double.parse(this.price)*this.amount}',
+                                              Text(
+                                                  '${double.parse(this.widget.price) * this.widget.amount}',
                                                   style: TextStyle(
                                                       fontSize: 20,
                                                       fontWeight:
