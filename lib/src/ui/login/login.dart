@@ -143,7 +143,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget btnLogin() {
     return GestureDetector(
       onTap: () {
-        print("object");
         login(phoneNumberController.text.toString(),
             passwordController.text.toString());
       },
