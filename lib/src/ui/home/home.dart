@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/utilities/colors.dart';
+import '../category/category.dart';
 import '../notice/promotion_notice.dart';
 import '../product/detail_product.dart';
 import 'header_drawer.dart';
@@ -494,7 +495,7 @@ class _HomePageState extends State<Homepage> {
               launch('tel://0853685806');
             }
 else if(currentPage==DrawerSections.category){
-  Navigator.pop(context);
+  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const CategoryPage()));
             }
 
 
