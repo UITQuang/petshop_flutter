@@ -229,30 +229,7 @@ class _HomePageState extends State<Homepage> {
                       );
 
                   }
-                  // children: List.generate(snapshot.data!.length, (index) {
-                  //   String name = snapshot.data![index]['title'];
-                  //   if (searchController.text.isEmpty) {
-                  //     return itemProduct(
-                  //       snapshot.data![index]['id'],
-                  //       AppUrl.url +
-                  //           snapshot.data![index]['picture'].toString(),
-                  //       snapshot.data![index]['title'].toString(),
-                  //       snapshot.data![index]['price'].toString(),
-                  //     );
-                  //   } else if (name
-                  //       .toLowerCase()
-                  //       .contains(searchController.text.toLowerCase())) {
-                  //     return itemProduct(
-                  //       snapshot.data![index]['id'],
-                  //       AppUrl.url +
-                  //           snapshot.data![index]['picture'].toString(),
-                  //       snapshot.data![index]['title'].toString(),
-                  //       snapshot.data![index]['price'].toString(),
-                  //     );
-                  //   } else {
-                  //     return Container();
-                  //   }
-                  // }
+
                   ),
                 );
               }
