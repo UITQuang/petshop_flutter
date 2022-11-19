@@ -135,4 +135,12 @@ class CartProvider extends ChangeNotifier {
     _items.clear();
     notifyListeners();
   }
+
+  void setCartItemAmount(id, value) {
+    for (int i = 0; i < items.length; i++) {
+      if(_items.values.toList()[i].id == id) {
+        _items.values.toList()[i].amount = value;
+      }
+    }
+  }
 }

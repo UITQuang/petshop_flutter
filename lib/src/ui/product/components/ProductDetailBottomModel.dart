@@ -23,11 +23,12 @@ class ProductDetailBottomModel extends StatefulWidget {
 
   @override
   State<ProductDetailBottomModel> createState() =>
-      _ProductDetailBottomModelState();
+      _ProductDetailBottomModelState(productAmount);
 }
 
 class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
-  int productAmount = 1;
+  int productAmount;
+  _ProductDetailBottomModelState(this.productAmount);
 
   @override
   Widget build(BuildContext context) {

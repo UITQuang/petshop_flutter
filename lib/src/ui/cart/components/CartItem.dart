@@ -8,7 +8,7 @@ class CartItem extends StatefulWidget {
   final String productId;
   final String productTypeId;
   final String title;
-  final int amount;
+  int amount;
   final String price;
   final String image;
   final String type;
@@ -26,14 +26,16 @@ class CartItem extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CartItem> createState() => _CartItemState();
+  State<CartItem> createState() => _CartItemState(amount);
 }
 
 class _CartItemState extends State<CartItem> {
+  int cartItemAmount;
+  _CartItemState(this.cartItemAmount);
 
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size.width;
-
+    final cartItemsData = Provider.of<CartProvider>(context);
     return Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +145,14 @@ class _CartItemState extends State<CartItem> {
                                                   icon: Icon(Icons.remove),
                                                   color: Colors.black,
                                                   onPressed: () {
-                                                    print(this.widget.amount);
+                                                    if (cartItemAmount > 1) {
+                                                      setState(() {
+                                                        cartItemAmount = cartItemAmount - 1;
+                                                      });
+                                                      cartItemsData.setCartItemAmount(this.widget.id, cartItemAmount);
+                                                    } else {
+                                                      print('Error: Amount must be large than 1');
+                                                    }
                                                   },
                                                 ),
                                               )),
@@ -158,7 +167,7 @@ class _CartItemState extends State<CartItem> {
                                                       color: Color.fromRGBO(
                                                           186, 186, 186, 1))),
                                               child: Text(
-                                                  this.widget.amount.toString(),
+                                                  cartItemAmount.toString(),
                                                   style:
                                                       TextStyle(fontSize: 15))),
                                           Container(
@@ -178,7 +187,10 @@ class _CartItemState extends State<CartItem> {
                                                   icon: Icon(Icons.add),
                                                   color: Colors.black,
                                                   onPressed: () {
-                                                    print(this.widget.amount);
+                                                    setState(() {
+                                                      cartItemAmount = cartItemAmount + 1;
+                                                    });
+                                                    cartItemsData.setCartItemAmount(this.widget.id, cartItemAmount);
                                                   },
                                                 ),
                                               )),
@@ -197,7 +209,7 @@ class _CartItemState extends State<CartItem> {
                                                 size: 18,
                                               ),
                                               Text(
-                                                  '${double.parse(this.widget.price) * this.widget.amount}',
+                                                  '${double.parse(this.widget.price) * cartItemAmount}',
                                                   style: TextStyle(
                                                       fontSize: 20,
                                                       fontWeight:
