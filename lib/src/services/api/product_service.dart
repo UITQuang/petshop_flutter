@@ -19,6 +19,18 @@ class ProductService{
       throw Exception('Error');
     }
   }
+  Future<List<dynamic>> getCategoryList () async {
+
+    final response = await http.get(Uri.parse(AppUrl.categoryList));
+    var   data = jsonDecode(response.body.toString());
+    if(response.statusCode == 200){
+
+      return data;
+
+    }else{
+      throw Exception('Error');
+    }
+  }
 
   Future<ProductDetail> getDetailProduct (int id) async {
     final response = await http.get(Uri.parse(AppUrl.detailProduct+id.toString()));

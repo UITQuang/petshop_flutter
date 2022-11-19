@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/utilities/colors.dart';
+import '../category/category.dart';
 import '../notice/promotion_notice.dart';
 import '../product/detail_product.dart';
 import 'header_drawer.dart';
@@ -228,30 +229,7 @@ class _HomePageState extends State<Homepage> {
                       );
 
                   }
-                  // children: List.generate(snapshot.data!.length, (index) {
-                  //   String name = snapshot.data![index]['title'];
-                  //   if (searchController.text.isEmpty) {
-                  //     return itemProduct(
-                  //       snapshot.data![index]['id'],
-                  //       AppUrl.url +
-                  //           snapshot.data![index]['picture'].toString(),
-                  //       snapshot.data![index]['title'].toString(),
-                  //       snapshot.data![index]['price'].toString(),
-                  //     );
-                  //   } else if (name
-                  //       .toLowerCase()
-                  //       .contains(searchController.text.toLowerCase())) {
-                  //     return itemProduct(
-                  //       snapshot.data![index]['id'],
-                  //       AppUrl.url +
-                  //           snapshot.data![index]['picture'].toString(),
-                  //       snapshot.data![index]['title'].toString(),
-                  //       snapshot.data![index]['price'].toString(),
-                  //     );
-                  //   } else {
-                  //     return Container();
-                  //   }
-                  // }
+
                   ),
                 );
               }
@@ -504,7 +482,7 @@ class _HomePageState extends State<Homepage> {
               launch('tel://0853685806');
             }
 else if(currentPage==DrawerSections.category){
-  Navigator.pop(context);
+  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const CategoryPage()));
             }
 
 

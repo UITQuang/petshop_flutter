@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:project1/src/ui/home/home.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project1/src/ui/login/signup.dart';
 
@@ -33,9 +33,9 @@ class _LoginPageState extends State<LoginPage> {
         });
   }
 
-  void login(String phone, password) async {
+  void login(String phone, String password) async {
     try {
-      Response response = await post(
+     http.Response response = await http.post(
           Uri.parse('https://meowmeowpetshop.xyz/api/v1/login-customer'),
           body: {'phone': phone, 'password': password});
       if (response.statusCode == 200) {
@@ -52,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
         _showDialog("Sai thông tin đăng nhập");
       }
     } catch (e) {
+      print('failed');
     }
   }
 

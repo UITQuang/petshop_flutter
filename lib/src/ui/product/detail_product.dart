@@ -114,6 +114,8 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           'image': AppUrl.url +
                               snapshot.data!.product!.picture.toString(),
                           'type': title.toString(),
+                          'amount': amount
+
                         });
 
                         return Column(
@@ -508,7 +510,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               productId: box.get('productInfo')['id'],
                               productTypeId: box.get('productInfo')['typeId'],
                               title: box.get('productInfo')['title'],
-                              amount: amount,
+                              amount: box.get('productInfo')['amount'],
                               price: box.get('productInfo')['price'],
                               image: box.get('productInfo')['image'],
                               type: box.get('productInfo')['type'],
