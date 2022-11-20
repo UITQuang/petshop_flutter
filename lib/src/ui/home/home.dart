@@ -4,7 +4,7 @@ import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
 import 'package:project1/src/ui/history/history.dart';
-import 'package:project1/src/ui/home/profile.dart';
+import 'package:project1/src/ui/updateProfile/profile.dart';
 
 import 'package:project1/src/ui/cart/Cart.dart';
 import 'package:provider/provider.dart';

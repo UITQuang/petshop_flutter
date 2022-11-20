@@ -12,6 +12,7 @@ class AppUrl {
   static const String login = baseUrl + 'login-customer';
   static const String signUp = baseUrl + 'create-customer';
   static const String updateProfile = baseUrl + 'update-customer';
+  static const String uploadImage = baseUrl + 'update-image';
 
   //order
   static const String createOrder = baseUrl + 'order';

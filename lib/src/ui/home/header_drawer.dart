@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../services/utilities/colors.dart';
 
 class HeaderDrawer extends StatefulWidget {
   const HeaderDrawer({Key? key}) : super(key: key);
@@ -9,6 +14,21 @@ class HeaderDrawer extends StatefulWidget {
 }
 
 class _HeaderDrawerState extends State<HeaderDrawer> {
+  File? image;
+
+  final _picker = ImagePicker();
+  bool showSpinner = false;
+
+  Future getImage(ImageSource source) async {
+    final pickedFile =
+    await _picker.pickImage(source: source, imageQuality: 80);
+    if (pickedFile != null) {
+      image = File(pickedFile.path);
+      setState(() {});
+    } else {
+      return;
+    }
+  }
   @override
   var box= Hive.box('userBox');
   Widget build(BuildContext context) {
@@ -20,11 +40,11 @@ class _HeaderDrawerState extends State<HeaderDrawer> {
 
       width: double.infinity,
       height: 150,
-      padding: EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(bottom: 8.0),
             child: Stack(
               children: [
                 const SizedBox(
@@ -39,9 +59,22 @@ class _HeaderDrawerState extends State<HeaderDrawer> {
                     bottom: -1,
                     child: SizedBox(
                         child: GestureDetector(
-
-                          onTap: () {},
-                          child: const Icon(Icons.camera_alt_outlined, color: Colors.white,),
+                          onTap: () {
+                            getImage(ImageSource.gallery);
+                          },
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                BorderRadius.only(topLeft: Radius.circular(10))),
+                            child: const Padding(
+                              padding: EdgeInsets.all(2.0),
+                              child: Icon(
+                                Icons.photo_camera,
+                                color: PRIMARY_COLOR,
+                              ),
+                            ),
+                          ),
                         )))
               ],
             ),
