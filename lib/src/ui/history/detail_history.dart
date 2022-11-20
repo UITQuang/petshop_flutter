@@ -9,6 +9,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../providers/cart_provider/CartProvider.dart';
 import '../../services/api/order_service.dart';
+import '../home/profile.dart';
 import '../payment/components/PaymentItem.dart';
 
 class HistoryDetail extends StatefulWidget {
@@ -120,6 +121,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             ),
                           ],
                         ),
+
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                         child: snapshot!.data!['info']!["is_paymented"] == "1"
@@ -163,6 +165,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           const Text('Địa chỉ nhận hàng',
+
+
                                               style: TextStyle(fontSize: 14)),
                                           Text(
                                               '${snapshot!.data!['info']['title']} | ${snapshot!.data!['info']['phone']}',
@@ -304,7 +308,9 @@ class _HistoryDetailState extends State<HistoryDetail> {
         width: MediaQuery.of(context).size.width,
         color: Colors.white,
 
+
         padding: const EdgeInsets.only(bottom: 10),
+
         child: Row(children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width*0.25,
@@ -317,6 +323,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                     image:
                         NetworkImage(AppUrl.url + item["picture"].toString()))),
           ),
+
           Expanded(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,6 +356,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                         children: <Widget>[
                           Text('${f.format(int.parse(item['price']))} VNĐ',
                               style: const TextStyle(
+
                                   fontSize: 20, fontWeight: FontWeight.w400)),
                           Text('x${item["quantity"].toString()}',
                               style: const TextStyle(
@@ -359,4 +367,5 @@ class _HistoryDetailState extends State<HistoryDetail> {
           )
         ]));
   }
+
 }
