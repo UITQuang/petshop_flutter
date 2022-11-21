@@ -13,7 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../providers/cart_provider/CartProvider.dart';
 import '../../services/utilities/app_url.dart';
-import '../home/profile.dart';
+import '../updateProfile/profile.dart';
 import 'components/PaymentItem.dart';
 import 'method_payment.dart';
 
