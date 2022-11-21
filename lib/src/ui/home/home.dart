@@ -4,6 +4,7 @@ import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
 import 'package:project1/src/ui/history/history.dart';
+import 'package:project1/src/ui/membership/membership.dart';
 import 'package:project1/src/ui/updateProfile/profile.dart';
 
 import 'package:project1/src/ui/cart/Cart.dart';
@@ -40,13 +41,13 @@ class _HomePageState extends State<Homepage> {
             children: [
               Container(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 4.0),
+                  padding: const EdgeInsets.only(left: 4.0),
                   child: IconButton(
                       onPressed: () {
                         Navigator.push(
                             context, MaterialPageRoute(builder: (_) => Cart()));
                       },
-                      icon: Icon(Icons.shopping_bag_outlined)),
+                      icon: const Icon(Icons.shopping_bag_outlined)),
                 ),
               ),
               Positioned(
@@ -55,14 +56,14 @@ class _HomePageState extends State<Homepage> {
                 child: Container(
                   width: 16,
                   height: 16,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: SECONDARY_COLOR, shape: BoxShape.circle),
                   child: Center(
                     child: Text(
                       context.watch<CartProvider>().items.length.toString(),
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                     ),
                   ),
                 ),
@@ -82,14 +83,13 @@ class _HomePageState extends State<Homepage> {
       ),
       body: bodyView(),
       drawer: Drawer(
-        child: Container(
-            child: Column(
+        child: Column(
           children: [
-            const HeaderDrawer(),
-            listDrawer(),
-            footDrawer(),
+        const HeaderDrawer(),
+        listDrawer(),
+        footDrawer(),
           ],
-        )),
+        ),
       ),
     );
   }
@@ -410,7 +410,7 @@ class _HomePageState extends State<Homepage> {
             currentPage == DrawerSections.history ? true : false),
         menuItem(5, "Thông tin thành viên", Icons.account_circle,
             currentPage == DrawerSections.information ? true : false),
-        menuItem(6, "Thẻ thành viên", Icons.card_membership_sharp,
+        menuItem(6, "Điểm tích lũy", Icons.card_membership_sharp,
             currentPage == DrawerSections.membershipCard ? true : false),
         menuItem(7, "Đăng xuất", Icons.logout,
             currentPage == DrawerSections.logOut ? true : false),
@@ -459,14 +459,15 @@ class _HomePageState extends State<Homepage> {
                   MaterialPageRoute(builder: (context) => const History()));
             }
             else if(currentPage==DrawerSections.membershipCard){
-              Navigator.pop(context);
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const MembershipPage()));
             }
             else if(currentPage==DrawerSections.logOut){
               Navigator.pop(context);
             }
             else if(currentPage==DrawerSections.notification){
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) =>  PromotionNotice()));
+                  MaterialPageRoute(builder: (context) =>  PromotionNoticePage()));
             }
             else if(currentPage==DrawerSections.hotline){
               launch('tel://0853685806');

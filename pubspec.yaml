@@ -48,6 +48,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   intl: ^0.17.0
+  percent_indicator: ^4.0.1
 
   provider: ^6.0.4
 
@@ -77,6 +78,7 @@ flutter:
     - assets/images/chovameo.jpg
     - assets/images/shoppe_express.png
     - assets/images/product.png
+    - assets/images/membership.png
     - assets/images/
   #   - images/a_dot_ham.jpeg
 
