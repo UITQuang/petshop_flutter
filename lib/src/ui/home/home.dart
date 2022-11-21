@@ -32,51 +32,58 @@ class _HomePageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xff1F1D48),
-        actions: [
-          Expanded(child: searchFilter()),
-          Stack(
-            children: [
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (_) => Cart()));
-                      },
-                      icon: const Icon(Icons.shopping_bag_outlined)),
-                ),
-              ),
-              Positioned(
-                right: 2,
-                top: 2,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: const BoxDecoration(
-                      color: SECONDARY_COLOR, shape: BoxShape.circle),
-                  child: Center(
-                    child: Text(
-                      context.watch<CartProvider>().items.length.toString(),
-                      textAlign: TextAlign.center,
-                      style:
-                          const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+
+    return SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color(0xff1F1D48),
+            actions: [
+              Expanded(child: searchFilter()),
+              Stack(
+                children: [
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context, MaterialPageRoute(builder: (_) => Cart()));
+                          },
+                          icon: Icon(Icons.shopping_bag_outlined)),
+
                     ),
                   ),
-                ),
+                  Positioned(
+                    right: 2,
+                    top: 2,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                          color: SECONDARY_COLOR, shape: BoxShape.circle),
+                      child: Center(
+                        child: Text(
+                          context.watch<CartProvider>().items.length.toString(),
+                          textAlign: TextAlign.center,
+                          style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               )
             ],
-          )
-        ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(5),
-          child: Container(
-            color: Colors.grey[200],
-            height: 1.0,
-          ),
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(5),
+              child: Container(
+                color: Colors.grey[200],
+                height: 1.0,
+              ),
+            ),
+            titleSpacing: 10,
+            automaticallyImplyLeading: true,
+
         ),
         titleSpacing: 10,
         automaticallyImplyLeading: true,
@@ -92,14 +99,19 @@ class _HomePageState extends State<Homepage> {
         ),
       ),
     );
+
   }
 
   Widget bodyView() {
     return SafeArea(
         child: SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 10,),
           carouselSlider(),
+          SizedBox(height: 10,),
+
           listFilter(),
           listProduct(),
         ],
@@ -108,28 +120,33 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget carouselSlider() {
-    return CarouselSlider(
-      items: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Image.asset("assets/images/chovameo.jpg", fit: BoxFit.fill),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Image.asset(
-            "assets/images/meo.jpg",
-            fit: BoxFit.fill,
-          ),
-        ),
-      ],
-      options: CarouselOptions(
-        autoPlay: true,
-        enlargeCenterPage: true,
-        viewportFraction: 0.6,
-        aspectRatio: 2.8,
-        initialPage: 2,
-      ),
-    );
+    NoticeProvider noticeProvider = NoticeProvider();
+    return FutureBuilder(
+        future: noticeProvider.getBannerList(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData){
+            return Text("");
+          }else{
+            int count_banner = int.parse(snapshot.data["count_banner"].toString());
+            return CarouselSlider(
+              items: [
+                for(int i = 0 ; i <  count_banner; i++)
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Image.network(AppUrl.url+snapshot.data["list_banner"][i]["picture"], fit: BoxFit.fill),
+                ),
+              ],
+              options: CarouselOptions(
+                autoPlay: true,
+                enlargeCenterPage: true,
+                viewportFraction: 0.6,
+                aspectRatio: 2.8,
+                initialPage: count_banner,
+              ),
+            );
+          }
+        });
+
   }
 
   Widget listProduct() {

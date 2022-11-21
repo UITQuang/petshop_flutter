@@ -11,6 +11,7 @@ import 'package:project1/src/services/api/product_service.dart';
 import '../../models/product_detail.dart';
 import '../cart/Cart.dart';
 import '../home/home.dart';
+import 'components/ProductDetailBottomModel.dart';
 
 class DetailProductScreen extends StatefulWidget {
   int id;
@@ -27,7 +28,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   String picture = "";
   String price = "";
   String title = "";
-
+  int amount = 1;
 
   var box = Hive.box('productBox');
 
@@ -40,6 +41,10 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
       activeTypeId = iProduct!.id.toString();
       title = iProduct!.title;
     });
+  }
+
+  void _update(int newAmount) {
+    setState(() => amount = newAmount);
   }
 
   @override
@@ -58,7 +63,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                     future: productService.getDetailProduct(widget.id),
                     builder: (context, AsyncSnapshot<ProductDetail> snapshot) {
                       if (!snapshot.hasData) {
-                        return  Shimmer.fromColors(
+                        return Shimmer.fromColors(
                           baseColor: Colors.grey.shade300,
                           highlightColor: Colors.grey.shade100,
                           child: Padding(
@@ -70,9 +75,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5)),
                                   width:
-                                  MediaQuery.of(context).size.width * 0.9,
+                                      MediaQuery.of(context).size.width * 0.9,
                                   height:
-                                  MediaQuery.of(context).size.width * 0.7,
+                                      MediaQuery.of(context).size.width * 0.7,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -80,7 +85,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   child: Container(
                                     color: Colors.white,
                                     width:
-                                    MediaQuery.of(context).size.width * 0.4,
+                                        MediaQuery.of(context).size.width * 0.4,
                                     height: 3,
                                   ),
                                 ),
@@ -91,8 +96,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   child: Container(
                                     color: Colors.white,
                                     width:
-                                    MediaQuery.of(context).size.width * 0.9,
-                                    height: MediaQuery.of(context).size.width * 0.1,
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    height:
+                                        MediaQuery.of(context).size.width * 0.1,
                                   ),
                                 ),
                               ],
@@ -105,8 +111,11 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           'typeId': activeTypeId,
                           'title': snapshot.data!.product!.title.toString(),
                           'price': snapshot.data!.product!.price.toString(),
-                          'image': AppUrl.url +snapshot.data!.product!.picture.toString(),
-                          'type': title.toString()
+                          'image': AppUrl.url +
+                              snapshot.data!.product!.picture.toString(),
+                          'type': title.toString(),
+                          'amount': amount
+
                         });
 
                         return Column(
@@ -159,7 +168,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                             children: [
                                               Container(
                                                 child: Padding(
-                                                  padding: EdgeInsets.all(10),
+                                                  padding: EdgeInsets.all(0),
                                                   child: IconButton(
                                                     onPressed: () {
                                                       Navigator.push(
@@ -178,8 +187,8 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                                 right: 3,
                                                 top: 6,
                                                 child: Container(
-                                                  width: 25,
-                                                  height: 25,
+                                                  width: 15,
+                                                  height: 15,
                                                   decoration: BoxDecoration(
                                                       color: SECONDARY_COLOR,
                                                       shape: BoxShape.circle),
@@ -193,7 +202,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
-                                                          fontSize: 18,
+                                                          fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.w500),
                                                     ),
@@ -460,7 +469,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
               ],
             )),
         bottomNavigationBar: Container(
-          height: 60,
+          height: 50,
           color: SECONDARY_COLOR,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -482,7 +491,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           Icon(
                             Icons.chat,
                             color: PRIMARY_COLOR,
-                            size: 35,
+                            size: 30,
                           ),
                           Text(
                             'Chat ngay',
@@ -501,7 +510,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               productId: box.get('productInfo')['id'],
                               productTypeId: box.get('productInfo')['typeId'],
                               title: box.get('productInfo')['title'],
-                              amount: 1,
+                              amount: box.get('productInfo')['amount'],
                               price: box.get('productInfo')['price'],
                               image: box.get('productInfo')['image'],
                               type: box.get('productInfo')['type'],
@@ -517,7 +526,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           Icon(
                             Icons.add_shopping_cart,
                             color: PRIMARY_COLOR,
-                            size: 35,
+                            size: 30,
                           ),
                           Text(
                             'Thêm vào giỏ hàng',
@@ -563,89 +572,14 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
     price = productType[0]!.price;
     ProductService productService = ProductService();
     showModalBottomSheet(
-        isScrollControlled: false,
+        isScrollControlled: true,
         context: context,
-        builder: (builder) {
-          return Container(
-            height: size.height * 0.5,
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(10.0))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _curentProductType(),
-                    const Divider(
-                      color: Colors.grey,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Mùi hương',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Wrap(
-                              children: [
-                                for (int i = 0; i < productType.length; i++)
-                                  _listProductType(productType[i])
-                              ],
-                            ),
-                          ]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Số lượng',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Row(children: [
-                            IconButton(
-                                icon: Icon(Icons.remove), onPressed: () {}),
-                            const Text('1'),
-                            IconButton(icon: Icon(Icons.add), onPressed: () {})
-                          ])
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print('Mua ngay');
-                        },
-                        style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.all(0),
-                            backgroundColor: PRIMARY_COLOR),
-                        child: const Text(
-                          'Thêm vào giỏ hàng',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
-          );
-        });
+        builder: (_) => ProductDetailBottomModel(
+              curentProductType: _curentProductType,
+              productType: productType,
+              listProductType: _listProductType,
+              productAmount: amount, update: _update,
+            ));
   }
 
   Widget _curentProductType() {

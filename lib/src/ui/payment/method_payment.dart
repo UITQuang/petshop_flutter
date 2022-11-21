@@ -10,8 +10,8 @@ class MethodPayment extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     //var size = MediaQuery.of(context).size.width;
-    return MaterialApp(
-        home: Scaffold(
+    return SafeArea(
+        child: Scaffold(
           backgroundColor: Color.fromRGBO(244, 244, 244, 1),
           appBar: AppBar(
             backgroundColor: Color.fromRGBO(31, 29, 72, 1),
@@ -31,28 +31,7 @@ class MethodPayment extends StatelessWidget {
                 method("assets/images/cod.png", "Thanh toán khi nhận hàng", context),
               ],
           ),
-          // bottomNavigationBar: Material(
-          //   color: Color.fromRGBO(31, 29, 72, 1),
-          //   child: InkWell(
-          //     onTap: () {
-          //       //print('called on tap');
-          //     },
-          //     child: const SizedBox(
-          //       height: kToolbarHeight,
-          //       width: double.infinity,
-          //       child: Center(
-          //         child: Text(
-          //           'ĐỒNG Ý',
-          //           style: TextStyle(
-          //             color: Colors.white,
-          //             fontSize: 20,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+
         ));
   }
   Widget method (String assetImage, String methodName, context){
@@ -92,5 +71,4 @@ class MethodPayment extends StatelessWidget {
     );
   }
 }
-
 

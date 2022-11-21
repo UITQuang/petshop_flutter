@@ -54,4 +54,15 @@ class NoticeProvider{
       throw Exception('Error');
     }
   }
+
+  Future<dynamic> getBannerList () async {
+    final response = await http.get(Uri.parse("https://meowmeowpetshop.xyz/api/v1/notice?notice_type=banner"));
+    if(response.statusCode == 200){
+      var data = jsonDecode(response.body.toString());
+      return data;
+    }else{
+      throw Exception('Error');
+    }
+  }
+
 }
