@@ -9,7 +9,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../providers/cart_provider/CartProvider.dart';
 import '../../services/api/order_service.dart';
-import '../home/profile.dart';
+import '../updateProfile/profile.dart';
 import '../payment/components/PaymentItem.dart';
 
 class HistoryDetail extends StatefulWidget {
