@@ -24,8 +24,13 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   var box = Hive.box('userBox');
-
-  //image picker
+  bool enableEdit = false;
+  bool enableCancel = false;
+  bool enableUpdate = false;
+  bool editedName = false;
+  bool editedEmail = false;
+  bool editedPhone = false;
+  bool editedAddress = false;
   File? image;
 
   final _picker = ImagePicker();
@@ -36,7 +41,9 @@ class _ProfilePageState extends State<ProfilePage> {
         await _picker.pickImage(source: source, imageQuality: 80);
     if (pickedFile != null) {
       image = File(pickedFile.path);
-      setState(() {});
+      setState(() {
+        enableUpdate = true;
+      });
     } else {
       return;
     }
@@ -44,37 +51,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> updateProfile(String name, String phone, String email,
       String address, String id) async {
-    // var stream = http.ByteStream(image!.openRead());
-    // stream.cast();
-    // var length = await image!.length();
-    // var uri = Uri.parse(AppUrl.uploadImage);
-    //
-    // print(uri);
-    // var request = http.MultipartRequest('POST', uri);
-    //
-    // var multipart = http.MultipartFile('picture', stream, length);
-    // request.fields['id'] = id;
-    // request.files.add(multipart);
-    // var response = await request.send();
-    // // response.stream.transform(utf8.decoder).listen((value) {
-    // //   print(value);
-    // //
-    // // });
-    // print(response.statusCode);
-    // if (response.statusCode == 200) {
-    //
-    //   setState(() {
-    //     showSpinner = false;
-    //   });
-    //
-    //   print('thanh cong');
-    // } else {
-    //
-    //
-    //   // print(data);
-    //   print('false');
-    // }
     try {
+      setState(() {
+        showSpinner = true;
+      });
       http.Response response = await http.post(Uri.parse(AppUrl.updateProfile),
           body: {
             'name': name,
@@ -93,11 +73,58 @@ class _ProfilePageState extends State<ProfilePage> {
         box.put("id", data['id']);
         box.put("picture", data['picture']);
         _showDialog("Cập nhật thành công!");
+        setState(() {
+          enableUpdate = false;
+          enableEdit = false;
+          enableCancel = false;
+        });
+        setState(() {
+          showSpinner = false;
+        });
       } else {
+        setState(() {
+          showSpinner = false;
+        });
         _showDialog("Cập nhật thất bại!");
       }
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<void> updatePicture(String id) async {
+    setState(() {
+      showSpinner = true;
+    });
+    var uri = Uri.parse(AppUrl.uploadImage);
+    var request = http.MultipartRequest('POST', uri);
+
+    request.fields['id'] = id;
+    if (image == null) {
+      setState(() {
+        showSpinner = false;
+      });
+    } else {
+      request.files.add(http.MultipartFile(
+          'picture', image!.readAsBytes().asStream(), image!.lengthSync(),
+          filename: image!.path.split('/').last));
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        setState(() {
+          showSpinner = false;
+          enableUpdate = false;
+        });
+        //Lấy ra đường dẫn sau khi cập nhật
+        response.stream.transform(utf8.decoder).listen((value) {
+          var data = jsonDecode(value);
+          box.put("picture", data['picture']);
+        });
+      } else {
+        setState(() {
+          showSpinner = false;
+        });
+      }
     }
   }
 
@@ -117,14 +144,107 @@ class _ProfilePageState extends State<ProfilePage> {
         });
   }
 
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     nameController.text = box.get("name");
     emailController.text = box.get("email");
     phoneController.text = box.get("phone");
     addressController.text = box.get("address");
-    // _image=box.get("image");
+
+    nameController.addListener(() {
+      final edited = (nameController.text != box.get("name"));
+      setState(() {
+        editedName = edited;
+        if ((editedName) ||
+            (editedEmail) ||
+            (editedPhone) ||
+            (editedAddress) ||
+            (image != null)) {
+          enableUpdate = true;
+        } else {
+          enableUpdate = false;
+        }
+      });
+    });
+    emailController.addListener(() {
+      final edited = (emailController.text != box.get("email"));
+      setState(() {
+        editedEmail = edited;
+        if ((editedName) ||
+            (editedEmail) ||
+            (editedPhone) ||
+            (editedAddress) ||
+            (image != null)) {
+          enableUpdate = true;
+        } else {
+          enableUpdate = false;
+        }
+      });
+    });
+
+    phoneController.addListener(() {
+      final edited = (phoneController.text != box.get("phone"));
+      setState(() {
+        editedPhone = edited;
+        if ((editedName) ||
+            (editedEmail) ||
+            (editedPhone) ||
+            (editedAddress) ||
+            (image != null)) {
+          enableUpdate = true;
+        } else {
+          enableUpdate = false;
+        }
+      });
+    });
+
+    addressController.addListener(() {
+      final edited = (addressController.text != box.get("address"));
+      setState(() {
+        editedAddress = edited;
+        if ((editedName) ||
+            (editedEmail) ||
+            (editedPhone) ||
+            (editedAddress) ||
+            (image != null)) {
+          enableUpdate = true;
+        } else {
+          enableUpdate = false;
+        }
+      });
+    });
+    // listener(nameController, "name", editedName);
+    // listener(emailController, "email",editedEmail);
+    // listener(phoneController, "phone",editedPhone);
+    // listener(addressController, "address",editedAddress);
+  }
+
+  // void listener(TextEditingController textEditingController, String title, bool editedTitle) {
+  //   textEditingController.addListener(() {
+  //     final edited = (textEditingController.text != box.get(title));
+  //     setState(() {
+  //       editedTitle = edited;
+  //       if ((editedName) ||
+  //           (editedEmail) ||
+  //           (editedPhone) ||
+  //           (editedAddress) ||
+  //           (image != null)) {
+  //         enableUpdate = true;
+  //       } else {
+  //         enableUpdate = false;
+  //       }
+  //     });
+  //   });
+  // }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    super.dispose();
   }
 
   @override
@@ -134,37 +254,40 @@ class _ProfilePageState extends State<ProfilePage> {
       child: SafeArea(
         child: Scaffold(
             appBar: AppBar(
-              backgroundColor: const Color(0xff1F1D48),
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(5),
-                child: Container(
-                  color: Colors.grey[200],
-                  height: 1.0,
-                ),
-              ),
+              backgroundColor: PRIMARY_COLOR,
               brightness: Brightness.light,
-              titleSpacing: 10,
               automaticallyImplyLeading: true,
+              title: const Text("Thông tin cá nhân"),
             ),
             bottomNavigationBar: Material(
               color: const Color(0xff1F1D48),
               child: InkWell(
-                onTap: () {
-                  updateProfile(
-                      nameController.text.toString(),
-                      phoneController.text.toString(),
-                      emailController.text.toString(),
-                      addressController.text.toString(),
-                      box.get("id").toString());
-                },
-                child: const SizedBox(
+                onTap: (enableUpdate)
+                    ? () {
+                        (image != null)
+                            ? updatePicture(box.get("id").toString())
+                            : null;
+                        (editedName ||
+                                editedEmail ||
+                                editedPhone ||
+                                editedAddress)
+                            ? updateProfile(
+                                nameController.text.toString(),
+                                phoneController.text.toString(),
+                                emailController.text.toString(),
+                                addressController.text.toString(),
+                                box.get("id").toString())
+                            : null;
+                      }
+                    : null,
+                child: SizedBox(
                   height: kToolbarHeight,
                   width: double.infinity,
                   child: Center(
                     child: Text(
                       "Cập nhật thông tin",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: enableUpdate ? Colors.white : Colors.grey,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -179,31 +302,25 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget profile() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0, right: 15),
+    return Container(
+      color: PRIMARY_COLOR,
       child: ListView(
-        children: [
-          avatar(),
-          inputInfo(nameController, "Họ và tên", "name"),
-          inputInfo(emailController, "Email", "email"),
-          inputInfo(phoneController, "Số điện thoại", "phone"),
-          inputInfo(addressController, "Địa chỉ", "address"),
-        ],
+        children: [avatar(), detailInfo()],
       ),
     );
   }
 
   Widget avatar() {
     return Padding(
-      padding: const EdgeInsets.only(top: 50, bottom: 50),
+      padding: const EdgeInsets.only(top: 30, bottom: 30),
       child: Center(
         child: Stack(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.width * 0.25,
-              width: MediaQuery.of(context).size.width * 0.25,
+              height: MediaQuery.of(context).size.width * 0.35,
+              width: MediaQuery.of(context).size.width * 0.35,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: BorderRadius.circular(100),
                 // Image border
                 child: SizedBox.fromSize(
                     child: image != null
@@ -211,12 +328,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             image!,
                             fit: BoxFit.cover,
                           )
-                        : Image.asset("assets/images/avatar.jpg")),
+                        : Image.network(
+                            AppUrl.url + box.get("picture").toString(),
+                            fit: BoxFit.cover,
+                          )),
               ),
             ),
             Positioned(
-                right: 0,
-                bottom: -1,
+                right: 5,
+                bottom: 5,
                 child: SizedBox(
                     child: GestureDetector(
                   onTap: () {
@@ -228,7 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         borderRadius:
                             BorderRadius.only(topLeft: Radius.circular(10))),
                     child: const Padding(
-                      padding: EdgeInsets.all(2.0),
+                      padding: EdgeInsets.only(top: 2.0, left: 2, right: 2),
                       child: Icon(
                         Icons.photo_camera,
                         color: PRIMARY_COLOR,
@@ -242,36 +362,111 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Widget detailInfo() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.6,
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: Column(
+          children: [
+            inputInfo(nameController, "Họ và tên:", "name"),
+            inputInfo(emailController, "Email:", "email"),
+            inputInfo(phoneController, "Số điện thoại:", "phone"),
+            inputInfo(addressController, "Địa chỉ:", "address"),
+            const SizedBox(
+              height: 15,
+            ),
+            Row(
+              children: [
+                cancelInfo(),
+                const Expanded(child: SizedBox()),
+                editInfo(),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget editInfo() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          enableEdit = true;
+          enableCancel = true;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 20.0),
+        child: Center(
+            child: Text("Chỉnh sửa",
+                style: TextStyle(
+                  color: (enableEdit) ? Colors.blue : Colors.grey,
+                  fontSize: 16,
+                  decoration: TextDecoration.underline,
+                ))),
+      ),
+    );
+  }
+
+  Widget cancelInfo() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          enableCancel = false;
+          enableEdit = false;
+          nameController.text = box.get("name");
+          emailController.text = box.get("email");
+          phoneController.text = box.get("phone");
+          addressController.text = box.get("address");
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: Center(
+            child: Text(
+          "Đặt lại",
+          style: TextStyle(
+            color: enableCancel ? Colors.black : Colors.grey,
+            fontSize: 16,
+            decoration: TextDecoration.underline,
+          ),
+        )),
+      ),
+    );
+  }
+
   Widget inputInfo(TextEditingController textEditingController, String title,
       String getBox) {
     return Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(20),
         child: Row(
           children: [
             Expanded(
               child: TextFormField(
+                enabled: enableEdit,
+                style: const TextStyle(fontSize: 19),
                 controller: textEditingController,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(bottom: 3),
                   labelText: title,
                   labelStyle: const TextStyle(
                       color: Colors.black,
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.w400),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  textEditingController.text = box.get(getBox).toString();
-                });
-              },
-              child: const Icon(
-                Icons.edit,
-                size: 10,
-              ),
+            Icon(
+              Icons.edit,
+              size: 20,
+              color: enableEdit ? Colors.blue : Colors.grey,
             )
           ],
         ));
