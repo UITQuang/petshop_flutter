@@ -85,9 +85,7 @@ class _HomePageState extends State<Homepage> {
             automaticallyImplyLeading: true,
 
         ),
-        titleSpacing: 10,
-        automaticallyImplyLeading: true,
-      ),
+
       body: bodyView(),
       drawer: Drawer(
         child: Column(
@@ -98,7 +96,7 @@ class _HomePageState extends State<Homepage> {
           ],
         ),
       ),
-    );
+    ));
 
   }
 
