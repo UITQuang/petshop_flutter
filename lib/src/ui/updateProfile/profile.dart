@@ -257,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
               backgroundColor: PRIMARY_COLOR,
               brightness: Brightness.light,
               automaticallyImplyLeading: true,
-              title: const Text("Thông tin cá nhân"),
+              title: const Text("Thông tin cá nhân "),
             ),
             bottomNavigationBar: Material(
               color: const Color(0xff1F1D48),
