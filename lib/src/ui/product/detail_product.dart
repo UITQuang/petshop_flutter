@@ -117,13 +117,15 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           'type': title.toString(),
                           'amount': amount
                         });
-
                         for (int i = 0;
                             i < snapshot.data!.productType!.length;
                             i++) {
-                          String boxItemName = 'productTypeInfo${i.toString()}';
-                          productTypeBox.put(
-                              boxItemName, snapshot.data!.productType![i]);
+                          if (snapshot.data!.productType![i].id != null) {
+                            String boxItemName =
+                                'productTypeInfo${i.toString()}';
+                            productTypeBox.put(
+                                boxItemName, snapshot.data!.productType![i]);
+                          }
                         }
 
                         return Column(
@@ -514,7 +516,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   child: ElevatedButton(
                       onPressed: () {
                         print(productTypeBox.values.toList());
-                        _modalBottomSheetMenu(productTypeBox.values.toList());
+                    _modalBottomSheetMenu(productTypeBox.values.toList());
                         /*context.read<CartProvider>().addItem(
                               productId: box.get('productInfo')['id'],
                               productTypeId: box.get('productInfo')['typeId'],
@@ -648,7 +650,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Image(
-              image: NetworkImage(AppUrl.url + iProduct!.picture),
+              image: NetworkImage('${AppUrl.url}${iProduct!.picture}'),
               width: 30,
             ),
             SizedBox(

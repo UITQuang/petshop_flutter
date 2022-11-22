@@ -14,7 +14,6 @@ class ProductDetailBottomModel extends StatefulWidget {
   final int productAmount;
   final ValueChanged<int> update;
 
-
   const ProductDetailBottomModel(
       {Key? key,
       required this.curentProductType,
