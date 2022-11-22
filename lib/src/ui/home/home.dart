@@ -4,6 +4,7 @@ import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
 import 'package:project1/src/ui/history/history.dart';
+import 'package:project1/src/ui/membership/membership.dart';
 import 'package:project1/src/ui/updateProfile/profile.dart';
 
 import 'package:project1/src/ui/cart/Cart.dart';
@@ -30,69 +31,70 @@ class _HomePageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: const Color(0xff1F1D48),
-            actions: [
-              Expanded(child: searchFilter()),
-              Stack(
-                children: [
-                  Container(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 4.0),
-                      child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context, MaterialPageRoute(builder: (_) => Cart()));
-                          },
-                          icon: Icon(Icons.shopping_bag_outlined)),
+      appBar: AppBar(
+        backgroundColor: const Color(0xff1F1D48),
+        actions: [
+          Expanded(child: searchFilter()),
+          Stack(
+            children: [
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (_) => Cart()));
+                      },
+                      icon: const Icon(Icons.shopping_bag_outlined)),
+                ),
+              ),
+              Positioned(
+                right: 2,
+                top: 2,
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  decoration: const BoxDecoration(
+                      color: SECONDARY_COLOR, shape: BoxShape.circle),
+                  child: Center(
+                    child: Text(
+                      context.watch<CartProvider>().items.length.toString(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w400),
                     ),
                   ),
-                  Positioned(
-                    right: 2,
-                    top: 2,
-                    child: Container(
-                      width: 16,
-                      height: 16,
-                      decoration: BoxDecoration(
-                          color: SECONDARY_COLOR, shape: BoxShape.circle),
-                      child: Center(
-                        child: Text(
-                          context.watch<CartProvider>().items.length.toString(),
-                          textAlign: TextAlign.center,
-                          style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               )
             ],
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(5),
-              child: Container(
-                color: Colors.grey[200],
-                height: 1.0,
-              ),
-            ),
-            titleSpacing: 10,
-            automaticallyImplyLeading: true,
+          )
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(5),
+          child: Container(
+            color: Colors.grey[200],
+            height: 1.0,
           ),
-          body: bodyView(),
-          drawer: Drawer(
-            child: Container(
-                child: Column(
-                  children: [
-                    const HeaderDrawer(),
-                    listDrawer(),
-                    footDrawer(),
-                  ],
-                )),
+        ),
+        titleSpacing: 10,
+        automaticallyImplyLeading: true,
+      ),
+      body: bodyView(),
+      drawer: Drawer(
+        child: Container(
+          decoration: const BoxDecoration(color: Colors.white),
+          child: Column(
+            children: [
+              const HeaderDrawer(),
+              listDrawer(),
+              footDrawer(),
+            ],
           ),
-        ));
+        ),
+      ),
+    ));
   }
 
   Widget bodyView() {
@@ -101,10 +103,13 @@ class _HomePageState extends State<Homepage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           carouselSlider(),
-          SizedBox(height: 10,),
-
+          const SizedBox(
+            height: 10,
+          ),
           listFilter(),
           listProduct(),
         ],
@@ -116,18 +121,21 @@ class _HomePageState extends State<Homepage> {
     NoticeProvider noticeProvider = NoticeProvider();
     return FutureBuilder(
         future: noticeProvider.getBannerList(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData){
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
             return Text("");
-          }else{
-            int count_banner = int.parse(snapshot.data["count_banner"].toString());
+          } else {
+            int count_banner =
+                int.parse(snapshot.data["count_banner"].toString());
             return CarouselSlider(
               items: [
-                for(int i = 0 ; i <  count_banner; i++)
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Image.network(AppUrl.url+snapshot.data["list_banner"][i]["picture"], fit: BoxFit.fill),
-                ),
+                for (int i = 0; i < count_banner; i++)
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Image.network(
+                        AppUrl.url + snapshot.data["list_banner"][i]["picture"],
+                        fit: BoxFit.fill),
+                  ),
               ],
               options: CarouselOptions(
                 autoPlay: true,
@@ -139,7 +147,6 @@ class _HomePageState extends State<Homepage> {
             );
           }
         });
-
   }
 
   Widget listProduct() {
@@ -149,7 +156,6 @@ class _HomePageState extends State<Homepage> {
         child: FutureBuilder(
             future: productService.getProductList(),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-
               if (!snapshot.hasData) {
                 return GridView.count(
                     shrinkWrap: true,
@@ -169,14 +175,12 @@ class _HomePageState extends State<Homepage> {
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(5)),
-                                width:
-                                    MediaQuery.of(context).size.width * 0.4,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.3,
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                height: MediaQuery.of(context).size.width * 0.3,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 5.0, bottom: 5),
+                                padding:
+                                    const EdgeInsets.only(top: 5.0, bottom: 5),
                                 child: Container(
                                   color: Colors.white,
                                   width:
@@ -201,15 +205,16 @@ class _HomePageState extends State<Homepage> {
                       );
                     }));
               } else {
-                var mapsnapshot=new Map();
-                int lengthSearch=0;
-                for (int i=0; i<snapshot.data!.length;i++){
+                var mapsnapshot = new Map();
+                int lengthSearch = 0;
+                for (int i = 0; i < snapshot.data!.length; i++) {
                   String name = snapshot.data![i]['title'];
 
-                  if(name.toLowerCase().contains(searchController.text.toLowerCase())){
-                    mapsnapshot[lengthSearch]=snapshot.data![i];
+                  if (name
+                      .toLowerCase()
+                      .contains(searchController.text.toLowerCase())) {
+                    mapsnapshot[lengthSearch] = snapshot.data![i];
                     lengthSearch++;
-
                   }
                 }
                 return GridView.count(
@@ -219,18 +224,13 @@ class _HomePageState extends State<Homepage> {
                   crossAxisCount: 2,
                   childAspectRatio: (1 / 1.5),
                   children: List.generate(mapsnapshot.length, (index) {
-
-                      return itemProduct(
-                        mapsnapshot[index]['id'],
-                        AppUrl.url +
-                            mapsnapshot[index]['picture'].toString(),
-                        mapsnapshot[index]['title'].toString(),
-                        mapsnapshot[index]['price'].toString(),
-                      );
-
-                  }
-
-                  ),
+                    return itemProduct(
+                      mapsnapshot[index]['id'],
+                      AppUrl.url + mapsnapshot[index]['picture'].toString(),
+                      mapsnapshot[index]['title'].toString(),
+                      mapsnapshot[index]['price'].toString(),
+                    );
+                  }),
                 );
               }
             }));
@@ -315,14 +315,12 @@ class _HomePageState extends State<Homepage> {
 
   Widget itemFilter(IconData icon, String title) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         searchController.clear();
-        if(title!="Tất cả"){
-          searchController.text=title;
+        if (title != "Tất cả") {
+          searchController.text = title;
         }
-        setState(() {
-
-        });
+        setState(() {});
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -355,7 +353,8 @@ class _HomePageState extends State<Homepage> {
                   color: const Color(0xFFF9F9FB),
                   border: Border.all(color: const Color(0xFFE2E8F0)),
                   borderRadius: BorderRadius.circular(5)),
-              padding: const EdgeInsets.symmetric(horizontal: (8), vertical: (7)),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: (8), vertical: (7)),
               child: Row(
                 children: [
                   const Icon(
@@ -420,7 +419,7 @@ class _HomePageState extends State<Homepage> {
             currentPage == DrawerSections.history ? true : false),
         menuItem(5, "Thông tin thành viên", Icons.account_circle,
             currentPage == DrawerSections.information ? true : false),
-        menuItem(6, "Thẻ thành viên", Icons.card_membership_sharp,
+        menuItem(6, "Điểm tích lũy", Icons.card_membership_sharp,
             currentPage == DrawerSections.membershipCard ? true : false),
         menuItem(7, "Đăng xuất", Icons.logout,
             currentPage == DrawerSections.logOut ? true : false),
@@ -431,8 +430,6 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget menuItem(int id, String title, IconData icon, bool selected) {
-
-
     return Material(
       color: selected ? Colors.grey : Colors.white,
       child: InkWell(
@@ -457,36 +454,28 @@ class _HomePageState extends State<Homepage> {
             }
           });
 
-            if(currentPage==DrawerSections.information){
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ProfilePage()));
-            }
-            else if(currentPage==DrawerSections.home){
-              Navigator.pop(context);
-            }
-            else if(currentPage==DrawerSections.history){
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const History()));
-            }
-            else if(currentPage==DrawerSections.membershipCard){
-              Navigator.pop(context);
-            }
-            else if(currentPage==DrawerSections.logOut){
-              Navigator.pop(context);
-            }
-            else if(currentPage==DrawerSections.notification){
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) =>  PromotionNotice()));
-            }
-            else if(currentPage==DrawerSections.hotline){
-              launch('tel://0853685806');
-            }
-else if(currentPage==DrawerSections.category){
-  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const CategoryPage()));
-            }
-
-
-
+          if (currentPage == DrawerSections.information) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ProfilePage()));
+          } else if (currentPage == DrawerSections.home) {
+            Navigator.pop(context);
+          } else if (currentPage == DrawerSections.history) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const History()));
+          } else if (currentPage == DrawerSections.membershipCard) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const MembershipPage()));
+          } else if (currentPage == DrawerSections.logOut) {
+            Navigator.pop(context);
+          } else if (currentPage == DrawerSections.notification) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => PromotionNoticePage()));
+          } else if (currentPage == DrawerSections.hotline) {
+            launch('tel://0853685806');
+          } else if (currentPage == DrawerSections.category) {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const CategoryPage()));
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -503,8 +492,9 @@ else if(currentPage==DrawerSections.category){
 
   Widget footDrawer() {
     return Container(
-      alignment: Alignment.bottomLeft,
-      margin: EdgeInsets.only(top: 50, left: 30),
+      color: Colors.white,
+
+      margin: const EdgeInsets.only(top: 50, left: 30),
       child: Column(
         children: const [
           Text(

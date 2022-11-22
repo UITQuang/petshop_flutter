@@ -4,10 +4,10 @@ import '../../services/api/product_service.dart';
 import '../../services/utilities/colors.dart';
 
 
-class PromotionNotice extends StatelessWidget {
+class PromotionNoticePage extends StatelessWidget {
   var title;
 
-  PromotionNotice({this.title = 'Thông báo'});
+  PromotionNoticePage({this.title = 'Thông báo'});
   @override
   Widget build(BuildContext context) {
     NoticeProvider noticeProvider = NoticeProvider();
@@ -43,13 +43,7 @@ class PromotionNotice extends StatelessWidget {
               },
             ),
           )
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     // Add your onPressed code here!
-          //   },
-          //   backgroundColor: PRIMARY_COLOR,
-          //   child: const Icon(Icons.chat),
-          // ),
+
         );
   }
   Widget _showNotice (context, item){

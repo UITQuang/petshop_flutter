@@ -47,56 +47,50 @@ class _HistoryDetailState extends State<HistoryDetail> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 50,
-                          color: Colors.white,
-                        ),
-                        Container(
-                          margin:
-                          const EdgeInsets.only(top: 10, bottom: 10),
-                          width: MediaQuery.of(context).size.width,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Container(
-                          height: 80,
-                          color: Colors.white,
-                        ),
-                        Container(
-                          margin:
-                          const EdgeInsets.only(top: 10, bottom: 10),
-                          width: MediaQuery.of(context).size.width,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                        Container(
-                          height: 80,
-                          color: Colors.white,
-                        ),
-                        Container(
-                          margin:
-                          const EdgeInsets.only(top: 10, bottom: 10),
-                          width: MediaQuery.of(context).size.width,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-
-
-                        Container(
-                          height: 150,
-                          color: Colors.white,
-                        ),
-
-
-                      ],
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 50,
+                            color: Colors.white,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10, bottom: 10),
+                            width: MediaQuery.of(context).size.width,
+                            height: 1,
+                            color: Colors.grey,
+                          ),
+                          Container(
+                            height: 80,
+                            color: Colors.white,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10, bottom: 10),
+                            width: MediaQuery.of(context).size.width,
+                            height: 1,
+                            color: Colors.grey,
+                          ),
+                          Container(
+                            height: 80,
+                            color: Colors.white,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10, bottom: 10),
+                            width: MediaQuery.of(context).size.width,
+                            height: 1,
+                            color: Colors.grey,
+                          ),
+                          Container(
+                            height: 150,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),);
+                  );
                 } else {
                   return Column(
                     children: [
@@ -109,24 +103,25 @@ class _HistoryDetailState extends State<HistoryDetail> {
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 4,
-                              offset:
-                                  Offset(0, 1), // changes position of shadow
+                              offset: const Offset(
+                                  0, 1), // changes position of shadow
                             ),
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 4,
-                              offset:
-                                  Offset(0, -1), // changes position of shadow
+                              offset: const Offset(
+                                  0, -1), // changes position of shadow
                             ),
                           ],
                         ),
 
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                        child: snapshot!.data!['info']!["is_paymented"] == "1"
-                            ? AlertPaymented(snapshot!.data!)
-                            : AlertNonPaymented(snapshot!.data!),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 20),
+                        child: snapshot.data!['info']["is_paymented"] == "1"
+                            ? AlertPaymented(snapshot.data!)
+                            : AlertNonPaymented(snapshot.data!),
+
                       ),
                       const SizedBox(
                         height: 20,
@@ -169,7 +164,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
 
                                               style: TextStyle(fontSize: 14)),
                                           Text(
-                                              '${snapshot!.data!['info']['title']} | ${snapshot!.data!['info']['phone']}',
+                                              '${snapshot.data!['info']['title']} | ${snapshot.data!['info']['phone']}',
                                               style: const TextStyle(
                                                   fontSize: 14)),
                                           SizedBox(
@@ -179,7 +174,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                                 100,
                                             child: Wrap(children: [
                                               Text(
-                                                  'Địa chỉ: ${snapshot!.data!['info']['address']}',
+                                                  'Địa chỉ: ${snapshot.data!['info']['address']}',
                                                   style: const TextStyle(
                                                       fontSize: 14)),
                                             ]),
@@ -212,10 +207,10 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Mã hoá đơn: ${snapshot!.data!['info']['order_code']} ",
+                                            "Mã hoá đơn: ${snapshot.data!['info']['order_code']} ",
                                           ),
                                           Text(
-                                            "Ngày đặt: ${snapshot!.data!['info']['date']} ",
+                                            "Ngày đặt: ${snapshot.data!['info']['date']} ",
                                           ),
                                         ])
                                   ]),
@@ -227,13 +222,13 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                 color: Colors.grey,
                               ),
                               for (int i = 0;
-                                  i < snapshot!.data!['details'].length;
+                                  i < snapshot.data!['details'].length;
                                   i++)
                                 showProductItem(
-                                    context, snapshot!.data!['details'][i])
+                                    context, snapshot.data!['details'][i])
                             ],
                           )),
-                      if (snapshot!.data!['info']!["is_paymented"] == "0")
+                      if (snapshot.data!['info']!["is_paymented"] == "0")
                         IsPayment()
                     ],
                   );
@@ -308,13 +303,12 @@ class _HistoryDetailState extends State<HistoryDetail> {
         width: MediaQuery.of(context).size.width,
         color: Colors.white,
 
-
         padding: const EdgeInsets.only(bottom: 10),
 
         child: Row(children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width*0.25,
-            height: MediaQuery.of(context).size.width*0.25,
+            width: MediaQuery.of(context).size.width * 0.25,
+            height: MediaQuery.of(context).size.width * 0.25,
             margin: const EdgeInsets.only(right: 10.0),
             decoration: BoxDecoration(
                 color: Colors.red[100],
@@ -342,8 +336,9 @@ class _HistoryDetailState extends State<HistoryDetail> {
                     child: Text('Phân loại: ${item["classify"].toString()}',
                         textAlign: TextAlign.left,
                         style: const TextStyle(
-                          color: Colors.black,
-                            fontSize: 15, fontWeight: FontWeight.w400)),
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400)),
                   ),
                   const SizedBox(
                     height: 8,
