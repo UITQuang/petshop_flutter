@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project1/src/models/product_detail.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
+import '../../../providers/cart_provider/CartProvider.dart';
 import '../../../services/utilities/colors.dart';
 
 class ProductDetailBottomModel extends StatefulWidget {
@@ -11,6 +13,7 @@ class ProductDetailBottomModel extends StatefulWidget {
   final dynamic listProductType;
   final int productAmount;
   final ValueChanged<int> update;
+
 
   const ProductDetailBottomModel(
       {Key? key,
@@ -32,6 +35,7 @@ class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
 
   @override
   Widget build(BuildContext context) {
+    var box = Hive.box('productBox');
     return SafeArea(
         child: Wrap(
       children: [
@@ -112,7 +116,15 @@ class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      print('Mua ngay');
+                      context.read<CartProvider>().addItem(
+                            productId: box.get('productInfo')['id'],
+                            productTypeId: box.get('productInfo')['typeId'],
+                            title: box.get('productInfo')['title'],
+                            amount: box.get('productInfo')['amount'],
+                            price: box.get('productInfo')['price'],
+                            image: box.get('productInfo')['image'],
+                            type: box.get('productInfo')['type'],
+                          );
                     },
                     style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.all(0),
