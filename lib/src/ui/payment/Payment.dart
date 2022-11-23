@@ -32,7 +32,6 @@ class _PaymentState extends State<Payment> {
   int feeShip = 20000;
   _PaymentState({this.title = 'Giỏ hàng'});
 
-  @override
   String responseCode = '';
   String vnp_TxnRef = '';
   String method = "Thanh toán bằng Momo"; //1:momo 2:vnpay 3:cod
@@ -271,7 +270,7 @@ class _PaymentState extends State<Payment> {
                               Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    Text(method ?? "",
+                                    Text(method!="" ?method: "",
                                         style: const TextStyle(
                                             overflow: TextOverflow.ellipsis,
                                             color: Color.fromRGBO(152, 152, 152, 1),
@@ -413,7 +412,7 @@ class _PaymentState extends State<Payment> {
         appScheme: "pet_shop",
         merchantCode: 'MOMOIQA420180417',
         partnerCode: 'pet_shop',
-        amount: int.parse(total_payment.toString()) ?? 0,
+        amount: int.parse(total_payment.toString()),
         orderId: order_code.toString() ,
         orderLabel: 'Thanh toán đơn hàng',
         merchantNameLabel: "Thanh toán MoMo",
