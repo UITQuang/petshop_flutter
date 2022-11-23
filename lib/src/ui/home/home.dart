@@ -1,5 +1,7 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
@@ -28,6 +30,18 @@ class Homepage extends StatefulWidget {
 class _HomePageState extends State<Homepage> {
   TextEditingController searchController = TextEditingController();
   var currentPage = DrawerSections.home;
+  final f = NumberFormat("###,###.###", "tr_TR");
+  var colorizeColors = [
+    Colors.red,
+    Colors.yellow,
+    PRIMARY_COLOR,
+  ];
+
+  var colorizeTextStyle = const TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    fontFamily: 'Horizon',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +53,14 @@ class _HomePageState extends State<Homepage> {
           Expanded(child: searchFilter()),
           Stack(
             children: [
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (_) => Cart()));
-                      },
-                      icon: const Icon(Icons.shopping_bag_outlined)),
-                ),
+              Padding(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (_) => Cart()));
+                    },
+                    icon: const Icon(Icons.shopping_bag_outlined)),
               ),
               Positioned(
                 right: 2,
@@ -71,13 +83,13 @@ class _HomePageState extends State<Homepage> {
             ],
           )
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(5),
-          child: Container(
-            color: Colors.grey[200],
-            height: 1.0,
-          ),
-        ),
+        // bottom: PreferredSize(
+        //   preferredSize: const Size.fromHeight(5),
+        //   child: Container(
+        //     color: Colors.grey[200],
+        //     height: 1.0,
+        //   ),
+        // ),
         titleSpacing: 10,
         automaticallyImplyLeading: true,
       ),
@@ -100,19 +112,40 @@ class _HomePageState extends State<Homepage> {
   Widget bodyView() {
     return SafeArea(
         child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 10,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment(0.8, 1),
+            colors: <Color>[
+              PRIMARY_COLOR,
+              Color(0xff7136d9),
+              Color(0xffa77def),
+              Color(0xffbda3ec),
+              Color(0xffc7afd5),
+              Color(0xffd5bcf3),
+              Color(0xffe8d8f5),
+              Color(0xfff5f3f8),
+            ],
+            // Gradient from https://learnui.design/tools/gradient-generator.html
+            tileMode: TileMode.mirror,
           ),
-          carouselSlider(),
-          const SizedBox(
-            height: 10,
-          ),
-          listFilter(),
-          listProduct(),
-        ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            carouselSlider(),
+            const SizedBox(
+              height: 10,
+            ),
+            listHotProduct(),
+            listSpecialForYou(),
+            listPopularProduct()
+          ],
+        ),
       ),
     ));
   }
@@ -123,15 +156,17 @@ class _HomePageState extends State<Homepage> {
         future: noticeProvider.getBannerList(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Text("");
+            return const Text("");
           } else {
-            int count_banner =
+            int countBanner =
                 int.parse(snapshot.data["count_banner"].toString());
             return CarouselSlider(
               items: [
-                for (int i = 0; i < count_banner; i++)
+                for (int i = 0; i < countBanner; i++)
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: MediaQuery.of(context).size.width*0.955 ,
+
+
                     child: Image.network(
                         AppUrl.url + snapshot.data["list_banner"][i]["picture"],
                         fit: BoxFit.fill),
@@ -140,13 +175,163 @@ class _HomePageState extends State<Homepage> {
               options: CarouselOptions(
                 autoPlay: true,
                 enlargeCenterPage: true,
-                viewportFraction: 0.6,
-                aspectRatio: 2.8,
-                initialPage: count_banner,
+                viewportFraction: 1.5,
+                aspectRatio: 4,
+                initialPage: countBanner,
               ),
             );
           }
         });
+  }
+
+  Widget listHotProduct() {
+    ProductService productService = ProductService();
+    return Container(
+      margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        children: [
+          headerSlideProduct("Sản phẩm ", 'HOT '),
+          FutureBuilder(
+            future: productService.getProductHotList(),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (!snapshot.hasData) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for (int i = 0; i < 6; i++)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: MediaQuery.of(context).size.width * 0.3,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5)),
+                              ),
+                            ),
+                        ],
+                      )),
+                );
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (int i = 0; i < 6; i++)
+                          itemHotProduct(
+                              snapshot.data![i]['id'],
+                              AppUrl.url +
+                                  snapshot.data![i]['picture'].toString(),
+                              snapshot.data![i]['price'])
+                      ],
+                    ),
+                  ),
+                );
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget listSpecialForYou() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(8, 10, 8, 5),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        children: [
+          headerSlideProduct("Dành cho ", 'BẠN'),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (int i = 0; i < 10; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0, bottom: 8),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        height: MediaQuery.of(context).size.width * 0.25,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: const Center(child: Text("hot product"))),
+                  )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget headerSlideProduct(String first, String last) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 8, 8, 5),
+      child: Row(
+        children: [
+          Text(
+            first,
+            style: const TextStyle(
+                color: PRIMARY_COLOR,
+                fontSize: 18,
+                fontWeight: FontWeight.w500),
+          ),
+          AnimatedTextKit(
+            animatedTexts: [
+              ColorizeAnimatedText(
+                last,
+                textStyle: colorizeTextStyle,
+                colors: colorizeColors,
+              ),
+              ColorizeAnimatedText(
+                last,
+                textStyle: colorizeTextStyle,
+                colors: colorizeColors,
+              ),
+            ],
+            repeatForever: true,
+            isRepeatingAnimation: true,
+          ),
+          const Expanded(child: SizedBox()),
+          GestureDetector(
+            onTap: () {},
+            child: const Text(
+              "Xem thêm",
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget listPopularProduct() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+      child: Column(
+        children: [
+          listFilter(),
+          listProduct(),
+        ],
+      ),
+    );
   }
 
   Widget listProduct() {
@@ -205,7 +390,7 @@ class _HomePageState extends State<Homepage> {
                       );
                     }));
               } else {
-                var mapsnapshot = new Map();
+                var mapsnapshot =  Map();
                 int lengthSearch = 0;
                 for (int i = 0; i < snapshot.data!.length; i++) {
                   String name = snapshot.data![i]['title'];
@@ -222,7 +407,7 @@ class _HomePageState extends State<Homepage> {
                   physics: const NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   crossAxisCount: 2,
-                  childAspectRatio: (1 / 1.5),
+                  childAspectRatio: (1 / 1.45),
                   children: List.generate(mapsnapshot.length, (index) {
                     return itemProduct(
                       mapsnapshot[index]['id'],
@@ -234,6 +419,68 @@ class _HomePageState extends State<Homepage> {
                 );
               }
             }));
+  }
+
+  Widget itemHotProduct(
+    int id,
+    String networkImage,
+    String price,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DetailProductScreen(
+                  id: id,
+                )));
+        ProductService().addViewProduct('$id');
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.33,
+          height: MediaQuery.of(context).size.width * 0.4,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(5)),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Stack(
+                  children: [
+                    Image(
+                      image: NetworkImage(networkImage),
+                    ),
+                    const Positioned(
+                        top: 0,
+                        right: 0,
+                        child: SizedBox(
+                            child: Icon(
+                          Icons.hotel_class_outlined,
+                          color: Color(0xfffa1a1a),
+                          size: 20,
+                        )))
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    f.format(int.parse(price)),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget itemProduct(
@@ -249,14 +496,16 @@ class _HomePageState extends State<Homepage> {
             builder: (context) => DetailProductScreen(
                   id: id,
                 )));
+        ProductService().addViewProduct('$id');
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(2),
         child: Container(
           alignment: Alignment.topLeft,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(5)),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.all(0.0),
@@ -274,25 +523,13 @@ class _HomePageState extends State<Homepage> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Row(
-                children: [
-                  Text(
-                    '₫' '$price',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: SECONDARY_COLOR,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Expanded(
-                    child: SizedBox(
-                      width: 10,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
+              Text(
+                '₫' '$price',
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: SECONDARY_COLOR,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -302,13 +539,32 @@ class _HomePageState extends State<Homepage> {
   }
 
   Widget listFilter() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        itemFilter(Icons.border_all, "Tất cả"),
-        itemFilter(Icons.pets_outlined, "Chó"),
-        itemFilter(Icons.pets_sharp, "Mèo"),
-        itemFilter(Icons.toys, "Đồ chơi")
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0, top: 20, bottom: 8),
+          child: Row(children: const [
+            Text(
+              "Sản phẩm phổ biến",
+              style: TextStyle(
+                  color: PRIMARY_COLOR,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500),
+            ),
+            Expanded(child: SizedBox()),
+          ]),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              itemFilter(Icons.border_all, "Tất cả"),
+              itemFilter(Icons.pets_outlined, "Chó"),
+              itemFilter(Icons.pets_sharp, "Mèo"),
+              itemFilter(Icons.toys_outlined, "Đồ chơi")
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -323,16 +579,28 @@ class _HomePageState extends State<Homepage> {
         setState(() {});
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8, right: 8.0),
         child: Container(
           height: 40,
           decoration: BoxDecoration(
-              color: Color(0xffF4F4F4),
-              borderRadius: BorderRadius.circular(10)),
+              color: const Color(0xffffecdf),
+              borderRadius: BorderRadius.circular(5)),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
-              children: [Icon(icon), Text(title)],
+              children: [
+                Icon(
+                  icon,
+                  color: const Color(0xfff59c89),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                )
+              ],
             ),
           ),
         ),
@@ -493,7 +761,6 @@ class _HomePageState extends State<Homepage> {
   Widget footDrawer() {
     return Container(
       color: Colors.white,
-
       margin: const EdgeInsets.only(top: 50, left: 30),
       child: Column(
         children: const [

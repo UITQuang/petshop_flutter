@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:project1/src/ui/cart/components/CartItem.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+
 
 class CartProvider extends ChangeNotifier {
   static final Map<String, CartItem> _items = {};
@@ -18,8 +18,8 @@ class CartProvider extends ChangeNotifier {
     image,
     type,
   }) {
-    void _addNoneExistProduct(_items) {
-      _items.putIfAbsent(
+    void _addNoneExistProduct(items) {
+      items.putIfAbsent(
           productId,
           () => CartItem(
                 productId: productId,
@@ -33,8 +33,8 @@ class CartProvider extends ChangeNotifier {
               ));
     }
 
-    void _addNoneExistedProductType(_items) {
-      _items.putIfAbsent(
+    void _addNoneExistedProductType(items) {
+      items.putIfAbsent(
           '${productId}_${productTypeId}',
           () => CartItem(
                 productId: productId,
@@ -48,8 +48,8 @@ class CartProvider extends ChangeNotifier {
               ));
     }
 
-    void _updateExistedProductType(_items) {
-      _items.update(
+    void _updateExistedProductType(items) {
+      items.update(
           '${productId}_${productTypeId}',
           (value) => CartItem(
                 productId: productId,
@@ -63,8 +63,8 @@ class CartProvider extends ChangeNotifier {
               ));
     }
 
-    void _updateFirstExistedProduct(_items) {
-      _items.update(
+    void _updateFirstExistedProduct(items) {
+      items.update(
           productId,
           (value) => CartItem(
                 productId: productId,
