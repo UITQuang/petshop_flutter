@@ -459,7 +459,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                             i++)
                                           IconButton(
                                             icon: Image.network(AppUrl.url +
-                                                snapshot.data!.productType![i]!
+                                                snapshot.data!.productType![i]
                                                     .picture
                                                     .toString()),
                                             iconSize: 60,
@@ -525,7 +525,10 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               price: box.get('productInfo')['price'],
                               image: box.get('productInfo')['image'],
                               type: box.get('productInfo')['type'],
+
                             );*/
+                        ProductService().addToCart(box.get('productInfo')['id'].toString());
+
                       },
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(0),

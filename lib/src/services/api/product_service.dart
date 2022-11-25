@@ -19,6 +19,27 @@ class ProductService{
       throw Exception('Error');
     }
   }
+  Future<List<dynamic>> getProductHotList () async {
+
+    final response = await http.get(Uri.parse(AppUrl.productHotList));
+    var   data = jsonDecode(response.body.toString());
+    if(response.statusCode == 200){
+      return data;
+
+    }else{
+      throw Exception('Error');
+    }
+  }
+  Future<void> addViewProduct (String id) async {
+
+    await http.post(Uri.parse(AppUrl.addViewProduct),body: {'product_id':id});
+
+  }
+  Future<void> addToCart (String id) async {
+
+    await http.post(Uri.parse(AppUrl.addToCart),body: {'product_id':id});
+
+  }
   Future<List<dynamic>> getCategoryList () async {
 
     final response = await http.get(Uri.parse(AppUrl.categoryList));
@@ -31,7 +52,6 @@ class ProductService{
       throw Exception('Error');
     }
   }
-
   Future<ProductDetail> getDetailProduct (int id) async {
     final response = await http.get(Uri.parse(AppUrl.detailProduct+id.toString()));
     if(response.statusCode == 200){
