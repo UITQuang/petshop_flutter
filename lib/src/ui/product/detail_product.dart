@@ -29,17 +29,18 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   String price = "";
   String title = "";
   int amount = 1;
+  Color activeTypeColor = SECONDARY_COLOR;
 
   var box = Hive.box('productBox');
 
-  void _changeProduct(iProduct) {
-    print(iProduct.picture);
-    print(iProduct.id);
+  Box<ProductType> productTypeBox = Hive.box<ProductType>('productTypeBox');
+
+  void changeProductTypeActive(typePicture, typePrice, typeId, typeTitle) {
     setState(() {
-      picture = iProduct!.picture;
-      price = iProduct!.price;
-      activeTypeId = iProduct!.id.toString();
-      title = iProduct!.title;
+      picture = typePicture;
+      price = typePrice;
+      activeTypeId = typeId.toString();
+      title = typeTitle;
     });
   }
 
@@ -115,8 +116,17 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               snapshot.data!.product!.picture.toString(),
                           'type': title.toString(),
                           'amount': amount
-
                         });
+                        for (int i = 0;
+                            i < snapshot.data!.productType!.length;
+                            i++) {
+                          if (snapshot.data!.productType![i].id != null) {
+                            String boxItemName =
+                                'productTypeInfo${i.toString()}';
+                            productTypeBox.put(
+                                boxItemName, snapshot.data!.productType![i]);
+                          }
+                        }
 
                         return Column(
                           children: [
@@ -505,8 +515,9 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   flex: 1,
                   child: ElevatedButton(
                       onPressed: () {
-                        // _modalBottomSheetMenu();
-                        context.read<CartProvider>().addItem(
+                        print(productTypeBox.values.toList());
+                        _modalBottomSheetMenu(productTypeBox.values.toList());
+                        /*context.read<CartProvider>().addItem(
                               productId: box.get('productInfo')['id'],
                               productTypeId: box.get('productInfo')['typeId'],
                               title: box.get('productInfo')['title'],
@@ -514,8 +525,10 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               price: box.get('productInfo')['price'],
                               image: box.get('productInfo')['image'],
                               type: box.get('productInfo')['type'],
-                            );
+
+                            );*/
                         ProductService().addToCart(box.get('productInfo')['id'].toString());
+
                       },
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(0),
@@ -568,6 +581,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   }
 
   void _modalBottomSheetMenu(productType) {
+    print('mounted');
     Size size = MediaQuery.of(context).size;
     picture = productType[0]!.picture;
     price = productType[0]!.price;
@@ -579,7 +593,13 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
               curentProductType: _curentProductType,
               productType: productType,
               listProductType: _listProductType,
-              productAmount: amount, update: _update,
+              productAmount: amount,
+              update: _update,
+              changeProduct: changeProductTypeActive,
+              activeTypeId: activeTypeId,
+              picture: picture,
+              price: price,
+              title: title,
             ));
   }
 
@@ -622,22 +642,28 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
     );
   }
 
-  Widget _listProductType(iProduct) {
+  Widget _listProductType(iProduct, payloadProductTypeInfo) {
+    void handleProductTypeClicked(iProduct) {
+      payloadProductTypeInfo(iProduct);
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
+            backgroundColor: activeTypeId == iProduct.id.toString()
+                ? activeTypeColor
+                : Colors.white,
             elevation: 5,
             shadowColor: BACKGROUND_COLOR),
         onPressed: () {
-          _changeProduct(iProduct);
+          handleProductTypeClicked(iProduct);
         },
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Image(
-              image: NetworkImage(AppUrl.url + iProduct!.picture),
+              image: NetworkImage('${AppUrl.url}${iProduct!.picture}'),
               width: 30,
             ),
             SizedBox(
