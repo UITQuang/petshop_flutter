@@ -12,7 +12,12 @@ class ProductDetailBottomModel extends StatefulWidget {
   final List<ProductType> productType;
   final dynamic listProductType;
   final int productAmount;
+  final String activeTypeId;
+  final String picture;
+  final String price;
+  final String title;
   final ValueChanged<int> update;
+  final dynamic changeProduct;
 
   const ProductDetailBottomModel(
       {Key? key,
@@ -20,17 +25,38 @@ class ProductDetailBottomModel extends StatefulWidget {
       required this.productType,
       required this.listProductType,
       required this.productAmount,
-      required this.update})
+      required this.update,
+      required this.changeProduct,
+      required this.activeTypeId,
+      required this.picture,
+      required this.price,
+      required this.title})
       : super(key: key);
 
   @override
   State<ProductDetailBottomModel> createState() =>
-      _ProductDetailBottomModelState(productAmount);
+      _ProductDetailBottomModelState(
+          productAmount, activeTypeId, picture, price, title);
 }
 
 class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
   int productAmount;
-  _ProductDetailBottomModelState(this.productAmount);
+  String activeTypeId;
+  String picture;
+  String price;
+  String title;
+  _ProductDetailBottomModelState(this.productAmount, this.activeTypeId,
+      this.picture, this.price, this.title);
+
+  void payloadProductTypeInfo(iProduct) {
+    setState(() {
+      activeTypeId = iProduct!.id.toString();
+      picture = iProduct!.picture;
+      price = iProduct!.price;
+      title = iProduct!.title;
+    });
+    widget.changeProduct( picture, price,activeTypeId, title);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +91,8 @@ class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
                         Wrap(
                           children: [
                             for (int i = 0; i < widget.productType.length; i++)
-                              widget.listProductType(widget.productType[i])
+                              widget.listProductType(
+                                  widget.productType[i], payloadProductTypeInfo)
                           ],
                         ),
                       ]),

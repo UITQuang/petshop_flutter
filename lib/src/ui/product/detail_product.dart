@@ -35,12 +35,12 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
 
   Box<ProductType> productTypeBox = Hive.box<ProductType>('productTypeBox');
 
-  void _changeProduct(iProduct) {
+  void changeProductTypeActive(typePicture, typePrice, typeId, typeTitle) {
     setState(() {
-      picture = iProduct!.picture;
-      price = iProduct!.price;
-      activeTypeId = iProduct!.id.toString();
-      title = iProduct!.title;
+      picture = typePicture;
+      price = typePrice;
+      activeTypeId = typeId.toString();
+      title = typeTitle;
     });
   }
 
@@ -516,7 +516,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   child: ElevatedButton(
                       onPressed: () {
                         print(productTypeBox.values.toList());
-                    _modalBottomSheetMenu(productTypeBox.values.toList());
+                        _modalBottomSheetMenu(productTypeBox.values.toList());
                         /*context.read<CartProvider>().addItem(
                               productId: box.get('productInfo')['id'],
                               productTypeId: box.get('productInfo')['typeId'],
@@ -578,6 +578,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   }
 
   void _modalBottomSheetMenu(productType) {
+    print('mounted');
     Size size = MediaQuery.of(context).size;
     picture = productType[0]!.picture;
     price = productType[0]!.price;
@@ -591,6 +592,11 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
               listProductType: _listProductType,
               productAmount: amount,
               update: _update,
+              changeProduct: changeProductTypeActive,
+              activeTypeId: activeTypeId,
+              picture: picture,
+              price: price,
+              title: title,
             ));
   }
 
@@ -633,7 +639,11 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
     );
   }
 
-  Widget _listProductType(iProduct) {
+  Widget _listProductType(iProduct, payloadProductTypeInfo) {
+    void handleProductTypeClicked(iProduct) {
+      payloadProductTypeInfo(iProduct);
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       child: ElevatedButton(
@@ -644,7 +654,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
             elevation: 5,
             shadowColor: BACKGROUND_COLOR),
         onPressed: () {
-          _changeProduct(iProduct);
+          handleProductTypeClicked(iProduct);
         },
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
