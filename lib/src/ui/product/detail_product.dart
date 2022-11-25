@@ -117,6 +117,15 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                           'type': title.toString(),
                           'amount': amount
                         });
+
+                        if(productTypeBox.length > snapshot.data!.productType!.length){
+                          var stopIndex = snapshot.data!.productType!.length - 1;
+                          var startIndex = productTypeBox.length - 1;
+                          for(int  i = startIndex; i > stopIndex ; i--) {
+                            productTypeBox.delete('productTypeInfo${i.toString()}');
+                          }
+                        }
+
                         for (int i = 0;
                             i < snapshot.data!.productType!.length;
                             i++) {
@@ -127,6 +136,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                 boxItemName, snapshot.data!.productType![i]);
                           }
                         }
+                        print(productTypeBox.values.toList());
 
                         return Column(
                           children: [
@@ -516,8 +526,8 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                   child: ElevatedButton(
                       onPressed: () {
                         print(productTypeBox.values.toList());
-                        _modalBottomSheetMenu(productTypeBox.values.toList());
-                        /*context.read<CartProvider>().addItem(
+                        if(productTypeBox.values.toList().length == 0) {
+                          context.read<CartProvider>().addItem(
                               productId: box.get('productInfo')['id'],
                               productTypeId: box.get('productInfo')['typeId'],
                               title: box.get('productInfo')['title'],
@@ -526,9 +536,11 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               image: box.get('productInfo')['image'],
                               type: box.get('productInfo')['type'],
 
-                            );*/
-
-
+                            );
+                          ProductService().addToCart(box.get('productInfo')['id'].toString());
+                        } else {
+                          _modalBottomSheetMenu(productTypeBox.values.toList());
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(0),
@@ -581,7 +593,6 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   }
 
   void _modalBottomSheetMenu(productType) {
-    print('mounted');
     Size size = MediaQuery.of(context).size;
     picture = productType[0]!.picture;
     price = productType[0]!.price;
