@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project1/src/models/product_detail.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
+import '../../../providers/cart_provider/CartProvider.dart';
 import '../../../services/utilities/colors.dart';
 
 class ProductDetailBottomModel extends StatefulWidget {
@@ -10,7 +12,12 @@ class ProductDetailBottomModel extends StatefulWidget {
   final List<ProductType> productType;
   final dynamic listProductType;
   final int productAmount;
+  final String activeTypeId;
+  final String picture;
+  final String price;
+  final String title;
   final ValueChanged<int> update;
+  final dynamic changeProduct;
 
   const ProductDetailBottomModel(
       {Key? key,
@@ -18,20 +25,42 @@ class ProductDetailBottomModel extends StatefulWidget {
       required this.productType,
       required this.listProductType,
       required this.productAmount,
-      required this.update})
+      required this.update,
+      required this.changeProduct,
+      required this.activeTypeId,
+      required this.picture,
+      required this.price,
+      required this.title})
       : super(key: key);
 
   @override
   State<ProductDetailBottomModel> createState() =>
-      _ProductDetailBottomModelState(productAmount);
+      _ProductDetailBottomModelState(
+          productAmount, activeTypeId, picture, price, title);
 }
 
 class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
   int productAmount;
-  _ProductDetailBottomModelState(this.productAmount);
+  String activeTypeId;
+  String picture;
+  String price;
+  String title;
+  _ProductDetailBottomModelState(this.productAmount, this.activeTypeId,
+      this.picture, this.price, this.title);
+
+  void payloadProductTypeInfo(iProduct) {
+    setState(() {
+      activeTypeId = iProduct!.id.toString();
+      picture = iProduct!.picture;
+      price = iProduct!.price;
+      title = iProduct!.title;
+    });
+    widget.changeProduct( picture, price,activeTypeId, title);
+  }
 
   @override
   Widget build(BuildContext context) {
+    var box = Hive.box('productBox');
     return SafeArea(
         child: Wrap(
       children: [
@@ -62,7 +91,8 @@ class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
                         Wrap(
                           children: [
                             for (int i = 0; i < widget.productType.length; i++)
-                              widget.listProductType(widget.productType[i])
+                              widget.listProductType(
+                                  widget.productType[i], payloadProductTypeInfo)
                           ],
                         ),
                       ]),
@@ -112,7 +142,15 @@ class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      print('Mua ngay');
+                      context.read<CartProvider>().addItem(
+                            productId: box.get('productInfo')['id'],
+                            productTypeId: box.get('productInfo')['typeId'],
+                            title: box.get('productInfo')['title'],
+                            amount: box.get('productInfo')['amount'],
+                            price: box.get('productInfo')['price'],
+                            image: box.get('productInfo')['image'],
+                            type: box.get('productInfo')['type'],
+                          );
                     },
                     style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.all(0),
