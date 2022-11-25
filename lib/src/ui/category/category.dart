@@ -14,7 +14,7 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int selectedIndex = 0;
   ProductService productService = ProductService();
 
@@ -237,6 +237,7 @@ class _CategoryPageState extends State<CategoryPage> {
             builder: (context) => DetailProductScreen(
                   id: id,
                 )));
+        ProductService().addViewProduct('$id');
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 16),

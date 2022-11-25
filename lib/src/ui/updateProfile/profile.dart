@@ -328,10 +328,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             image!,
                             fit: BoxFit.cover,
                           )
-                        : Image.network(
+                        : (box.get("picture").toString()!=null)?Image.network(
                             AppUrl.url + box.get("picture").toString(),
                             fit: BoxFit.cover,
-                          )),
+                          ):Image.asset("assets/images/avatar.jpg")),
               ),
             ),
             Positioned(

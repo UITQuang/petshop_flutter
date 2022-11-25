@@ -197,7 +197,7 @@ class _HistoryState extends State<History> {
           tileColor: Colors.grey[100],
           title: Row(
             children: [
-              Text(item["date"].toString() ?? ""),
+              Text(item["date"].toString()!="" ?item["date"].toString(): ""),
               const Expanded(child: SizedBox()),
               Text(
                 '${f.format(int.parse(item['total_payment']))} VNĐ',
@@ -206,7 +206,7 @@ class _HistoryState extends State<History> {
               )
             ],
           ),
-          subtitle: Text("Mã hoá đơn: ${item["order_code"].toString() ?? ""}"),
+          subtitle: Text("Mã hoá đơn: ${item["order_code"].toString()!="" ?item["order_code"].toString(): ""}"),
           trailing: const Icon(
             size: 15,
             Icons.arrow_forward_ios_rounded,
