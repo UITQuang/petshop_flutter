@@ -527,7 +527,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               type: box.get('productInfo')['type'],
 
                             );*/
-                        ProductService().addToCart(box.get('productInfo')['id'].toString());
+
 
                       },
                       style: ElevatedButton.styleFrom(

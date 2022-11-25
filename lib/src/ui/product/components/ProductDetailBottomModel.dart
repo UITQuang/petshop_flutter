@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/cart_provider/CartProvider.dart';
+import '../../../services/api/product_service.dart';
 import '../../../services/utilities/colors.dart';
 
 class ProductDetailBottomModel extends StatefulWidget {
@@ -151,6 +152,7 @@ class _ProductDetailBottomModelState extends State<ProductDetailBottomModel> {
                             image: box.get('productInfo')['image'],
                             type: box.get('productInfo')['type'],
                           );
+                      ProductService().addToCart(box.get('productInfo')['id'].toString());
                     },
                     style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.all(0),
