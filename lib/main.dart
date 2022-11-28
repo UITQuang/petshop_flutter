@@ -19,7 +19,7 @@ void main() async{
     child: MaterialApp(
         theme: ThemeData(primaryColor: Colors.pinkAccent),
         debugShowCheckedModeBanner: false,
-        home:  const Homepage()),
+        home:  const LoginPage()),
   ));
 
 }

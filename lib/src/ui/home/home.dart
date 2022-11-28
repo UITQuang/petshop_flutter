@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
@@ -38,7 +39,7 @@ class _HomePageState extends State<Homepage> {
   ];
 
   var colorizeTextStyle = const TextStyle(
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: FontWeight.w600,
     fontFamily: 'Horizon',
   );
@@ -119,8 +120,8 @@ class _HomePageState extends State<Homepage> {
             end: Alignment(0.8, 1),
             colors: <Color>[
               PRIMARY_COLOR,
-              Color(0xff7136d9),
-              Color(0xffa77def),
+              Color(0xff3921a1),
+              Color(0xff7948ce),
               Color(0xffbda3ec),
               Color(0xffc7afd5),
               Color(0xffd5bcf3),
@@ -142,7 +143,7 @@ class _HomePageState extends State<Homepage> {
               height: 10,
             ),
             listHotProduct(),
-            listSpecialForYou(),
+            listSaleProduct(),
             listPopularProduct()
           ],
         ),
@@ -164,9 +165,7 @@ class _HomePageState extends State<Homepage> {
               items: [
                 for (int i = 0; i < countBanner; i++)
                   SizedBox(
-                    width: MediaQuery.of(context).size.width*0.955 ,
-
-
+                    width: MediaQuery.of(context).size.width * 0.99,
                     child: Image.network(
                         AppUrl.url + snapshot.data["list_banner"][i]["picture"],
                         fit: BoxFit.fill),
@@ -187,7 +186,7 @@ class _HomePageState extends State<Homepage> {
   Widget listHotProduct() {
     ProductService productService = ProductService();
     return Container(
-      margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(10)),
       child: Column(
@@ -243,31 +242,59 @@ class _HomePageState extends State<Homepage> {
     );
   }
 
-  Widget listSpecialForYou() {
+  Widget listSaleProduct() {
+    ProductService productService = ProductService();
     return Container(
-      margin: const EdgeInsets.fromLTRB(8, 10, 8, 5),
+      margin: const EdgeInsets.fromLTRB(8, 5, 8, 0),
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
           headerSlideProduct("Dành cho ", 'BẠN'),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (int i = 0; i < 10; i++)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10.0, bottom: 8),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10)),
-                        height: MediaQuery.of(context).size.width * 0.25,
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        child: const Center(child: Text("hot product"))),
-                  )
-              ],
-            ),
+          FutureBuilder(
+            future: productService.getProductReduceList(),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (!snapshot.hasData) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for (int i = 0; i < 6; i++)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: MediaQuery.of(context).size.width * 0.3,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5)),
+                              ),
+                            ),
+                        ],
+                      )),
+                );
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (int i = 0; i < 6; i++)
+                          itemSaleProduct(
+                              snapshot.data![i]['id'],
+                              AppUrl.url +
+                                  snapshot.data![i]['picture'].toString(),
+                              snapshot.data![i]['percent_discount'])
+                      ],
+                    ),
+                  ),
+                );
+              }
+            },
           )
         ],
       ),
@@ -320,7 +347,7 @@ class _HomePageState extends State<Homepage> {
 
   Widget listPopularProduct() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+      margin: const EdgeInsets.fromLTRB(2, 0, 2, 0),
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -390,7 +417,7 @@ class _HomePageState extends State<Homepage> {
                       );
                     }));
               } else {
-                var mapsnapshot =  Map();
+                var mapsnapshot = Map();
                 int lengthSearch = 0;
                 for (int i = 0; i < snapshot.data!.length; i++) {
                   String name = snapshot.data![i]['title'];
@@ -439,10 +466,11 @@ class _HomePageState extends State<Homepage> {
         padding: const EdgeInsets.only(right: 10.0),
         child: Container(
           width: MediaQuery.of(context).size.width * 0.33,
-          height: MediaQuery.of(context).size.width * 0.4,
+          height: MediaQuery.of(context).size.width * 0.45,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(5)),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.all(0),
@@ -463,19 +491,127 @@ class _HomePageState extends State<Homepage> {
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    f.format(int.parse(price)),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.red,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+              Text(
+                f.format(int.parse(price)),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
+              LinearPercentIndicator(
+                width: MediaQuery.of(context).size.width * 0.3,
+                lineHeight: MediaQuery.of(context).size.width * 0.03,
+                backgroundColor: Colors.red[100],
+                animation: true,
+                percent: 0.6,
+                animationDuration: 2000,
+                progressColor: Colors.red[400],
+                alignment: MainAxisAlignment.center,
+                center: Text(
+                  'Đã bán ${id * 2}',
+                  style: const TextStyle(fontSize: 11, color: Colors.white),
+                ),
+                barRadius: const Radius.circular(5),
+                linearStrokeCap: LinearStrokeCap.roundAll,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  Widget itemSaleProduct(
+      int id,
+      String networkImage,
+      String percent,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DetailProductScreen(
+              id: id,
+            )));
+        ProductService().addViewProduct('$id');
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.25,
+          height: MediaQuery.of(context).size.width * 0.25,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(5)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Stack(
+                  children: [
+                    Image(
+                      image: NetworkImage(networkImage),
+                    ),
+                     Positioned(
+                        top: 0,
+                        right: 0,
+                     
+                          child: Container(
+                            height: 35,
+                            width: 32,
+                            decoration: const BoxDecoration(
+                              gradient:   LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: <Color>[
+
+                              Colors.orangeAccent,
+                              Colors.yellow,
+                              Colors.yellowAccent,
+                                ],
+                                // Gradient from https://learnui.design/tools/gradient-generator.html
+                                tileMode: TileMode.mirror,
+                              ),
+                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
+                            ),
+                          ),
+                     ),
+
+                    Positioned(
+                        top: 0,
+                        right: 0,
+                        child: SizedBox(
+                          child: DefaultTextStyle(
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black54,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 7.0,
+                                  color: Colors.white70,
+                                  offset: Offset(0, 0),
+                                ),
+                              ],
+                            ),
+                            child: AnimatedTextKit(
+                              pause: const Duration(milliseconds:0 ),
+                              repeatForever: true,
+                              isRepeatingAnimation: true,
+                              totalRepeatCount: 1,
+                              animatedTexts: [
+                                FlickerAnimatedText(' $percent%\nGiảm'),
+                                FlickerAnimatedText(' $percent%\nGiảm'),
+                              ],
+
+                            ),
+                          ),
+                        )
+                    )
+                        // Center(child: Text(' $percent%\nGiảm',style: TextStyle(fontSize: 12,color: Colors.grey),)))
+                  ],
+                ),
+              ),
+
             ],
           ),
         ),

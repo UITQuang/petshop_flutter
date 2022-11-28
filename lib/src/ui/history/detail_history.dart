@@ -1,16 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
 import 'package:project1/src/services/utilities/colors.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../providers/cart_provider/CartProvider.dart';
 import '../../services/api/order_service.dart';
-import '../updateProfile/profile.dart';
-import '../payment/components/PaymentItem.dart';
+
 
 class HistoryDetail extends StatefulWidget {
   int order_id;
@@ -240,10 +236,10 @@ class _HistoryDetailState extends State<HistoryDetail> {
   Widget IsPayment() {
     return InkWell(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 0),
+        margin: const EdgeInsets.symmetric(vertical: 0),
         width: MediaQuery.of(context).size.width,
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: const BoxDecoration(
           color: PRIMARY_COLOR,
         ),
