@@ -5,7 +5,9 @@ import 'package:project1/src/services/utilities/app_url.dart';
 import 'package:project1/src/services/utilities/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'package:vnpay_flutter/vnpay_flutter.dart';
 import '../../services/api/order_service.dart';
+import '../payment/After_Pay.dart';
 
 
 class HistoryDetail extends StatefulWidget {
@@ -225,7 +227,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             ],
                           )),
                       if (snapshot.data!['info']!["is_paymented"] == "0")
-                        IsPayment()
+                        IsPayment(snapshot.data)
                     ],
                   );
                 }
@@ -233,8 +235,11 @@ class _HistoryDetailState extends State<HistoryDetail> {
             )));
   }
 
-  Widget IsPayment() {
+  Widget IsPayment(data) {
     return InkWell(
+      onTap: (){
+        onPaymentVnPay(data!["info"]!["order_code"], data!["info"]!["total_payment"]);
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 0),
         width: MediaQuery.of(context).size.width,
@@ -358,5 +363,38 @@ class _HistoryDetailState extends State<HistoryDetail> {
           )
         ]));
   }
+
+  void onPaymentVnPay(order_code,total_payment) async {
+    final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
+      url:
+      'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', //vnpay url, default is https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      version: '2.0.1',
+      tmnCode: 'F52HC9LF', //vnpay tmn code, get from vnpay
+      txnRef: order_code,
+      orderInfo: 'Thanh toán đơn hàng', //order info, default is Pay Order
+      amount: double.tryParse(total_payment.toString())?? 0.0,
+      returnUrl:
+      'http://schemas.android.com/apk/res/android', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
+      ipAdress: '192.168.10.10',
+      vnpayHashKey:
+      'NAKQHMIIDOHWTSZSEMLFXYZNAJLSZAMS', //vnpay hash key, get from vnpay
+      vnPayHashType: VNPayHashType
+          .HMACSHA512, //hash type. Default is HmacSHA512, you can chang it in: https://sandbox.vnpayment.vn/merchantv2
+    );
+    VNPAYFlutter.instance.show(
+      paymentUrl: paymentUrl,
+      onPaymentSuccess: (params) {
+        setState(() {
+          Navigator.push(context,MaterialPageRoute( builder: (context) =>AfterPay(title: "Thanh toán thành công")));
+        });
+      },
+      onPaymentError: (params) {
+        setState(() {
+          Navigator.push( context,MaterialPageRoute( builder: (context) => AfterPay(title: "Thanh toán thất bại")));
+        });
+      },
+    );
+  }
+
 
 }
