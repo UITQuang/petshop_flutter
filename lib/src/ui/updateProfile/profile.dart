@@ -303,7 +303,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget profile() {
     return Container(
-      color: PRIMARY_COLOR,
+      decoration: const BoxDecoration(
+        color: PRIMARY_COLOR,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment(0.8, 1),
+          colors: <Color>[
+            PRIMARY_COLOR,
+            Color(0xff472db7),
+            Color(0xff8757da),
+          ],
+          // Gradient from https://learnui.design/tools/gradient-generator.html
+          tileMode: TileMode.mirror,
+        ),
+      ),
       child: ListView(
         children: [avatar(), detailInfo()],
       ),
@@ -328,10 +341,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             image!,
                             fit: BoxFit.cover,
                           )
-                        : (box.get("picture").toString()!=null)?Image.network(
-                            AppUrl.url + box.get("picture").toString(),
-                            fit: BoxFit.cover,
-                          ):Image.asset("assets/images/avatar.jpg")),
+                        : (box.get("picture").toString() != null)
+                            ? Image.network(
+                                AppUrl.url + box.get("picture").toString(),
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset("assets/images/avatar.jpg")),
               ),
             ),
             Positioned(

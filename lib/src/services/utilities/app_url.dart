@@ -5,6 +5,7 @@ class AppUrl {
   static const String url = 'https://meowmeowpetshop.xyz';
   static const String productList = '${baseUrl}product';
   static const String productHotList = '${baseUrl}product-hot';
+  static const String productReduceList = '${baseUrl}product-promotional';
   static const String categoryList = '${baseUrl}category-with-product';
   static const String detailProduct = '${baseUrl}product/';
 
@@ -16,11 +17,13 @@ class AppUrl {
   static const String uploadImage = '${baseUrl}update-image';
   static const String addViewProduct = '${baseUrl}add-num-view-product';
   static const String addToCart = '${baseUrl}add-num-add-to-cart-product';
+  static const String postRefund = '${baseUrl}create-refund-order';
 
   //order
   static const String createOrder = '${baseUrl}order';
   static const String getListOrder = '${baseUrl}get-list-order';
   static const String getDetailOrder = '${baseUrl}get-detail-order';
+  static const String getNoticeRefund = '${baseUrl}refund-notice';
 
 
 }
