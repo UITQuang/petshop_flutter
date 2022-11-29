@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hive/hive.dart';
+import 'package:project1/src/services/api/voucher_service.dart';
 import 'package:project1/src/ui/payment/After_Pay.dart';
 import 'package:provider/provider.dart';
 import 'package:vnpay_flutter/vnpay_flutter.dart';
@@ -14,6 +15,7 @@ import 'package:http/http.dart' as http;
 import '../../providers/cart_provider/CartProvider.dart';
 import '../../services/utilities/app_url.dart';
 import '../updateProfile/profile.dart';
+import 'apply_voucher.dart';
 import 'components/PaymentItem.dart';
 import 'method_payment.dart';
 
@@ -35,7 +37,9 @@ class _PaymentState extends State<Payment> {
   String responseCode = '';
   String vnp_TxnRef = '';
   String method = "Thanh toán bằng Momo"; //1:momo 2:vnpay 3:cod
-
+  //voucher
+  String voucher = "";
+  int discount_price = 0;
   //momo
   late MomoVn _momoPay;
   late PaymentResponse _momoPaymentResult;
@@ -89,7 +93,7 @@ class _PaymentState extends State<Payment> {
     // TODO: implement build
     final cartItemsData = Provider.of<CartProvider>(context);
     var size = MediaQuery.of(context).size;
-
+    VoucherService voucherService = VoucherService();
     return SafeArea(
         child: Scaffold(
           backgroundColor: Color.fromRGBO(244, 244, 244, 1),
@@ -160,6 +164,54 @@ class _PaymentState extends State<Payment> {
                           ]))
                 ]),
                 Row(children: <Widget>[
+                  InkWell(
+                    onTap: () async {
+                      final result = await Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ApplyVoucher()));
+                      setState(() {
+                        if(result == null){
+                          voucher = "";
+                          discount_price = 0;
+                        }else{
+                          voucher = result["id_voucher"];
+                          discount_price = calcVoucher(result, cartItemsData.totalPay(feeShip));
+                        }
+                      });
+                    },
+                    child: Container(
+                      //width: x,
+                        width: size.width,
+                        color: Colors.white,
+                        margin: EdgeInsets.only(top: 10.0),
+                        padding: EdgeInsets.fromLTRB(22.0, 15.0, 22.0, 15.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                child: const Text('Áp dụng voucher',
+                                    style: TextStyle(
+                                        fontSize: 16, fontWeight: FontWeight.w500)),
+                              ),
+                              Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(voucher,
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: Color.fromRGBO(152, 152, 152, 1),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400)),
+                                    const Icon(
+                                      size: 15,
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: Color.fromRGBO(152, 152, 152, 1),
+                                    )
+                                  ]),
+                            ])),
+                  )
+                ]),
+
+                Row(children: <Widget>[
                   Container(
                       width: size.width,
                       color: Colors.white,
@@ -206,6 +258,27 @@ class _PaymentState extends State<Payment> {
                                         MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           Container(
+                                            child: const Text('Áp dụng voucher',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400)),
+                                          ),
+                                          Container(
+                                            child:  Text('-${discount_price}',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400)),
+                                          ),
+                                        ]),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
+                                    width: size.width * 0.85,
+                                    child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
                                             child: const Text('Tổng tiền vận chuyển',
                                                 style: TextStyle(
                                                     fontSize: 15,
@@ -232,7 +305,7 @@ class _PaymentState extends State<Payment> {
                                                     fontWeight: FontWeight.w500)),
                                           ),
                                           Container(
-                                            child: Text('₫${cartItemsData.totalPay(feeShip)}',
+                                            child: Text('₫${cartItemsData.totalPay(feeShip) - discount_price}',
                                                 style: const TextStyle(
                                                     color: Color.fromRGBO(
                                                         31, 29, 72, 1),
@@ -293,6 +366,9 @@ class _PaymentState extends State<Payment> {
                 if(box.get("address").toString() == ""){
                   _showDialog(context);
                 }else{
+                  voucherService.removeVoucher(box.get("id").toString(), voucher);
+                  int total = cartItemsData.totalPay(feeShip).round() - discount_price;
+
                   createOrder(
                       order_code: DateTime.now().millisecondsSinceEpoch.toString(),
                       o_name: box.get("name"),
@@ -301,7 +377,7 @@ class _PaymentState extends State<Payment> {
                       o_address: box.get("address"),
                       user_id: box.get("id").toString(),
                       order_description: "",
-                      total_payment: cartItemsData.totalPay(feeShip).toString(),
+                      total_payment: total.toString(),
                       amount: cartItemsData.totalProductCost().toString() ,
                       arr_product: cartItemsData.generalItems()
                   );
@@ -483,6 +559,7 @@ class _PaymentState extends State<Payment> {
           );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
+        print(data.toString());
         String order_code = data["order_code"].toString();
         int total_payment = data["total_payment"];
 
@@ -502,5 +579,29 @@ class _PaymentState extends State<Payment> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  int calcVoucher(voucher, totalPayment){
+    int discountPrice = 0;
+    int discountPercent = 0;
+    int maxPrice = 0;
+    String typeVoucher = "";
+    typeVoucher = voucher["type_voucher"];
+
+    if(typeVoucher == "price"){
+      discountPrice = voucher["discount_price"];
+    }else if(typeVoucher == "percent"){
+      discountPercent = voucher["discount_percent"];
+      maxPrice = voucher["max_price"];
+      double result = 0;
+      result = totalPayment * discountPercent/100;
+      discountPrice  = result.round();
+      if(discountPrice > maxPrice){
+        discountPrice = maxPrice;
+      }
+    }else{
+      discountPrice = 0;
+    }
+    return discountPrice;
   }
 }
