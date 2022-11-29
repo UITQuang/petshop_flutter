@@ -25,5 +25,11 @@ class AppUrl {
   static const String getDetailOrder = '${baseUrl}get-detail-order';
   static const String getNoticeRefund = '${baseUrl}refund-notice';
 
+  //voucher
+  static const String getVoucherList = '${baseUrl}get-voucher-list';
+  static const String getVoucherOfUser = '${baseUrl}get-voucher-of-user';
+  static const String removeVoucherOfUser = '${baseUrl}remove-voucher';
+
+
 
 }
