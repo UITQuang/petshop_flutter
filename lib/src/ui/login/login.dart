@@ -48,8 +48,11 @@ class _LoginPageState extends State<LoginPage> {
         box.put("email", data['data']['email']);
         box.put("id", data['data']['id']);
         box.put("picture", data['data']['picture']);
-
-        print(box.get("name"));
+        // box.put("rank", data['data']['rank']);
+        // box.put("point", data['data']['point']);
+        // box.put("point_for_rank", data['data']['point_for_rank']);
+        // print(box.get("rank"));
+        // print(box.get("point_for_rank"));
       } else {
         _showDialog("Sai thông tin đăng nhập");
       }
