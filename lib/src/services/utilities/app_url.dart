@@ -29,6 +29,8 @@ class AppUrl {
   static const String getVoucherList = '${baseUrl}get-voucher-list';
   static const String getVoucherOfUser = '${baseUrl}get-voucher-of-user';
   static const String removeVoucherOfUser = '${baseUrl}remove-voucher';
+  static const String getInfoRank = '${baseUrl}info-rank';
+  static const String redeemVoucher = '${baseUrl}redeem-voucher';
 
 
 

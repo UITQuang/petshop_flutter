@@ -36,7 +36,6 @@ class _ApplyVoucherState extends State<ApplyVoucher> {
                return Padding(
                  padding: const EdgeInsets.all(8.0),
                  child: Container(
-                   height: MediaQuery.of(context).size.width * 0.6,
                    width: MediaQuery.of(context).size.width * 0.95,
                    decoration: BoxDecoration(
                      color: BACKGROUND_COLOR,
@@ -52,9 +51,6 @@ class _ApplyVoucherState extends State<ApplyVoucher> {
                            return voucher(snapshot.data![index]);
                          },
                        )
-                       // for(int i = 0 ; i< snapshot.data!.length ; i++)(
-                       //     voucher()
-                       //    )
 
                      ],
                    ),
