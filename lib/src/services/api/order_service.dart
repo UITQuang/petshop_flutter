@@ -19,8 +19,8 @@ class OrderProvider{
       }
   }
 
-  Future<dynamic> getDetailOrder (String order_id) async {
-    Map<String, String> body = {'order_id': order_id};
+  Future<dynamic> getDetailOrder (String orderId) async {
+    Map<String, String> body = {'order_id': orderId};
     final response = await http.post(
         Uri.parse(AppUrl.getDetailOrder),
         body: body);

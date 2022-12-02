@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project1/src/ui/updateProfile/profile.dart';
 
+import '../../services/utilities/app_url.dart';
 import '../../services/utilities/colors.dart';
 
 class HeaderDrawer extends StatefulWidget {
@@ -21,7 +23,7 @@ class _HeaderDrawerState extends State<HeaderDrawer> {
 
   Future getImage(ImageSource source) async {
     final pickedFile =
-    await _picker.pickImage(source: source, imageQuality: 80);
+        await _picker.pickImage(source: source, imageQuality: 80);
     if (pickedFile != null) {
       image = File(pickedFile.path);
       setState(() {});
@@ -29,15 +31,15 @@ class _HeaderDrawerState extends State<HeaderDrawer> {
       return;
     }
   }
+
+  var box = Hive.box('userBox');
+
   @override
-  var box= Hive.box('userBox');
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Color(0xff1F1D48),
+      decoration: const BoxDecoration(
+        color: PRIMARY_COLOR,
       ),
-
       width: double.infinity,
       height: 150,
       padding: const EdgeInsets.only(top: 20.0),
@@ -47,35 +49,42 @@ class _HeaderDrawerState extends State<HeaderDrawer> {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Stack(
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 70,
                   width: 70,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage("assets/images/avatar.jpg"),
-                  ),
+                  child: (box.get("picture").toString() != "")
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              AppUrl.url + box.get("picture").toString()),
+                        )
+                      : const CircleAvatar(
+                          backgroundImage:
+                              AssetImage("assets/images/avatar.jpg"),
+                        ),
                 ),
                 Positioned(
-                    right: 0,
-                    bottom: -1,
+                    right: -3,
+                    bottom: -4,
                     child: SizedBox(
                         child: GestureDetector(
-                          onTap: () {
-                            getImage(ImageSource.gallery);
-                          },
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                BorderRadius.only(topLeft: Radius.circular(10))),
-                            child: const Padding(
-                              padding: EdgeInsets.all(2.0),
-                              child: Icon(
-                                Icons.photo_camera,
-                                color: PRIMARY_COLOR,
-                              ),
-                            ),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ProfilePage()));
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10))),
+                        child: const Padding(
+                          padding: EdgeInsets.all(0),
+                          child: Icon(
+                            Icons.edit_note_outlined,
+                            color: PRIMARY_COLOR,
                           ),
-                        )))
+                        ),
+                      ),
+                    )))
               ],
             ),
           ),

@@ -8,11 +8,12 @@ import 'components/CartItem.dart';
 class Cart extends StatelessWidget {
   String title = '';
 
+
+
   Cart({this.title = 'Giỏ hàng'});
   @override
   Widget build(BuildContext context) {
     final cartItemsData = Provider.of<CartProvider>(context);
-    //print(cartItemsData.items['product']?.title);
     // TODO: implement build
     return SafeArea(
         child: Scaffold(
@@ -33,13 +34,7 @@ class Cart extends StatelessWidget {
             shrinkWrap: true,
             padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
             itemBuilder: (context, index) {
-              print(cartItemsData.generalItems());
-              return //ListView(
-                //shrinkWrap: true,
-                //padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                //children: <Widget>[
-                //?. . - null handle value error
-                CartItem(
+              return CartItem(
                   productId: cartItemsData.items.keys.toList()[index],
                   id: cartItemsData.items.values.toList()[index].id.toString(),
                   productTypeId: cartItemsData.items.values
@@ -62,8 +57,13 @@ class Cart extends StatelessWidget {
         color: Color.fromRGBO(31, 29, 72, 1),
         child: InkWell(
           onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => Payment()));
+            if(cartItemsData.totalProductCost() == 0){
+              _showDialog(context);
+            }else{
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => Payment()));
+            }
+
           },
           child: const SizedBox(
             height: kToolbarHeight,
@@ -82,5 +82,23 @@ class Cart extends StatelessWidget {
         ),
       ),
     ));
+  }
+
+  _showDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Nhắc nhở"),
+            content: Text("Giỏ hàng trống!"),
+            actions: <Widget>[
+              // OutlinedButton(
+              //     onPressed: () {
+              //       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage()));
+              //     },
+              //     child: const Text("Cập nhật"))
+            ],
+          );
+        });
   }
 }

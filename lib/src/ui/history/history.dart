@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:project1/src/services/utilities/colors.dart';
+import 'package:project1/src/ui/history/return_refund.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../services/api/order_service.dart';
@@ -197,7 +198,7 @@ class _HistoryState extends State<History> {
           tileColor: Colors.grey[100],
           title: Row(
             children: [
-              Text(item["date"].toString() ?? ""),
+              Text(item["date"].toString()!="" ?item["date"].toString(): ""),
               const Expanded(child: SizedBox()),
               Text(
                 '${f.format(int.parse(item['total_payment']))} VNĐ',
@@ -206,11 +207,21 @@ class _HistoryState extends State<History> {
               )
             ],
           ),
-          subtitle: Text("Mã hoá đơn: ${item["order_code"].toString() ?? ""}"),
-          trailing: const Icon(
-            size: 15,
-            Icons.arrow_forward_ios_rounded,
-            color: Color.fromRGBO(152, 152, 152, 1),
+          subtitle: Text("Mã hoá đơn: ${item["order_code"].toString()!="" ?item["order_code"].toString(): ""}"),
+          trailing: GestureDetector(
+            onTap: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => RefundPage(
+                        order_id: item["order_id"],
+                      )));
+            },
+            child:  const Icon(
+              size: 25,
+              Icons.report_gmailerrorred,
+              color: Colors.grey,
+            ),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
