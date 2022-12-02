@@ -308,7 +308,7 @@ class _HomePageState extends State<Homepage> {
 
   Widget headerSlideProduct(String first, String last) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 8, 8, 5),
+      padding: const EdgeInsets.fromLTRB(10, 5, 5, 5),
       child: Row(
         children: [
           Text(
