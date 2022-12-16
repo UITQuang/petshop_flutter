@@ -14,7 +14,7 @@ import '../../services/api/order_service.dart';
 import '../../services/utilities/app_url.dart';
 
 class RefundPage extends StatefulWidget {
-  int order_id=0;
+  int order_id = 0;
 
   RefundPage({required this.order_id});
 
@@ -24,11 +24,26 @@ class RefundPage extends StatefulWidget {
 
 class _RefundPageState extends State<RefundPage> {
   TextEditingController detailController = TextEditingController();
-   late String codeOder;
+  late String codeOder;
   var box = Hive.box('userBox');
 
   File? image;
   final _picker = ImagePicker();
+  _showDialog(String content) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Thông báo"),
+            content: Text(content),
+            actions: <Widget>[
+              OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Close"))
+            ],
+          );
+        });
+  }
 
   Future getImage(ImageSource source) async {
     final pickedFile =
@@ -47,10 +62,9 @@ class _RefundPageState extends State<RefundPage> {
     request.fields['user_id'] = id;
 
     request.fields['order_code'] = orderCode;
-    print(orderCode);
     request.fields['note'] = detailController.text.toString();
-    if (image == null) {
-      setState(() {});
+    if ((detailController.text.isEmpty)||(image==null) ){
+      setState(() {_showDialog("Bạn cần thêm đầy đủ thông tin!");});
     } else {
       request.files.add(http.MultipartFile(
           'picture', image!.readAsBytes().asStream(), image!.lengthSync(),
@@ -61,8 +75,6 @@ class _RefundPageState extends State<RefundPage> {
         setState(() {
           print("thanh cong");
         });
-        //Lấy ra đường dẫn sau khi cập nhật
-
       } else {
         setState(() {
           print("false");
@@ -87,8 +99,7 @@ class _RefundPageState extends State<RefundPage> {
             color: const Color(0xff1F1D48),
             child: InkWell(
               onTap: () {
-                postRefund(
-                    codeOder, box.get("id").toString());
+                postRefund(codeOder, box.get("id").toString());
               },
               child: const SizedBox(
                 height: kToolbarHeight,
@@ -111,6 +122,7 @@ class _RefundPageState extends State<RefundPage> {
               children: [
                 headerRefund(),
                 codeOrder(),
+                lineAcross(),
                 detailProblem(),
                 imageAttach()
               ],
@@ -120,50 +132,62 @@ class _RefundPageState extends State<RefundPage> {
   }
 
   Widget headerRefund() {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 0),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.width * 0.15,
-            width: MediaQuery.of(context).size.width * 0.15,
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: const Offset(0, 2))
+          ]),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
             child: SizedBox(
-              height: 70,
-              width: 70,
-              child: (box.get("picture").toString() != "")
-                  ? CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          AppUrl.url + box.get("picture").toString()),
-                    )
-                  : const CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/avatar.jpg"),
-                    ),
+              height: MediaQuery.of(context).size.width * 0.15,
+              width: MediaQuery.of(context).size.width * 0.15,
+              child: SizedBox(
+                height: 70,
+                width: 70,
+                child: (box.get("picture").toString() != "")
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            AppUrl.url + box.get("picture").toString()),
+                      )
+                    : const CircleAvatar(
+                        backgroundImage: AssetImage("assets/images/avatar.jpg"),
+                      ),
+              ),
             ),
           ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${box.get("name")}',
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Text(
-              '${box.get("email")}',
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400),
-            ),
-          ],
-        ),
-      ],
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${box.get("name")}',
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                '${box.get("email")}',
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -196,55 +220,39 @@ class _RefundPageState extends State<RefundPage> {
             ),
           );
         } else {
-          codeOder =snapshot.data!['info']['order_code'];
+          codeOder = snapshot.data!['info']['order_code'];
 
-          return Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 4,
-                            offset: const Offset(0, 2))
+          return Container(
+            padding: EdgeInsets.fromLTRB(8, 15, 0, 15),
+            child: Column(
+              children: [
+                Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Column(children: <Widget>[
+                        Container(
+                          width: 30,
+                          margin: const EdgeInsets.only(right: 10),
+                          child: const Icon(
+                            CupertinoIcons.doc_plaintext,
+                            size: 25.0,
+                          ),
+                        )
                       ]),
-                  child: Column(
-                    children: [
-                      Row(
+                      Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Column(children: <Widget>[
-                              Container(
-                                width: 30,
-                                margin: const EdgeInsets.only(right: 10),
-                                child: const Icon(
-                                  CupertinoIcons.doc_plaintext,
-                                  size: 25.0,
-                                ),
-                              )
-                            ]),
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    "Mã hoá đơn: ${snapshot.data!['info']['order_code']} ",
-                                  ),
-                                  Text(
-                                    "Ngày đặt: ${snapshot.data!['info']['date']} ",
-                                  ),
-                                ])
-                          ]),
-                    ],
-                  )),
-            ],
+                            Text(
+                              "Mã hoá đơn: ${snapshot.data!['info']['order_code']} ",
+                            ),
+                            const SizedBox(height: 8,),
+                            Text(
+                              "Ngày đặt: ${snapshot.data!['info']['date']} ",
+                            ),
+                          ])
+                    ]),
+              ],
+            ),
           );
         }
       },
@@ -253,7 +261,7 @@ class _RefundPageState extends State<RefundPage> {
 
   Widget detailProblem() {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 0),
       decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,6 +321,15 @@ class _RefundPageState extends State<RefundPage> {
           )
         ],
       ),
+    );
+  }
+  Widget lineAcross(){
+    return  Container(
+      margin:
+      const EdgeInsets.only(top: 5, bottom: 5),
+      width: MediaQuery.of(context).size.width,
+      height: 1,
+      color: Colors.grey,
     );
   }
 }

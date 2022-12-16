@@ -5,6 +5,7 @@ import 'package:project1/src/ui/home/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project1/src/ui/login/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,9 +15,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   var box = Hive.box('userBox');
+
   _showDialog(String content) {
     return showDialog(
         context: context,
@@ -35,13 +42,18 @@ class _LoginPageState extends State<LoginPage> {
 
   void login(String phone, String password) async {
     try {
-     http.Response response = await http.post(
+      http.Response response = await http.post(
           Uri.parse('https://meowmeowpetshop.xyz/api/v1/login-customer'),
           body: {'phone': phone, 'password': password});
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const Homepage()));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Đăng nhập thành công!')));
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        await pref.setString('token', data['access_token']);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const Homepage()),
+            (route) => false);
         box.put("name", data['data']['name']);
         box.put("phone", data['data']['phone']);
         box.put("address", data['data']['address']);
@@ -52,7 +64,6 @@ class _LoginPageState extends State<LoginPage> {
         // box.put("point", data['data']['point']);
         // box.put("point_for_rank", data['data']['point_for_rank']);
         // print(box.get("rank"));
-        // print(box.get("point_for_rank"));
       } else {
         _showDialog("Sai thông tin đăng nhập");
       }
@@ -60,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
       print('failed');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -74,12 +84,12 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               headerView(),
               inputInformation(
-                  phoneNumberController, "Số điện thoại", Icons.phone,false),
+                  phoneNumberController, "Số điện thoại", Icons.phone, false),
               const SizedBox(
                 height: 30,
               ),
-              inputInformation(
-                  passwordController, "Mật khẩu", Icons.password_outlined, true),
+              inputInformation(passwordController, "Mật khẩu",
+                  Icons.password_outlined, true),
               Padding(
                 padding: const EdgeInsets.only(bottom: 30.0, top: 30.0),
                 child: Row(
@@ -119,9 +129,9 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.7,
       child: Column(
-        children:  [
+        children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height*0.1,
+            height: MediaQuery.of(context).size.height * 0.1,
           ),
           const Padding(
             padding: EdgeInsets.all(8.0),
@@ -156,13 +166,12 @@ class _LoginPageState extends State<LoginPage> {
         width: MediaQuery.of(context).size.width * 0.8,
         height: 60,
         decoration: BoxDecoration(
-            color: const Color(0xff1F1D48), borderRadius: BorderRadius.circular(15)),
+            color: const Color(0xff1F1D48),
+            borderRadius: BorderRadius.circular(15)),
         child: const Text(
           'Đăng Nhập',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
         ),
       ),
     );
@@ -233,7 +242,7 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
       child: TextFormField(
-        obscureText: obs,
+          obscureText: obs,
           controller: textEditingController,
           decoration: InputDecoration(
             labelText: title,
