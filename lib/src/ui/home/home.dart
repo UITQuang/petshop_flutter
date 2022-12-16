@@ -1,17 +1,20 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
 import 'package:project1/src/ui/history/history.dart';
+import 'package:project1/src/ui/login/login.dart';
 import 'package:project1/src/ui/membership/membership.dart';
 import 'package:project1/src/ui/updateProfile/profile.dart';
 
 import 'package:project1/src/ui/cart/Cart.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,6 +32,11 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomePageState extends State<Homepage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   TextEditingController searchController = TextEditingController();
   var currentPage = DrawerSections.home;
   final f = NumberFormat("###,###.###", "tr_TR");
@@ -43,6 +51,7 @@ class _HomePageState extends State<Homepage> {
     fontWeight: FontWeight.w600,
     fontFamily: 'Horizon',
   );
+  var box = Hive.box('userBox');
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +91,6 @@ class _HomePageState extends State<Homepage> {
                 ),
               )
             ],
-
-
-
-
           )
         ],
         // bottom: PreferredSize(
@@ -112,7 +117,6 @@ class _HomePageState extends State<Homepage> {
         ),
       ),
     ));
-
   }
 
   Widget bodyView() {
@@ -526,18 +530,19 @@ class _HomePageState extends State<Homepage> {
       ),
     );
   }
+
   Widget itemSaleProduct(
-      int id,
-      String networkImage,
-      String percent,
-      ) {
+    int id,
+    String networkImage,
+    String percent,
+  ) {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => DetailProductScreen(
-              id: id,
-            )));
+                  id: id,
+                )));
         ProductService().addViewProduct('$id');
       },
       child: Padding(
@@ -557,30 +562,29 @@ class _HomePageState extends State<Homepage> {
                     Image(
                       image: NetworkImage(networkImage),
                     ),
-                     Positioned(
-                        top: 0,
-                        right: 0,
-                     
-                          child: Container(
-                            height: 35,
-                            width: 32,
-                            decoration: const BoxDecoration(
-                              gradient:   LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        height: 35,
+                        width: 32,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: <Color>[
                               Colors.orangeAccent,
                               Colors.yellow,
                               Colors.yellowAccent,
-                                ],
-                                // Gradient from https://learnui.design/tools/gradient-generator.html
-                                tileMode: TileMode.mirror,
-                              ),
-                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
-                            ),
+                            ],
+                            // Gradient from https://learnui.design/tools/gradient-generator.html
+                            tileMode: TileMode.mirror,
                           ),
-                     ),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10)),
+                        ),
+                      ),
+                    ),
 
                     Positioned(
                         top: 0,
@@ -599,7 +603,7 @@ class _HomePageState extends State<Homepage> {
                               ],
                             ),
                             child: AnimatedTextKit(
-                              pause: const Duration(milliseconds:0 ),
+                              pause: const Duration(milliseconds: 0),
                               repeatForever: true,
                               isRepeatingAnimation: true,
                               totalRepeatCount: 1,
@@ -607,16 +611,13 @@ class _HomePageState extends State<Homepage> {
                                 FlickerAnimatedText(' $percent%\nGiảm'),
                                 FlickerAnimatedText(' $percent%\nGiảm'),
                               ],
-
                             ),
                           ),
-                        )
-                    )
-                        // Center(child: Text(' $percent%\nGiảm',style: TextStyle(fontSize: 12,color: Colors.grey),)))
+                        ))
+                    // Center(child: Text(' $percent%\nGiảm',style: TextStyle(fontSize: 12,color: Colors.grey),)))
                   ],
                 ),
               ),
-
             ],
           ),
         ),
@@ -842,7 +843,7 @@ class _HomePageState extends State<Homepage> {
     return Material(
       color: selected ? Colors.grey : Colors.white,
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           setState(() {
             if (id == 1) {
               currentPage = DrawerSections.home;
@@ -875,7 +876,11 @@ class _HomePageState extends State<Homepage> {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const MembershipPage()));
           } else if (currentPage == DrawerSections.logOut) {
-            Navigator.pop(context);
+            SharedPreferences pref = await SharedPreferences.getInstance();
+            await pref.clear();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (route) => false);
           } else if (currentPage == DrawerSections.notification) {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => PromotionNoticePage()));

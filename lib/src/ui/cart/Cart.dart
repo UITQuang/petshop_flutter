@@ -7,9 +7,6 @@ import 'components/CartItem.dart';
 
 class Cart extends StatelessWidget {
   String title = '';
-
-
-
   Cart({this.title = 'Giỏ hàng'});
   @override
   Widget build(BuildContext context) {

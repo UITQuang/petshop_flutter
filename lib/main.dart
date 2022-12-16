@@ -11,6 +11,7 @@ import 'package:project1/src/models/product_detail.dart';
 import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/ui/home/home.dart';
 import 'package:project1/src/ui/login/login.dart';
+import 'package:project1/src/ui/login/waiting.dart';
 import 'package:provider/provider.dart';
 
 
@@ -26,6 +27,6 @@ void main() async {
     child: MaterialApp(
         theme: ThemeData(primaryColor: Colors.pinkAccent),
         debugShowCheckedModeBanner: false,
-        home: const LoginPage()),
+        home: const WaitingPage()),
   ));
 }

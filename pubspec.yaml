@@ -51,7 +51,7 @@ dependencies:
   percent_indicator: ^4.0.1
   animated_text_kit: ^4.2.2
   provider: ^6.0.4
-
+  shared_preferences: ^2.0.15
   vnpay_flutter: ^1.0.1
   momo_vn: ^2.0.2
 
@@ -79,6 +79,7 @@ flutter:
     - assets/images/shoppe_express.png
     - assets/images/product.png
     - assets/images/membership.png
+    - assets/images/logo.png
     - assets/images/
   #   - images/a_dot_ham.jpeg
 
