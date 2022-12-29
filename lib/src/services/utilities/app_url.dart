@@ -32,6 +32,9 @@ class AppUrl {
   static const String getInfoRank = '${baseUrl}info-rank';
   static const String redeemVoucher = '${baseUrl}redeem-voucher';
 
+  //conversation
+  static const String createMessage = '${baseUrl}create-message';
+
 
 
 }
