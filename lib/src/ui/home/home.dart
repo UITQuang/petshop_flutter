@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:project1/src/providers/cart_provider/CartProvider.dart';
 import 'package:project1/src/services/api/product_service.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
+import 'package:project1/src/ui/conversation/conversation.dart';
 import 'package:project1/src/ui/history/history.dart';
 import 'package:project1/src/ui/login/login.dart';
 import 'package:project1/src/ui/membership/membership.dart';
@@ -116,6 +119,14 @@ class _HomePageState extends State<Homepage> {
           ),
         ),
       ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.message),
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Conversation()));
+            },
+            backgroundColor: PRIMARY_COLOR,
+
+          ),
     ));
   }
 

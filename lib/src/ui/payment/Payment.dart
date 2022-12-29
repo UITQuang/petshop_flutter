@@ -30,15 +30,13 @@ class Payment extends StatefulWidget {
 //vnpay
 class _PaymentState extends State<Payment> {
   var box = Hive.box('userBox');
-
-
   var title;
   int feeShip = 20000;
   _PaymentState({this.title = 'Giỏ hàng'});
 
   String responseCode = '';
   String vnp_TxnRef = '';
-  String method = "Thanh toán bằng Momo"; //1:momo 2:vnpay 3:cod
+  String method = "Thanh toán bằng Vnpay"; //1:momo 2:vnpay 3:cod
   //voucher
   String voucher = "";
   int discount_price = 0;
@@ -299,7 +297,7 @@ class _PaymentState extends State<Payment> {
                       final result = await Navigator.push(context,
                           MaterialPageRoute(builder: (context) => MethodPayment()));
                       setState(() {
-                        method = result;
+                        method =  result ?? "Thanh toán bằng Vnpay";
                       });
                     },
                     child: Container(
