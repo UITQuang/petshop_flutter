@@ -47,7 +47,7 @@ class _WaitingPageState extends State<WaitingPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
               Padding(
-                padding: const EdgeInsets.only(top: 300.0),
+                padding: EdgeInsets.only(top: 300.0),
                 child: Center(
                   child: Icon(Icons.pets_outlined,size: 100,color: Colors.black54,),
                 ),

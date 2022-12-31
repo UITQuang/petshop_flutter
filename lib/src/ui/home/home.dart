@@ -876,14 +876,17 @@ class _HomePageState extends State<Homepage> {
           });
 
           if (currentPage == DrawerSections.information) {
+            Navigator.of(context).pop();
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const ProfilePage()));
           } else if (currentPage == DrawerSections.home) {
             Navigator.pop(context);
           } else if (currentPage == DrawerSections.history) {
+            Navigator.of(context).pop();
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => const History()));
           } else if (currentPage == DrawerSections.membershipCard) {
+            Navigator.of(context).pop();
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const MembershipPage()));
           } else if (currentPage == DrawerSections.logOut) {
@@ -893,11 +896,13 @@ class _HomePageState extends State<Homepage> {
                 MaterialPageRoute(builder: (context) => const LoginPage()),
                 (route) => false);
           } else if (currentPage == DrawerSections.notification) {
+            Navigator.of(context).pop();
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => PromotionNoticePage()));
           } else if (currentPage == DrawerSections.hotline) {
             launch('tel://0853685806');
           } else if (currentPage == DrawerSections.category) {
+            Navigator.of(context).pop();
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const CategoryPage()));
           }
