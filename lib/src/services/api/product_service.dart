@@ -47,8 +47,8 @@ class ProductService {
 
   Future<List<dynamic>> getCategoryList() async {
     final response = await http.get(Uri.parse(AppUrl.categoryList));
-    var data = jsonDecode(response.body.toString());
     if (response.statusCode == 200) {
+      var data = jsonDecode(response.body.toString());
       return data;
     } else {
       throw Exception('Error');

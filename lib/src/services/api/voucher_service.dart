@@ -48,6 +48,8 @@ class VoucherService {
     Map<String, String> body = {'id_user': id_user, 'id_voucher': id_voucher};
     http.Response response =
         await http.post(Uri.parse(AppUrl.redeemVoucher), body: body);
+    var data = jsonDecode(response.body.toString());
+    print(data);
     if (response.statusCode == 200) {
       return true;
     } else {

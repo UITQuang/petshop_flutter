@@ -29,7 +29,6 @@ class _MembershipPage extends State<MembershipPage> {
   File? image;
   String point = "0";
 
-
   @override
   Widget build(BuildContext context) {
 
@@ -38,6 +37,7 @@ class _MembershipPage extends State<MembershipPage> {
       length: 2,
       child: SafeArea(
           child: Scaffold(
+            resizeToAvoidBottomInset: true,
               appBar: AppBar(
                 centerTitle: false,
                 backgroundColor: PRIMARY_COLOR,
@@ -72,207 +72,216 @@ class _MembershipPage extends State<MembershipPage> {
               ),
               body: TabBarView(
                 children: <Widget>[
-                  Column(
-                    children: [
-                      FutureBuilder(
-                          future: voucherService.getInfoRank(box.get("id").toString()),
-                          builder: (context, snapshot) {
-                            if(!snapshot.hasData){
-                              return Text("Chưa có dữ liệu");
-                            }else {
-                              point = snapshot.data!["point"].toString();
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      height: MediaQuery.of(context).size.width * 0.55,
-                                      width: MediaQuery.of(context).size.width * 0.95,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                const EdgeInsets.fromLTRB(8.0, 8, 8, 0),
-                                                child: SizedBox(
-                                                  height:
-                                                  MediaQuery.of(context).size.width *
-                                                      0.15,
-                                                  width: MediaQuery.of(context).size.width *
-                                                      0.15,
-                                                  child: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(50),
-                                                    // Image border
-                                                    child: SizedBox.fromSize(
-                                                        child: image != null
-                                                            ? Image.file(
-                                                          image!,
-                                                          fit: BoxFit.contain,
-                                                        )
-                                                            : Image.network(AppUrl.url + box.get("picture"))),
-                                                  ),
-                                                ),
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '${snapshot.data!["name"].toString()}',
-                                                    style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.w500),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    "Rank: ${snapshot.data!["rank"].toString()}",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.w500),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              Padding(
-                                                  padding: const EdgeInsets.only(top: 0),
-                                                  child: Image.asset(
-                                                    "assets/images/membership.png",
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        FutureBuilder(
+                            future: voucherService.getInfoRank(box.get("id").toString()),
+                            builder: (context, snapshot) {
+                              if(!snapshot.hasData){
+                                return Text("Chưa có dữ liệu");
+                              }else {
+                                point = snapshot.data!["point"].toString();
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        height: MediaQuery.of(context).size.width * 0.55,
+                                        width: MediaQuery.of(context).size.width * 0.95,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                  const EdgeInsets.fromLTRB(8.0, 8, 8, 0),
+                                                  child: SizedBox(
                                                     height:
                                                     MediaQuery.of(context).size.width *
-                                                        0.3,
-                                                    width:
-                                                    MediaQuery.of(context).size.width *
-                                                        0.5,
-                                                  )),
-                                              Text(
-                                                "${point} point",
-                                                style: TextStyle(fontSize: 18),
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      height: MediaQuery.of(context).size.width * 0.4,
-                                      width: MediaQuery.of(context).size.width * 0.95,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "Quá trình tích lũy",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(8.0, 8, 0, 10),
-                                            child: Text(
-                                                snapshot.data!["text_next_rank"] ,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w400)),
-                                          ),
-                                          LinearPercentIndicator(
-                                            width: MediaQuery.of(context).size.width * 0.93,
-                                            lineHeight:
-                                            MediaQuery.of(context).size.width * 0.04,
-                                            animation: true,
-                                            percent: double.parse(snapshot.data!["percent"].toString()),
-                                            animationDuration: 2000,
-                                            progressColor: Colors.yellow,
-                                            center:  Text(
-                                                "${(double.parse(snapshot.data!["percent"].toString()) * 100).roundToDouble().toString()}%"
-                                            ),
-                                            barRadius: const Radius.circular(5),
-                                            linearStrokeCap: LinearStrokeCap.roundAll,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0, right: 10.0, top: 10),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.card_membership_outlined,
-                                                  color: Colors.brown[200],
+                                                        0.15,
+                                                    width: MediaQuery.of(context).size.width *
+                                                        0.15,
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50),
+                                                      // Image border
+                                                      child: SizedBox(
+                                                        height: 70,
+                                                        width: 70,
+                                                        child: (box.get("picture").toString() != "")
+                                                            ? CircleAvatar(
+                                                          backgroundImage: NetworkImage(
+                                                              AppUrl.url + box.get("picture").toString()),
+                                                        )
+                                                            : const CircleAvatar(
+                                                          backgroundImage:
+                                                          AssetImage("assets/images/avatar.jpg"),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                                const Expanded(child: SizedBox()),
-                                                Icon(
-                                                  Icons.card_membership_outlined,
-                                                  color: Colors.grey[400],
-                                                ),
-                                                const Expanded(child: SizedBox()),
-                                                Icon(
-                                                  Icons.card_membership_outlined,
-                                                  color: Colors.yellow[400],
+                                                Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '${snapshot.data!["name"].toString()}',
+                                                      style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.w500),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                      "Rank: ${snapshot.data!["rank"].toString()}",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.w500),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
-                                          )
-                                        ],
+                                            Column(
+                                              children: [
+                                                Padding(
+                                                    padding: const EdgeInsets.only(top: 0),
+                                                    child: Image.asset(
+                                                      "assets/images/membership.png",
+                                                      height:
+                                                      MediaQuery.of(context).size.width *
+                                                          0.3,
+                                                      width:
+                                                      MediaQuery.of(context).size.width *
+                                                          0.5,
+                                                    )),
+                                                Text(
+                                                  "${point} point",
+                                                  style: TextStyle(fontSize: 18),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            }
-                          }
-                          ),
-                      FutureBuilder(
-                        future: voucherService.getVoucherList(),
-                          builder: (context, snapshot){
-                          if(!snapshot.hasData){
-                            return Text("Đang load");
-                          }else{
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                height: MediaQuery.of(context).size.width * 0.6,
-                                width: MediaQuery.of(context).size.width * 0.95,
-                                decoration: BoxDecoration(
-                                  color: BACKGROUND_COLOR,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data!.length,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        return voucher(snapshot.data![index] , "đổi");
-                                      },
-                                    )
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        height: MediaQuery.of(context).size.width * 0.4,
+                                        width: MediaQuery.of(context).size.width * 0.95,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "Quá trình tích lũy",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(8.0, 8, 0, 10),
+                                              child: Text(
+                                                  snapshot.data!["text_next_rank"] ,
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w400)),
+                                            ),
+                                            LinearPercentIndicator(
+                                              width: MediaQuery.of(context).size.width * 0.93,
+                                              lineHeight:
+                                              MediaQuery.of(context).size.width * 0.04,
+                                              animation: true,
+                                              percent: double.parse(snapshot.data!["percent"].toString()),
+                                              animationDuration: 2000,
+                                              progressColor: Colors.yellow,
+                                              center:  Text(
+                                                  "${(double.parse(snapshot.data!["percent"].toString()) * 100).roundToDouble().toString()}%"
+                                              ),
+                                              barRadius: const Radius.circular(5),
+                                              linearStrokeCap: LinearStrokeCap.roundAll,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10.0, right: 10.0, top: 10),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.card_membership_outlined,
+                                                    color: Colors.brown[200],
+                                                  ),
+                                                  const Expanded(child: SizedBox()),
+                                                  Icon(
+                                                    Icons.card_membership_outlined,
+                                                    color: Colors.grey[400],
+                                                  ),
+                                                  const Expanded(child: SizedBox()),
+                                                  Icon(
+                                                    Icons.card_membership_outlined,
+                                                    color: Colors.yellow[400],
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ],
-                                ),
-                              ),
-                            );
-                          }
-                          })
-                    ],
+                                );
+                              }
+                            }
+                        ),
+                        FutureBuilder(
+                            future: voucherService.getVoucherList(),
+                            builder: (context, snapshot){
+                              if(!snapshot.hasData){
+                                return Text("Đang load");
+                              }else{
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    // height: MediaQuery.of(context).size.width * 0.4,
+                                    // width: MediaQuery.of(context).size.width * 0.95,
+                                    decoration: BoxDecoration(
+                                      color: BACKGROUND_COLOR,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: snapshot.data!.length,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            return voucher(snapshot.data![index] , "đổi");
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                            })
+                      ],
+                    ),
                   ),
+
                   FutureBuilder(
                     future: voucherService.getVoucherUser(box.get('id').toString()),
                     builder: (context, AsyncSnapshot<List<dynamic>> snapshot){
@@ -309,7 +318,7 @@ class _MembershipPage extends State<MembershipPage> {
                     },
                   ),
                 ],
-              ))),
+              )))
     );
   }
 
