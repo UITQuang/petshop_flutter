@@ -541,7 +541,7 @@ class _PaymentState extends State<Payment> {
           Navigator.push(context, MaterialPageRoute(builder: (context)=>AfterPay(title: "Đặt hàng thành công")));
         }
       } else {
-        print('failed');
+        print('tạo đơn thành thất bại - do đường truyền mạng');
       }
     } catch (e) {
       print(e.toString());
