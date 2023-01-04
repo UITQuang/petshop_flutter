@@ -56,11 +56,15 @@ dependencies:
   momo_vn: ^2.0.2
   pusher_channels_flutter: ^2.1.0
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.8.0"
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_logo.png"
   flutter_lints: ^2.0.0
   hive_generator: ^1.1.3
   build_runner: ^2.1.11
