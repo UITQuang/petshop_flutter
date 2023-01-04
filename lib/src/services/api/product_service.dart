@@ -1,9 +1,6 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:project1/src/services/utilities/app_url.dart';
-
-import '../../models/product_model.dart';
 import '../../models/product_detail.dart';
 
 class ProductService {

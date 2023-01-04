@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
+import 'package:project1/src/services/utilities/colors.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Conversation extends StatefulWidget {
   const Conversation({Key? key}) : super(key: key);
@@ -18,7 +21,9 @@ class _ConversationState extends State<Conversation> {
   static const String SECOND_USER_ID = "0"; //
 
   PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
-  final _messageController = TextEditingController();
+  TextEditingController _messageController = TextEditingController();
+  ScrollController focusBottom = ScrollController();
+  bool enableSend = false;
 
   String _apiKey = '4541cb3c2da572886efd';
   String _cluster = 'ap1';
@@ -29,12 +34,26 @@ class _ConversationState extends State<Conversation> {
     // ChatMessage(text: "how are you?", isSender: true,),
     // ChatMessage(text: "I'm fine", isSender: false,),
   ];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getMessage(user_id: box.get("id").toString(), second_user_id: SECOND_USER_ID);
+    getMessage(
+        user_id: box.get("id").toString(), second_user_id: SECOND_USER_ID);
     initPlatformState();
+    _messageController.addListener(() {
+      final enableSend = _messageController.text.isNotEmpty;
+      if (enableSend == true) {
+        setState(() {
+          this.enableSend = true;
+        });
+      } else {
+        setState(() {
+          this.enableSend = false;
+        });
+      }
+    });
   }
 
   Future<void> initPlatformState() async {
@@ -101,7 +120,6 @@ class _ConversationState extends State<Conversation> {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body.toString());
       for (var item in data["messages"]) {
-
         item["isSender"] == 0
             ? listMesage.add(ChatMessage(text: item["text"], isSender: false))
             : listMesage.add(ChatMessage(text: item["text"], isSender: true));
@@ -123,7 +141,7 @@ class _ConversationState extends State<Conversation> {
       child: Scaffold(
           appBar: AppBar(
             title: Row(
-              children: [
+              children: const [
                 CircleAvatar(
                   backgroundImage: AssetImage("assets/images/avatar.jpg"),
                 ),
@@ -137,32 +155,38 @@ class _ConversationState extends State<Conversation> {
               ],
             ),
             actions: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.local_phone))
+              IconButton(
+                  onPressed: () {
+                    launch('tel://0853685806');
+                  },
+                  icon: const Icon(Icons.local_phone))
             ],
           ),
           body: Column(
             children: [
               Expanded(
-                child:  ListView.builder(
-                    itemCount: listMesage.length,
-                    itemBuilder: (context, index) {
-                      if(listMesage.length != 0 && listMesage.length != null)
-                        return _messages(listMesage[index]);
-                      else{
-                        return Center(child: Text("chưa có tin nhắn"),);
-                      }
-                    })
-            ),
+                  child: ListView.builder(
+                controller: focusBottom,
+                itemCount: listMesage.length,
+                itemBuilder: (context, index) {
+                  if (listMesage.isNotEmpty) {
+                    return _messages(listMesage[index]);
+                  } else {
+                    return const Center(
+                      child: Text("chưa có tin nhắn"),
+                    );
+                  }
+                },
+              )),
               _chatInputField(),
             ],
           )),
     );
   }
 
-
   Widget _chatInputField() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
@@ -174,42 +198,50 @@ class _ConversationState extends State<Conversation> {
       child: SafeArea(
         child: Row(
           children: [
-            Icon(Icons.image),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Expanded(
                 child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               height: 50,
               decoration: BoxDecoration(
-                  color: Colors.lightBlue,
+                  color: Colors.white70,
                   borderRadius: BorderRadius.circular(40)),
               child: Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
                       child: TextField(
                     controller: _messageController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         hintText: "Type message", border: InputBorder.none),
                   )),
                   IconButton(
-                    onPressed: () {
-                      setState(() {
-                        createMessage(
-                            user_id: box.get("id").toString(),
-                            second_user_id: SECOND_USER_ID,
-                            message: _messageController.text,
-                            sender_name: box.get("name").toString());
-                        listMesage.add(ChatMessage(
-                            text: _messageController.text, isSender: true));
-                      });
-                      _messageController.text = "";
-                    },
-                    icon: Icon(Icons.send),
+                    onPressed: (enableSend)
+                        ? () {
+                            setState(() {
+                              createMessage(
+                                  user_id: box.get("id").toString(),
+                                  second_user_id: SECOND_USER_ID,
+                                  message: _messageController.text,
+                                  sender_name: box.get("name").toString());
+                              listMesage.add(ChatMessage(
+                                  text: _messageController.text,
+                                  isSender: true));
+                              focusBottom.jumpTo(
+                                focusBottom.position.maxScrollExtent,
+                              );
+                            });
+                            _messageController.clear();
+                          }
+                        : null,
+                    icon: const Icon(
+                      Icons.send,
+                      color: PRIMARY_COLOR,
+                    ),
                   ),
                 ],
               ),
@@ -229,7 +261,8 @@ class _ConversationState extends State<Conversation> {
           margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(message.isSender ? 1 : 0.5),
+              color: Colors.lightBlueAccent
+                  .withOpacity(message.isSender ? 1 : 0.5),
               borderRadius: BorderRadius.circular(30)),
           child: Text(message.text),
         )
