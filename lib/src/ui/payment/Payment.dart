@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hive/hive.dart';
+import 'package:project1/src/services/api/order_service.dart';
 import 'package:project1/src/services/api/voucher_service.dart';
 import 'package:project1/src/ui/payment/After_Pay.dart';
 import 'package:provider/provider.dart';
@@ -491,7 +492,6 @@ class _PaymentState extends State<Payment> {
   }
 
   void _handlePaymentSuccess(PaymentResponse response) {
-
     setState(() {
       _momoPaymentResult = response;
       _setState();
@@ -530,7 +530,11 @@ class _PaymentState extends State<Payment> {
 
         if (method == "Thanh toán bằng Momo") {
           // print("Thanh toán bằng Momo");
+          OrderProvider orderProvider = new OrderProvider();
+          print(orderCode);
+          orderProvider.handlePaymentStatus(orderCode);
           onPaymentMomo(orderCode,totalPayment);
+
         } else if (method == "Thanh toán bằng Vnpay") {
           // print("Thanh toán bằng Vnpay");
           onPaymentVnPay(orderCode,totalPayment);

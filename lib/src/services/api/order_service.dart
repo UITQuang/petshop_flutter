@@ -31,4 +31,10 @@ class OrderProvider{
       throw Exception('Error');
     }
   }
+
+  Future<void> handlePaymentStatus (String order_code) async {
+    Map<String, String> body = {'order_code': order_code};
+    http.Response response = await http.post(
+        Uri.parse("https://meowmeowpetshop.xyz/api/v1/handle-payment-status"), body: body);
+  }
 }
