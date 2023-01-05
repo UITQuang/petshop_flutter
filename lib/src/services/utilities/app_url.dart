@@ -24,6 +24,7 @@ class AppUrl {
   static const String getListOrder = '${baseUrl}get-list-order';
   static const String getDetailOrder = '${baseUrl}get-detail-order';
   static const String getNoticeRefund = '${baseUrl}refund-notice';
+  static const String postCancelOrder = '${baseUrl}cancel-order';
 
   //voucher
   static const String getVoucherList = '${baseUrl}get-voucher-list';
