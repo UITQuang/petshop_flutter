@@ -1,16 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:project1/src/services/utilities/app_url.dart';
 import 'package:project1/src/services/utilities/colors.dart';
+import 'package:project1/src/ui/history/history.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:vnpay_flutter/vnpay_flutter.dart';
 import '../../services/api/order_service.dart';
 
 import '../payment/After_Pay.dart';
-
-
 
 class HistoryDetail extends StatefulWidget {
   int order_id;
@@ -24,6 +27,35 @@ class HistoryDetail extends StatefulWidget {
 class _HistoryDetailState extends State<HistoryDetail> {
   int is_paymented = 0;
   final f = NumberFormat("###,###.###", "tr_TR");
+  final List<String> reasons = [
+    'Muốn thay địa chỉ giao hàng',
+    'Thủ tục thanh toán quá rắc rối',
+    'Muốn đổi/nhập mã Voucher',
+    'Đổi ý, không mua nữa'
+  ];
+  RxString reason = 'Muốn thay địa chỉ giao hàng'.obs;
+
+  void cancelOrder(String orderId, String reason) async {
+    try {
+      http.Response response = await http.post(
+          Uri.parse(AppUrl.postCancelOrder),
+          body: {'reason': reason, 'order_code': orderId});
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body.toString());
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("${data['message']}")));
+
+        setState(() {});
+      } else {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Hủy đơn hàng thất bại")));
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +72,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   Navigator.pop(context);
                 },
               ),
-              title: Text("Chi tiết hoá đơn", style: TextStyle(fontSize: 20)),
+              title: const Text("Chi tiết hoá đơn",
+                  style: TextStyle(fontSize: 20)),
             ),
             body: FutureBuilder(
               future: orderProvider.getDetailOrder(widget.order_id.toString()),
@@ -115,13 +148,11 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             ),
                           ],
                         ),
-
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 20),
                         child: snapshot.data!['info']["is_paymented"] == "1"
                             ? AlertPaymented(snapshot.data!)
                             : AlertNonPaymented(snapshot.data!),
-
                       ),
                       const SizedBox(
                         height: 20,
@@ -160,8 +191,6 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           const Text('Địa chỉ nhận hàng',
-
-
                                               style: TextStyle(fontSize: 14)),
                                           Text(
                                               '${snapshot.data!['info']['title']} | ${snapshot.data!['info']['phone']}',
@@ -212,7 +241,25 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                           Text(
                                             "Ngày đặt: ${snapshot.data!['info']['date']} ",
                                           ),
-                                        ])
+                                        ]),
+                                    const Expanded(child: SizedBox()),
+                                    GestureDetector(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => buildBottomSheet(
+                                                "${snapshot.data!['info']['order_code']}"));
+                                      },
+                                      child: const Text(
+                                        'Hủy đơn',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ),
                                   ]),
                               Container(
                                 margin:
@@ -229,7 +276,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             ],
                           )),
                       if (snapshot.data!['info']!["is_paymented"] == "0")
-                        IsPayment(snapshot.data)
+                        isPayment(snapshot.data)
                     ],
                   );
                 }
@@ -237,10 +284,119 @@ class _HistoryDetailState extends State<HistoryDetail> {
             )));
   }
 
-  Widget IsPayment(data) {
+  Widget buildBottomSheet(String orderCode) {
+    return Obx(() => Container(
+        color: Colors.white,
+        child: Column(children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Icon(Icons.arrow_back),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                ),
+                const Center(
+                    child: Text(
+                  "Chọn lý do hủy",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                )),
+              ],
+            ),
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: const Color(0xffffecdf),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                  child: Row(
+                    children: const [
+                      SizedBox(width: 10),
+                      Icon(
+                        Icons.warning_amber_sharp,
+                        color: Colors.orange,
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          "Vui lòng chọn lý do hủy. Với lý do này, bạn sẽ hủy tất cả sản phẩm trong đơn hàng và không thể thay đổi sau đó.",
+                          style: TextStyle(color: Colors.orange, fontSize: 16),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width - 50,
+                  height: 300,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          child: SingleChildScrollView(
+                        child: Column(
+                          children: reasons
+                              .map((e) => RadioListTile(
+                                  title: Text(e),
+                                  value: e,
+                                  groupValue: reason.value,
+                                  activeColor: Colors.red,
+                                  onChanged: (vl) {
+                                    reason.value = vl!;
+                                  }))
+                              .toList(),
+                        ),
+                      ))
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          const Expanded(child: SizedBox()),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.95,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () {
+                cancelOrder(orderCode.toString(), reason.value.toString());
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text(
+                'Đồng ý',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          )
+        ])));
+  }
+
+  Widget isPayment(data) {
     return InkWell(
-      onTap: (){
-        onPaymentVnPay(data!["info"]!["order_code"], data!["info"]!["total_payment"]);
+      onTap: () {
+        onPaymentVnPay(
+            data!["info"]!["order_code"], data!["info"]!["total_payment"]);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 0),
@@ -305,9 +461,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
     return Container(
         width: MediaQuery.of(context).size.width,
         color: Colors.white,
-
         padding: const EdgeInsets.only(bottom: 10),
-
         child: Row(children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width * 0.25,
@@ -320,7 +474,6 @@ class _HistoryDetailState extends State<HistoryDetail> {
                     image:
                         NetworkImage(AppUrl.url + item["picture"].toString()))),
           ),
-
           Expanded(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,7 +507,6 @@ class _HistoryDetailState extends State<HistoryDetail> {
                         children: <Widget>[
                           Text('${f.format(int.parse(item['price']))} VNĐ',
                               style: const TextStyle(
-
                                   fontSize: 20, fontWeight: FontWeight.w400)),
                           Text('x${item["quantity"].toString()}',
                               style: const TextStyle(
@@ -366,20 +518,22 @@ class _HistoryDetailState extends State<HistoryDetail> {
         ]));
   }
 
-  void onPaymentVnPay(order_code,total_payment) async {
+  void onPaymentVnPay(order_code, total_payment) async {
     final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
-      url:
-      'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', //vnpay url, default is https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+      //vnpay url, default is https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
       version: '2.0.1',
-      tmnCode: 'F52HC9LF', //vnpay tmn code, get from vnpay
+      tmnCode: 'F52HC9LF',
+      //vnpay tmn code, get from vnpay
       txnRef: order_code,
-      orderInfo: 'Thanh toán đơn hàng', //order info, default is Pay Order
-      amount: double.tryParse(total_payment.toString())?? 0.0,
-      returnUrl:
-      'http://schemas.android.com/apk/res/android', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
+      orderInfo: 'Thanh toán đơn hàng',
+      //order info, default is Pay Order
+      amount: double.tryParse(total_payment.toString()) ?? 0.0,
+      returnUrl: 'http://schemas.android.com/apk/res/android',
+      //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
       ipAdress: '192.168.10.10',
-      vnpayHashKey:
-      'NAKQHMIIDOHWTSZSEMLFXYZNAJLSZAMS', //vnpay hash key, get from vnpay
+      vnpayHashKey: 'NAKQHMIIDOHWTSZSEMLFXYZNAJLSZAMS',
+      //vnpay hash key, get from vnpay
       vnPayHashType: VNPayHashType
           .HMACSHA512, //hash type. Default is HmacSHA512, you can chang it in: https://sandbox.vnpayment.vn/merchantv2
     );
@@ -387,16 +541,22 @@ class _HistoryDetailState extends State<HistoryDetail> {
       paymentUrl: paymentUrl,
       onPaymentSuccess: (params) {
         setState(() {
-          Navigator.push(context,MaterialPageRoute( builder: (context) =>AfterPay(title: "Thanh toán thành công")));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AfterPay(title: "Thanh toán thành công")));
         });
       },
       onPaymentError: (params) {
         setState(() {
-          Navigator.push( context,MaterialPageRoute( builder: (context) => AfterPay(title: "Thanh toán thất bại")));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AfterPay(title: "Thanh toán thất bại")));
         });
       },
     );
   }
-
-
 }
