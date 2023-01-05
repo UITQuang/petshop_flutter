@@ -379,7 +379,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget detailInfo() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.65,
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
