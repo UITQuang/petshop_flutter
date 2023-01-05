@@ -17,7 +17,7 @@ class Cart extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(31, 29, 72, 1),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },

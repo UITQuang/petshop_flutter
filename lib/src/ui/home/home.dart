@@ -119,15 +119,15 @@ class _HomePageState extends State<Homepage> {
           ),
         ),
       ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.message),
-            onPressed: (){
-              FocusScope.of(context).requestFocus(FocusNode());
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Conversation()));
-            },
-            backgroundColor: PRIMARY_COLOR,
-
-          ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.message),
+        onPressed: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const Conversation()));
+        },
+        backgroundColor: PRIMARY_COLOR,
+      ),
     ));
   }
 
@@ -165,7 +165,9 @@ class _HomePageState extends State<Homepage> {
             ),
             listHotProduct(),
             listSaleProduct(),
-            listPopularProduct()
+            const SizedBox(height:5),
+            listPopularProduct(),
+
           ],
         ),
       ),
