@@ -28,7 +28,7 @@ class _ConversationState extends State<Conversation> {
   String _apiKey = '4541cb3c2da572886efd';
   String _cluster = 'ap1';
   String _channelName = 'channel-demo-real-time';
-  List listMesage = [
+  List listMessage = [
     // ChatMessage(text: "hello peter", isSender: true,),
     // ChatMessage(text: "hi john", isSender: false,),
     // ChatMessage(text: "how are you?", isSender: true,),
@@ -77,7 +77,7 @@ class _ConversationState extends State<Conversation> {
         data["sender_id"] == "0" &&
         data["recive_id"].toString() == box.get("id").toString()) {
       setState(() {
-        listMesage.add(ChatMessage(text: data["message"], isSender: false));
+        listMessage.add(ChatMessage(text: data["message"], isSender: false));
       });
     }
   }
@@ -121,8 +121,8 @@ class _ConversationState extends State<Conversation> {
       var data = jsonDecode(response.body.toString());
       for (var item in data["messages"]) {
         item["isSender"] == 0
-            ? listMesage.add(ChatMessage(text: item["text"], isSender: false))
-            : listMesage.add(ChatMessage(text: item["text"], isSender: true));
+            ? listMessage.add(ChatMessage(text: item["text"], isSender: false))
+            : listMessage.add(ChatMessage(text: item["text"], isSender: true));
       }
       setState(() {});
     } else {
@@ -168,10 +168,10 @@ class _ConversationState extends State<Conversation> {
               Expanded(
                   child: ListView.builder(
                 controller: focusBottom,
-                itemCount: listMesage.length,
+                itemCount: listMessage.length,
                 itemBuilder: (context, index) {
-                  if (listMesage.isNotEmpty) {
-                    return _messages(listMesage[index]);
+                  if (listMessage.isNotEmpty) {
+                    return _messages(listMessage[index]);
                   } else {
                     return const Center(
                       child: Text("chưa có tin nhắn"),
@@ -192,9 +192,9 @@ class _ConversationState extends State<Conversation> {
           color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
             BoxShadow(
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
                 blurRadius: 32,
-                color: Color(0xFF087949).withOpacity(0.2))
+                color: const Color(0xFF087949).withOpacity(0.2))
           ]),
       child: SafeArea(
         child: Row(
@@ -229,7 +229,7 @@ class _ConversationState extends State<Conversation> {
                                   second_user_id: SECOND_USER_ID,
                                   message: _messageController.text,
                                   sender_name: box.get("name").toString());
-                              listMesage.add(ChatMessage(
+                              listMessage.add(ChatMessage(
                                   text: _messageController.text,
                                   isSender: true));
                               focusBottom.jumpTo(
@@ -254,13 +254,19 @@ class _ConversationState extends State<Conversation> {
   }
 
   Widget _messages(message) {
+    print(MediaQuery.of(context).size.width*0.6);
     return Row(
       mainAxisAlignment:
           message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width*0.6,
+            minWidth: MediaQuery.of(context).size.width*0.3,
+          ),
+          width: message.text.length*8.0,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
               color: Colors.lightBlueAccent
                   .withOpacity(message.isSender ? 1 : 0.5),

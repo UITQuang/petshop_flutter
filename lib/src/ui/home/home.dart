@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -55,6 +56,18 @@ class _HomePageState extends State<Homepage> {
     fontFamily: 'Horizon',
   );
   var box = Hive.box('userBox');
+
+  final prices = [
+    ' Tất cả (giá)',
+    ' 200K - 400K',
+    ' 150K - 200K',
+    ' 100K - 150K',
+    ' 50K - 100K',
+    ' 0K - 50K'
+  ];
+  String value=' Tất cả (giá)';
+  int? minPrice;
+  int? maxPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -165,9 +178,8 @@ class _HomePageState extends State<Homepage> {
             ),
             listHotProduct(),
             listSaleProduct(),
-            const SizedBox(height:5),
+            const SizedBox(height: 5),
             listPopularProduct(),
-
           ],
         ),
       ),
@@ -378,8 +390,78 @@ class _HomePageState extends State<Homepage> {
       child: Column(
         children: [
           listFilter(),
+          priceFilter(),
           listProduct(),
         ],
+      ),
+    );
+  }
+
+  Widget priceFilter() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0,5,2,8),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: const Color(0xffffecdf),
+        ),
+        child: SingleChildScrollView(
+          child: Row(
+            children:[
+             const SizedBox(width:10),
+              const Icon(Icons.filter_list,color: Color(0xfff59c89) ,),
+              DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    dropdownColor: const Color(0xffffecdf),
+                    value: value,
+                    items: prices.map(buildMenuPrice).toList(),
+                    onChanged: (value) => setState(() {
+                      if(value==prices[0]){
+                        minPrice=0;
+                        maxPrice=400000;
+                      }
+                      else
+                      {
+                        if(value==prices[1]){
+                          minPrice=200000;
+                          maxPrice=400000;
+                        }
+                        else
+                        {
+                          if(value==prices[2]){
+                            minPrice=150000;
+                            maxPrice=200000;
+                          }
+                          else
+                          {
+                            if(value==prices[3]){
+                              minPrice=100000;
+                              maxPrice=150000;
+                            }
+                            else
+                            {
+                              if(value==prices[4]){
+                                minPrice=50000;
+                                maxPrice=100000;
+                              }
+                              else
+                              {
+                                if(value==prices[5]){
+                                  minPrice=0;
+                                  maxPrice=50000;
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+
+                      this.value = value!;
+                    }),
+                  )),
+            ]
+          ),
+        )
       ),
     );
   }
@@ -440,16 +522,28 @@ class _HomePageState extends State<Homepage> {
                       );
                     }));
               } else {
-                var mapsnapshot = Map();
+                var mapSnapshot = {};
                 int lengthSearch = 0;
                 for (int i = 0; i < snapshot.data!.length; i++) {
                   String name = snapshot.data![i]['title'];
-
-                  if (name
-                      .toLowerCase()
-                      .contains(searchController.text.toLowerCase())) {
-                    mapsnapshot[lengthSearch] = snapshot.data![i];
-                    lengthSearch++;
+                  if ((minPrice != null) && (maxPrice != null)) {
+                    if ((name
+                            .toLowerCase()
+                            .contains(searchController.text.toLowerCase()) &&
+                        ((int.parse(snapshot.data![i]['price'].toString()) >=
+                                minPrice!) &&
+                            (int.parse(snapshot.data![i]['price'].toString()) <=
+                                maxPrice!)))) {
+                      mapSnapshot[lengthSearch] = snapshot.data![i];
+                      lengthSearch++;
+                    }
+                  } else {
+                    if (name
+                        .toLowerCase()
+                        .contains(searchController.text.toLowerCase())) {
+                      mapSnapshot[lengthSearch] = snapshot.data![i];
+                      lengthSearch++;
+                    }
                   }
                 }
                 return GridView.count(
@@ -458,12 +552,12 @@ class _HomePageState extends State<Homepage> {
                   scrollDirection: Axis.vertical,
                   crossAxisCount: 2,
                   childAspectRatio: (1 / 1.45),
-                  children: List.generate(mapsnapshot.length, (index) {
+                  children: List.generate(mapSnapshot.length, (index) {
                     return itemProduct(
-                      mapsnapshot[index]['id'],
-                      AppUrl.url + mapsnapshot[index]['picture'].toString(),
-                      mapsnapshot[index]['title'].toString(),
-                      mapsnapshot[index]['price'].toString(),
+                      mapSnapshot[index]['id'],
+                      AppUrl.url + mapSnapshot[index]['picture'].toString(),
+                      mapSnapshot[index]['title'].toString(),
+                      mapSnapshot[index]['price'].toString(),
                     );
                   }),
                 );
@@ -811,16 +905,17 @@ class _HomePageState extends State<Homepage> {
                       },
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: Icon(
-                        Icons.filter_list,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
+
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: const Padding(
+                  //     padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                  //     child: Icon(
+                  //       Icons.filter_list,
+                  //       color: Colors.grey,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -829,6 +924,11 @@ class _HomePageState extends State<Homepage> {
       ),
     );
   }
+
+  DropdownMenuItem<String> buildMenuPrice(String price) =>
+      DropdownMenuItem(value: price, child: Text(price,style: const TextStyle(
+        fontSize: 14
+      ),));
 
   Widget listDrawer() {
     return Column(
@@ -914,7 +1014,7 @@ class _HomePageState extends State<Homepage> {
           padding: const EdgeInsets.all(10),
           child: Row(
             children: [
-              Expanded(flex: 1, child: Icon(icon)),
+              Expanded(flex: 1, child: Icon(icon, color: PRIMARY_COLOR,)),
               Expanded(flex: 3, child: Text(title))
             ],
           ),
