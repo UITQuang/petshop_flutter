@@ -167,7 +167,25 @@ class PromotionNoticePage extends StatelessWidget {
         future: noticeProvider.getNoticeList(),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (!snapshot.hasData) {
-            return const Text("loading");
+            return Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: ListView.builder(
+                    itemCount: 15,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: 10.0,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5)),
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: MediaQuery.of(context).size.width * 0.2,
+                        ),
+                      );
+                    }));
           } else {
             return ListView.builder(
                 itemCount: 3,
@@ -194,10 +212,7 @@ class PromotionNoticePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(item["content"].toString()),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(item["date_updated"].toString()),
+
               ],
             ),
           ),

@@ -140,13 +140,14 @@ class _ConversationState extends State<Conversation> {
       },
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: PRIMARY_COLOR,
             title: Row(
               children: const [
                 CircleAvatar(
                   backgroundImage: AssetImage("assets/images/avatar.jpg"),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
                 Text(
                   "Meow Meow PetShop",

@@ -62,9 +62,7 @@ class _PaymentState extends State<Payment> {
         print(box.get("address").toString());
       }
     });
-
   }
-
   Future<void> initPlatformState() async {
     if (!mounted) return;
     setState(() {});
@@ -79,7 +77,7 @@ class _PaymentState extends State<Payment> {
             actions: <Widget>[
               OutlinedButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ProfilePage()));
                 },
                   child: const Text("Cập nhật"))
             ],
